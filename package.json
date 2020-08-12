@@ -1,0 +1,38 @@
+{
+  "name": "parrot-pc-ui",
+  "version": "1.0.0",
+  "description": "鹦鹉UI的pc端组件库",
+  "main": "index.js",
+  "scripts": {
+    "delete": "rimraf node_modules",
+    "start": "cross-env webpack-dev-server --config webpack/webpack.dev.config.js",
+    "build": "cross-env webpack --config webpack/webpack.build.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WJB3/parrot-pc-ui.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WJB3/parrot-pc-ui/issues"
+  },
+  "homepage": "https://github.com/WJB3/parrot-pc-ui#readme",
+  "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "babel-loader": "^8.1.0",
+    "cross-env": "^7.0.2",
+    "css-loader": "^4.2.1",
+    "friendly-errors-webpack-plugin": "^1.7.0",
+    "html-webpack-plugin": "^4.3.0",
+    "mini-css-extract-plugin": "^0.10.0",
+    "postcss-loader": "^3.0.0",
+    "rimraf": "^3.0.2",
+    "style-loader": "^1.2.1",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-merge": "^5.1.1"
+  },
+  "dependencies": {}
+}
