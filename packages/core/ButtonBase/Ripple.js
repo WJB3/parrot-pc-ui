@@ -1,7 +1,6 @@
 
 import React from 'react';
 import classNames from '@packages/utils/classNames';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 const Ripple=(props)=>{
@@ -13,7 +12,8 @@ const Ripple=(props)=>{
         rippleX,
         rippleY,
         onExited,
-        in:inProp
+        in:inProp,
+        timeout
     }=props;
 
     const prefixCls=`${customizePrefixCls}-Ripple`
@@ -43,9 +43,20 @@ const Ripple=(props)=>{
         left: -(rippleSize / 2) + rippleX,
     };
 
-    useEffect(()=>{
+    const handleExited=React.useCallback(onExited);
 
-    },[inProp])
+    useEffect(()=>{
+        if (!inProp) {
+
+            setLeaving(true);
+
+            const timeoutId = setTimeout(handleExited, timeout);
+            return () => {
+                clearTimeout(timeoutId);
+            };
+        }
+        return undefined;
+    },[handleExited,inProp,timeout])
 
     return (
         <span className={rippleClassName} style={rippleStyles}>
@@ -59,6 +70,15 @@ Ripple.propTypes={
     //前缀
     prefixCls:PropTypes.string,
     //停止的回调
-    onExited:PropTypes.func
-
+    onExited:PropTypes.func,
+    //in表示组件停止或进入
+    in:PropTypes.bool,
+    //timeout组件离开时exited回调的间隔
+    timeout:PropTypes.number.isRequired,
+    //波纹的水平位置
+    rippleX: PropTypes.number,
+    //波纹的垂直位置
+    rippleY:PropTypes.number,
+    //波纹直径
+    rippleSize:PropTypes.number,
 }
