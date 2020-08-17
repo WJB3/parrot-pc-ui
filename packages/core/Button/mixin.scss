@@ -1,0 +1,36 @@
+
+@import "./val.scss";
+
+@mixin buttonSize($height,$padding-vertical,$padding-horizontal,$font-size:"16px",$border-radius:"4px"){//更换size
+    height:$height;
+    // line-height:$height;
+    padding:$padding-vertical $padding-horizontal;
+    font-size: $font-size;
+    border-radius: $border-radius;
+}
+
+
+@mixin button(){
+    user-select: none;
+    outline: none;
+    display: inline-block;
+    position: relative;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    white-space: nowrap;
+    font-weight: 400;
+    line-height: 1.5;
+    color:$global-text-color;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    text-transform:uppercase;
+    
+    &>span{
+        line-height: 1;
+    }
+
+    @include buttonSize($button-default-height,0,16px,$button-default-font-size,$button-default-border-radius);
+
+}

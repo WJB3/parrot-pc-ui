@@ -1,0 +1,10 @@
+
+@import "../styles/variable";
+@import "./mixin.scss"; 
+
+
+$prefixCls:"#{$global-prefix}-Button";
+
+.#{$prefixCls}{
+    
+}

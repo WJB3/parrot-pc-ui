@@ -1,5 +1,9 @@
 
-@import "@packages/themes/styles/_variable.scss";
+@import "../styles/variable";
 
 
 $prefixCls:"#{$global-prefix}-ButtonBase";
+
+.#{$prefixCls}{
+    
+}

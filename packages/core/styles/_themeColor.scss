@@ -1,0 +1,26 @@
+//定义主题色等
+$primary-color:rgba(0,189,170,1);
+$primary-color-opacity5:rgba(0,189,170,.5);
+$primary-color-opacity4:rgba(0,189,170,.4);
+$primary-color-opacity3:rgba(0,189,170,.3);
+$primary-color-opacity2:rgba(0,189,170,.2);
+$primary-color-opacity1:rgba(0,189,170,.1);
+
+@mixin OpacityPrimaryColor($opacity) {
+    background-color:rgba(0,189,170,$opacity);
+}
+
+$warning-color:rgba(252,227,138,1);
+ 
+$danger-color:rgba(255,46,99,1);
+
+$second-color:rgba(64,0,130,1);
+ 
+$disabled-color:rgba(0,0,0,.14);
+
+$info-color:rgba(7,121,228,1);
+
+$success-color:rgba(107,198,0,1);
+
+$default-color:rgba(224,224,224,1);
+ 
