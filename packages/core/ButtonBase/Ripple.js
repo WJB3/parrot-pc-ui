@@ -82,3 +82,5 @@ Ripple.propTypes={
     //波纹直径
     rippleSize:PropTypes.number,
 }
+
+export default Ripple;

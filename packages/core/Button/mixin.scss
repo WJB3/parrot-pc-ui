@@ -1,36 +1,90 @@
 
 @import "./val.scss";
 
-@mixin buttonSize($height,$padding-vertical,$padding-horizontal,$font-size:"16px",$border-radius:"4px"){//更换size
+@mixin buttonSize($height,$padding-vertical,$padding-horizontal,$font-size:"14px"){//更换size
     height:$height;
     // line-height:$height;
     padding:$padding-vertical $padding-horizontal;
     font-size: $font-size;
-    border-radius: $border-radius;
 }
 
 
 @mixin button(){
     user-select: none;
-    outline: none;
-    display: inline-block;
+    outline: none; 
     position: relative;
     text-decoration: none;
     text-align: center;
     border: none;
     white-space: nowrap;
     font-weight: 400;
-    line-height: 1.5;
-    color:$global-text-color;
+    line-height: 1.5; 
     display: inline-flex;
     align-items: center;
-    cursor: pointer;
+    cursor: pointer; 
     text-transform:uppercase;
+    border-radius: 4px;
+    transition:background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+
+    &:hover{
+        @include boxShadowLevel(4);
+        opacity:0.8;
+    }
     
     &>span{
         line-height: 1;
     }
 
-    @include buttonSize($button-default-height,0,16px,$button-default-font-size,$button-default-border-radius);
+    &-default{
+        @include buttonSize($button-default-height,0,16px,$button-default-font-size);
+    }
 
+    &-small{
+        @include buttonSize($button-small-height,0 ,8px,$button-small-font-size);
+    }
+    
+    &-large{
+        @include buttonSize($button-large-height,0 ,32px,$button-large-font-size);
+    }
+
+}
+
+@mixin button-color-default(){
+    color:$global-text-color;
+    background-color: $default-color;
+
+    &:hover{
+        
+    }
+}
+
+@mixin button-color-primary(){
+    color:#fff;
+    background-color: $primary-color;
+}
+
+@mixin button-color-danger(){
+    color:#fff;
+    background-color: $danger-color;
+}
+
+@mixin button-color-second(){
+    color:#fff;
+    background-color: $second-color;
+}
+
+@mixin button-color-warning(){
+    color:#fff;
+    background-color: $warning-color;
+}
+
+@mixin button-color-success(){
+    color:#fff;
+    background-color: $success-color;
+}
+
+
+@mixin button-color-info(){
+    color:#fff;
+    background-color: $info-color;
 }

@@ -4,9 +4,9 @@ import React from 'react';
 
 export default function usePrefixCls(name,customizePrefixCls){
 
-    return React.useMemo(()=>{
+    const { getPrefixCls } = React.useContext(ConfigContext);
 
-        const { getPrefixCls } = React.useContext(ConfigContext);
+    return React.useMemo(()=>{
 
         const prefixCls = getPrefixCls(name, customizePrefixCls);
  

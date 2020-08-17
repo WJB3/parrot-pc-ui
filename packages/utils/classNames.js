@@ -21,4 +21,6 @@ export default function classNames(name){
             }
         }
     }
+
+    return classes.join(" ");
 }

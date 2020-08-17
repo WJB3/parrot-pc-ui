@@ -1,10 +1,46 @@
 
-@import "../styles/variable";
+@import "../styles/variable.scss";
 @import "./mixin.scss"; 
 
 
 $prefixCls:"#{$global-prefix}-Button";
 
 .#{$prefixCls}{
+    @include button();
+
+    &-TypeContained{
+        @include boxShadowLevel(2);
+    }
+
+    &-ColorContainedDefault{
+        @include button-color-default();
+    }
+
+    &-ColorContainedPrimary{
+        @include button-color-primary();
+    }
+
+    &-ColorContainedDanger{
+        @include button-color-danger();
+    }
+
+    &-ColorContainedSecond{
+        @include button-color-second();
+    }
+
+    &-ColorContainedWarning{
+        @include button-color-warning();
+    }
+
+    &-ColorContainedSuccess{
+        @include button-color-success();
+    }
+
+    &-ColorContainedInfo{
+        @include button-color-info();
+    }
+
+  
+
     
 }

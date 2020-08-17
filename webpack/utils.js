@@ -80,6 +80,7 @@ exports.styleLoaders=function(options){
                 test:new RegExp("\\."+extension+"$"),
                 include:[
                     path.resolve("src/"),
+                    path.resolve("packages/"),
                     path.resolve('node_modules')
                 ],
                 use:loader
@@ -88,13 +89,13 @@ exports.styleLoaders=function(options){
             output.push({
                 test:new RegExp("\\."+extension+"$"),
                 include:[
-                    path.resolve("src/")
+                    path.resolve("src/"),
+                    path.resolve("packages/"),
                 ],
                 exclude:[/node_modules/,/build/],
                 use:loader
             })
         }
     }
-    
     return output;
 }

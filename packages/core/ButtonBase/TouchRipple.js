@@ -24,6 +24,27 @@ const TouchRipple=React.forwardRef((props,ref)=>{
 
     const rippleCallback = React.useRef(null);
 
+    const startCommit = React.useCallback(
+      params => {
+        const { pulsate, rippleX, rippleY, rippleSize, cb } = params;
+  
+        setRipples(oldRipples => [
+          ...oldRipples,
+          <Ripple
+            key={nextKey.current} 
+            timeout={DURATION}
+            pulsate={pulsate}
+            rippleX={rippleX}
+            rippleY={rippleY}
+            rippleSize={rippleSize}
+          />,
+        ]);
+        nextKey.current += 1;
+        rippleCallback.current = cb;
+      },
+      [],
+  );
+
     const start=React.useCallback((event={},options = {}, cb)=>{
         const {
             pulsate = false,
@@ -83,26 +104,7 @@ const TouchRipple=React.forwardRef((props,ref)=>{
         startCommit({ pulsate, rippleX, rippleY, rippleSize, cb });
     },[startCommit,centerProp]);
 
-    const startCommit = React.useCallback(
-        params => {
-          const { pulsate, rippleX, rippleY, rippleSize, cb } = params;
     
-          setRipples(oldRipples => [
-            ...oldRipples,
-            <Ripple
-              key={nextKey.current} 
-              timeout={DURATION}
-              pulsate={pulsate}
-              rippleX={rippleX}
-              rippleY={rippleY}
-              rippleSize={rippleSize}
-            />,
-          ]);
-          nextKey.current += 1;
-          rippleCallback.current = cb;
-        },
-        [],
-    );
 
     React.useEffect(() => {
         if (rippleCallback.current) {

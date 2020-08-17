@@ -3,6 +3,8 @@ import classNames from '@packages/utils/classNames';
 import PropTypes from 'prop-types';
 import ButtonBase from '../ButtonBase';
 import usePrefixCls from '@packages/hooks/usePrefixCls';
+import capitalize from '@packages/utils/capitalize';
+import "./index.scss";
 
 const Button=React.forwardRef((props,ref)=>{
     const {
@@ -10,7 +12,8 @@ const Button=React.forwardRef((props,ref)=>{
         className,
         size="default",
         children,
-        type="",
+        color="default",
+        type="contained"
     }=props;
 
     const prefixCls=usePrefixCls('Button',customizePrefixCls);
@@ -19,7 +22,12 @@ const Button=React.forwardRef((props,ref)=>{
         <ButtonBase
             className={classNames(
                 prefixCls,
-                className
+                className,
+                {
+                    [`${prefixCls}-${size}`]:size,
+                    [`${prefixCls}-Color${capitalize(type)}${capitalize(color)}`]:color,
+                    [`${prefixCls}-Type${capitalize(type)}`]:type
+                }
             )}
         >
             {children}
@@ -32,7 +40,8 @@ Button.propTypes={
     className:PropTypes.string,
     size:PropTypes.oneOf(['small','default','large']),
     children:PropTypes.any,
-    type:PropTypes.oneOf(['text', 'outlined', 'contained'])
+    type:PropTypes.oneOf(['text', 'outlined', 'contained']),
+    color:PropTypes.string
 };
 
 export default Button;

@@ -1,5 +1,6 @@
 const path=require('path')
 const SRC_PATH=path.resolve(__dirname,"../src");
+const PACKAGE_PATH=path.resolve(__dirname,"../packages");
 
 module.exports={
     entry:{
@@ -17,9 +18,11 @@ module.exports={
             {
                 test:/\.(js|jsx)/,
                 loader:"babel-loader",
-                include:SRC_PATH,
-                exclude:/node_modules/,
-                include:/src/
+                exclude:/node_modules/, 
+                include:[
+                    SRC_PATH,
+                    PACKAGE_PATH
+                ]
             }, 
             {
                 test:/\.svg$/,
