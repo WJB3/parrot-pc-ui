@@ -22,17 +22,17 @@ const Ripple=(props)=>{
 
     const rippleClassName=classNames(
         prefixCls,
-        `${prefixCls}-visible`,
+        `${prefixCls}-Visible`,
         {
-            [`${prefixCls}-pulsate`]:pulsate
+            [`${prefixCls}-Pulsate`]:pulsate
         }
     )
 
     const childClassName=classNames(
-        `${prefixCls}-child`,
+        `${prefixCls}-Child`,
         {
-            [`${prefixCls}-childLeaving`]:leaving,
-            [`${prefixCls}-childPulsate`]:pulsate
+            [`${prefixCls}-ChildLeaving`]:leaving,
+            [`${prefixCls}-ChildPulsate`]:pulsate
         }
     )
 
@@ -45,7 +45,7 @@ const Ripple=(props)=>{
 
     const handleExited=React.useCallback(onExited);
 
-    useEffect(()=>{
+    React.useEffect(()=>{
         if (!inProp) {
 
             setLeaving(true);

@@ -27,11 +27,14 @@ const TouchRipple=React.forwardRef((props,ref)=>{
     const startCommit = React.useCallback(
       params => {
         const { pulsate, rippleX, rippleY, rippleSize, cb } = params;
+ 
+        console.log(params)
   
         setRipples(oldRipples => [
           ...oldRipples,
           <Ripple
             key={nextKey.current} 
+            prefixCls={prefixCls}
             timeout={DURATION}
             pulsate={pulsate}
             rippleX={rippleX}
@@ -118,6 +121,7 @@ const TouchRipple=React.forwardRef((props,ref)=>{
     }, [start]);
 
     const stop = React.useCallback((event, cb) => { 
+ 
         setRipples(oldRipples => {
           if (oldRipples.length > 0) {
             return oldRipples.slice(1);
@@ -138,6 +142,7 @@ const TouchRipple=React.forwardRef((props,ref)=>{
         }),
         [pulsate, start, stop],
     );     
+ 
 
     return (
         <span className={classNames(prefixCls)} ref={container}>

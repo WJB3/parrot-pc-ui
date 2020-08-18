@@ -1,11 +1,12 @@
 
 @import "./val.scss";
 
-@mixin buttonSize($height,$padding-vertical,$padding-horizontal,$font-size:"14px"){//更换size
+@mixin buttonSize($height,$padding-vertical,$padding-horizontal,$font-size:"14px",$min-width:"64px"){//更换size
     height:$height;
     // line-height:$height;
     padding:$padding-vertical $padding-horizontal;
     font-size: $font-size;
+    min-width: $min-width;
 }
 
 
@@ -17,18 +18,14 @@
     text-align: center;
     border: none;
     white-space: nowrap;
-    font-weight: 400;
-    line-height: 1.5; 
-    display: inline-flex;
-    align-items: center;
-    cursor: pointer; 
+    font-weight: 500;
+    line-height: 1.5;   
     text-transform:uppercase;
     border-radius: 4px;
     transition:background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 
     &:hover{
         @include boxShadowLevel(4);
-        opacity:0.8;
     }
     
     &>span{
@@ -36,15 +33,15 @@
     }
 
     &-default{
-        @include buttonSize($button-default-height,0,16px,$button-default-font-size);
+        @include buttonSize($button-default-height,0,16px,$button-default-font-size,$button-default-min-width);
     }
 
     &-small{
-        @include buttonSize($button-small-height,0 ,8px,$button-small-font-size);
+        @include buttonSize($button-small-height,0 ,8px,$button-small-font-size,$button-small-min-width);
     }
     
     &-large{
-        @include buttonSize($button-large-height,0 ,32px,$button-large-font-size);
+        @include buttonSize($button-large-height,0 ,32px,$button-large-font-size,$button-large-min-width);
     }
 
 }
@@ -54,37 +51,61 @@
     background-color: $default-color;
 
     &:hover{
-        
+        background-color: $default-color-hover;
     }
 }
 
 @mixin button-color-primary(){
     color:#fff;
     background-color: $primary-color;
+
+    &:hover{
+        background-color: $primary-color-hover;
+    }
 }
 
 @mixin button-color-danger(){
     color:#fff;
     background-color: $danger-color;
+
+    &:hover{
+        background-color: $danger-color-hover;
+    }
 }
 
 @mixin button-color-second(){
     color:#fff;
     background-color: $second-color;
+
+    &:hover{
+        background-color: $second-color-hover;
+    }
 }
 
 @mixin button-color-warning(){
     color:#fff;
     background-color: $warning-color;
+
+    &:hover{
+        background-color: $warning-color-hover;
+    }
 }
 
 @mixin button-color-success(){
     color:#fff;
     background-color: $success-color;
+
+    &:hover{
+        background-color: $success-color-hover;
+    }
 }
 
 
 @mixin button-color-info(){
     color:#fff;
     background-color: $info-color;
+
+    &:hover{
+        background-color: $info-color-hover;
+    }
 }

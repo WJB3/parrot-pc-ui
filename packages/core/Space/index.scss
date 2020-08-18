@@ -1,0 +1,20 @@
+
+@import "../styles/variable.scss";
+
+$prefixCls:"#{$global-prefix}-Space";
+
+.#{$prefixCls}{
+    
+    display: inline-flex;
+
+    &-Horizontal{
+        align-items: center;
+        flex-wrap: wrap;
+        line-height: 0;
+    }
+
+    &-Vertical{
+        flex-direction: column;
+    }
+    
+}

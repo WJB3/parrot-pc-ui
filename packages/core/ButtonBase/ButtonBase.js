@@ -2,7 +2,8 @@ import React from 'react';
 import classNames from '@packages/utils/classNames'; 
 import PropTypes from 'prop-types'; 
 import TouchRipple from './TouchRipple';
-import usePrefixCls from '@packages/hooks/usePrefixCls'
+import usePrefixCls from '@packages/hooks/usePrefixCls';
+import "./index.scss";
 
 const ButtonBase=React.forwardRef((props,ref)=>{
     const {
@@ -89,8 +90,7 @@ const ButtonBase=React.forwardRef((props,ref)=>{
     const handleTouchStart = useRippleHandler('start', onTouchStart);
     const handleTouchEnd = useRippleHandler('stop', onTouchEnd);
     const handleTouchMove = useRippleHandler('stop', onTouchMove);
-
-    console.log(className);
+ 
 
     return (
         <ComponentProp
