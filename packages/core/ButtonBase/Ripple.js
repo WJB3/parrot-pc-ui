@@ -2,6 +2,7 @@
 import React from 'react';
 import classNames from '@packages/utils/classNames';
 import PropTypes from 'prop-types';
+import useEventCallback from '@packages/hooks/useEventCallback';
 
 const Ripple=(props)=>{
 
@@ -15,6 +16,8 @@ const Ripple=(props)=>{
         in:inProp,
         timeout
     }=props;
+
+   
 
     const prefixCls=`${customizePrefixCls}-Ripple`
 
@@ -43,14 +46,15 @@ const Ripple=(props)=>{
         left: -(rippleSize / 2) + rippleX,
     };
 
-    const handleExited=React.useCallback(onExited);
+    const handleExited=useEventCallback(onExited);
 
     React.useEffect(()=>{
+        //transitiongroup通过onExited回调来判断移除节点的时机
         if (!inProp) {
-
+             
             setLeaving(true);
 
-            const timeoutId = setTimeout(handleExited, timeout);
+            const timeoutId = setTimeout(handleExited, 100000);
             return () => {
                 clearTimeout(timeoutId);
             };

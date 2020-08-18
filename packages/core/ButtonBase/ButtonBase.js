@@ -103,8 +103,9 @@ const ButtonBase=React.forwardRef((props,ref)=>{
             )}
             onClick={onClick} 
             onFocus={handleFocus}
-            onBlur={handleBlur}
             onMouseDown={handleMouseDown}
+            onBlur={handleBlur}
+            
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseLeave}
             onKeyDown={handleKeyDown}

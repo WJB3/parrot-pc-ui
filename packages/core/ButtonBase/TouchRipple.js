@@ -4,7 +4,7 @@ import { TransitionGroup } from 'react-transition-group';
 import Ripple from './Ripple';
 import PropTypes from 'prop-types';
 
-const DURATION = 550;
+const DURATION = 400;
 
 const TouchRipple=React.forwardRef((props,ref)=>{
 
@@ -27,8 +27,6 @@ const TouchRipple=React.forwardRef((props,ref)=>{
     const startCommit = React.useCallback(
       params => {
         const { pulsate, rippleX, rippleY, rippleSize, cb } = params;
- 
-        console.log(params)
   
         setRipples(oldRipples => [
           ...oldRipples,
@@ -120,8 +118,8 @@ const TouchRipple=React.forwardRef((props,ref)=>{
         start({}, { pulsate: true });
     }, [start]);
 
-    const stop = React.useCallback((event, cb) => { 
- 
+    const stop = React.useCallback((event, cb) => {
+      
         setRipples(oldRipples => {
           if (oldRipples.length > 0) {
             return oldRipples.slice(1);
@@ -143,7 +141,7 @@ const TouchRipple=React.forwardRef((props,ref)=>{
         [pulsate, start, stop],
     );     
  
-
+ 
     return (
         <span className={classNames(prefixCls)} ref={container}>
             <TransitionGroup component={null} exit {...restProps}>

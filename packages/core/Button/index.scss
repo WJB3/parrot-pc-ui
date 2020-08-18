@@ -10,6 +10,10 @@ $prefixCls:"#{$global-prefix}-Button";
 
     &-TypeContained{
         @include boxShadowLevel(2);
+
+        &:active{
+            @include boxShadowLevel(4);
+        }
     }
 
     &-ColorContainedDefault{
