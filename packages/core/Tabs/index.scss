@@ -4,20 +4,32 @@
 
 
 $prefixCls:"#{$global-prefix}-Tabs";
+$prefixClsTab:"#{$global-prefix}-Tab";
 
 .#{$prefixCls}{
-    color:$global-text-color;
-    transition:box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1);
-    background-color: #fff;
 
-    &-Round{
-        border-radius: 4px;
+    box-sizing: border-box;
+    color:$global-second-text-color;
+    margin:0;
+    padding:0;
+    display: flex;
+    overflow:hidden;
+
+    &-TabPositionTop,&-TabPositionBottom{
+        flex-direction: column;
     }
+    
+    
+    .#{$prefixClsTab}{
+        padding:6px 12px;
+        overflow:hidden;
+        position: relative;
+        max-width: 264px;
+        min-width:160px;
+        min-height: 48px;
+        text-align: center;
+        box-sizing: border-box;
 
-    @for $i from 0 through 24 {
-        &-Shadow#{$i} {
-            @include boxShadowLevel($i)
-        }
     }
 
 }

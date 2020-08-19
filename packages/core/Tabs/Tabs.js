@@ -4,7 +4,26 @@ import PropTypes from 'prop-types';
 import usePrefixCls from '@packages/hooks/usePrefixCls';
 import TabContext from './TabContext';
 import capitalize from '@packages/utils/capitalize';
+import childrenToArray from '@packages/utils/childrenToArray';
+import TabNavBar from './TabNavBar';
 import "./index.scss";
+
+function parseTabList(children){
+    return childrenToArray(children)
+    .map((node)=>{
+        if(React.isValidElement(node)){
+            const key=node.key!==undefined?String(node.key):undefined;
+            return {
+                key,
+                ...node.props,
+                node
+            }
+        }
+
+        return null;
+    })
+    .filter(tab=>tab);
+}
 
 const Tabs=React.forwardRef((props,ref)=>{
     const {
@@ -13,13 +32,20 @@ const Tabs=React.forwardRef((props,ref)=>{
         children,
         tabPosition="top",
         component:Component="div",
+        color="primary",
         ...restProps
     }=props;
 
     const prefixCls=usePrefixCls('Tabs',customizePrefixCls);
+
+    const tabs=parseTabList(children);
+
+    const tabNavBarProps={
+
+    }
  
     return (
-        <TabContext.Provider >
+        <TabContext.Provider value={{tabs,color}}>
             <Component
                 className={classNames(
                     prefixCls,
@@ -30,7 +56,9 @@ const Tabs=React.forwardRef((props,ref)=>{
                 )}
                 ref={ref} 
                 {...restProps}
-            />
+            >
+                <TabNavBar {...tabNavBarProps} />
+            </Component>
         </TabContext.Provider> 
     )
 });
