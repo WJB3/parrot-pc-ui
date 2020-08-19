@@ -27,11 +27,11 @@ const TabNavBar=React.forwardRef((props,ref)=>{
 
     }
 
-    const tabNodes=tabs.map(tab=>{
+    const tabNodes=tabs.map(item=>{
 
-        const { key,tab }=tab;
+        const { key,tab }=item;
 
-        <ButtonBase className={classNames(
+        return  <ButtonBase className={classNames(
             prefixClsTab,
             {
                 [`${prefixClsTab}-Color${capitalize(color)}`]:color
@@ -56,8 +56,17 @@ const TabNavBar=React.forwardRef((props,ref)=>{
                             `${prefixCls}-Wrap`
                         )
                     }
-                ></div>
-                {tabNodes}
+                >
+                    <div className={
+                        classNames(
+                            `${prefixCls}-Wrap-TabList`
+                        )
+                    }>
+                        {tabNodes}
+                    </div>
+                    
+                </div>
+                
             </Component> 
     )
 });
