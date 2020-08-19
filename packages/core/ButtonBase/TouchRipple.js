@@ -4,7 +4,7 @@ import { TransitionGroup } from 'react-transition-group';
 import Ripple from './Ripple';
 import PropTypes from 'prop-types';
 
-const DURATION = 400;
+const DURATION = 500;
 
 const TouchRipple=React.forwardRef((props,ref)=>{
 

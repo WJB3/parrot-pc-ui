@@ -1,0 +1,23 @@
+
+@import "../styles/variable.scss";
+  
+
+
+$prefixCls:"#{$global-prefix}-Tabs";
+
+.#{$prefixCls}{
+    color:$global-text-color;
+    transition:box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: #fff;
+
+    &-Round{
+        border-radius: 4px;
+    }
+
+    @for $i from 0 through 24 {
+        &-Shadow#{$i} {
+            @include boxShadowLevel($i)
+        }
+    }
+
+}

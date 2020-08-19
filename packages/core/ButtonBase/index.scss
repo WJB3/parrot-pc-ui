@@ -4,7 +4,7 @@
 
 $prefixCls:"#{$global-prefix}-ButtonBase";
 
-$ripple-animation-duration:300ms;
+$ripple-animation-duration:500ms;
 
 .#{$prefixCls}{
     cursor: pointer;
@@ -38,7 +38,7 @@ $ripple-animation-duration:300ms;
             &-Visible{
                 opacity: 0.3;
                 transform: scale(1);
-                animation: ripple-enter $ripple-animation-duration cubic-bezier(0.4, 0, 1, 1);
+                animation: ripple-enter $ripple-animation-duration cubic-bezier(0.4, 0, 0.2, 1);;
             }
 
             &-Child{

@@ -24,11 +24,12 @@ const Button=React.forwardRef((props,ref)=>{
                 prefixCls,
                 className,
                 {
-                    [`${prefixCls}-${size}`]:size,
+                    [`${prefixCls}-${capitalize(size)}`]:size,
                     [`${prefixCls}-Color${capitalize(type)}${capitalize(color)}`]:color,
                     [`${prefixCls}-Type${capitalize(type)}`]:type
                 }
             )}
+            ref={ref}
         >
             {children}
         </ButtonBase>

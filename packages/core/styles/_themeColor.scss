@@ -5,7 +5,7 @@ $primary-color-opacity4:rgba(0,189,170,.4);
 $primary-color-opacity3:rgba(0,189,170,.3);
 $primary-color-opacity2:rgba(0,189,170,.2);
 $primary-color-opacity1:rgba(0,189,170,.1);
-$primary-color-hover:rgba(0, 172, 154,1);
+$primary-color-hover:rgb(4, 153, 138);
 
 @mixin OpacityPrimaryColor($opacity) {
     background-color:rgba(0,189,170,$opacity);
@@ -15,10 +15,10 @@ $warning-color:rgba(248,180,0,1);
 $warning-color-hover:rgba(209, 154, 2,1);
  
 $danger-color:rgba(247, 31, 85,1);
-$danger-color-hover:rgb(218, 32, 78);
+$danger-color-hover:rgb(184, 9, 53);
 
 $second-color:rgba(64,0,130,1);
-$second-color-hover:rgb(54, 0, 109);
+$second-color-hover:rgb(48, 0, 95);
  
 $disabled-color:rgba(0,0,0,.14);
 
