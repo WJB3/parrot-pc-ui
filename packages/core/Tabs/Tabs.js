@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from '@packages/utils/classNames'; 
 import PropTypes from 'prop-types'; 
 import usePrefixCls from '@packages/hooks/usePrefixCls';
+import useControlled from '@packages/hooks/useControlled';
 import TabContext from './TabContext';
 import capitalize from '@packages/utils/capitalize';
 import childrenToArray from '@packages/utils/childrenToArray';
@@ -12,7 +13,7 @@ function parseTabList(children){
     return childrenToArray(children)
     .map((node)=>{
         if(React.isValidElement(node)){
-            const key=node.key!==undefined?String(node.key):undefined;
+            const key=(node.key!==undefined&&node.key!==null)?String(node.key):undefined;
             return {
                 key,
                 ...node.props,
@@ -26,22 +27,45 @@ function parseTabList(children){
 }
 
 const Tabs=React.forwardRef((props,ref)=>{
+
+    const { children }=props;
+
+    const tabs=parseTabList(children);
+
+    console.log(tabs)
+
     const {
         prefixCls:customizePrefixCls,
-        className, 
-        children,
+        className,  
         tabPosition="top",
         component:Component="div",
         color="primary",
+        activeKey:activeKeyProp=tabs[0]?.key,
+        defaultActiveKey,
+        onTabClick,
+        onChange,
         ...restProps
     }=props;
 
     const prefixCls=usePrefixCls('Tabs',customizePrefixCls);
 
-    const tabs=parseTabList(children);
+    const [activeKey,setActiveKey]=useControlled({controlled:activeKeyProp,default:defaultActiveKey});
+
+    const onInternalTabClick=(key,e)=>{
+
+        console.log("onInternalTabClick");
+        console.log(key);
+
+        onTabClick?.(key,e);
+        setActiveKey(key);
+        if(activeKey!==key){
+            onChange?.(key);
+        }
+    }
 
     const tabNavBarProps={
-
+        activeKey,
+        onTabClick:onInternalTabClick
     }
  
     return (

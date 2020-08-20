@@ -8,11 +8,13 @@ import Tabs from '@packages/core/Tabs';
 
 const Page= React.forwardRef((props,ref)=>{
     return <React.Fragment>
+        <Paper square >
         <Tabs >
-            <div tab="1">1</div>
-            <div tab="2">2</div>
-            <div tab="3">3</div>
+            <div  tab="Tab 1" key="1">1</div>
+            <div  tab="Tab 2" key="2">2</div>
+            <div  tab="Tab 3" key="3">3</div>
         </Tabs>
+        </Paper>
     </React.Fragment>
 });
 
