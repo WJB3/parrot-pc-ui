@@ -49,7 +49,7 @@ const TabNavBar=React.forwardRef((props,ref)=>{
 
     
 
-    const TabNodes=()=>tabs.map(item=>{
+    const TabNodes=tabs.map(item=>{
 
         const { key,tab }=item;
 
@@ -71,9 +71,7 @@ const TabNavBar=React.forwardRef((props,ref)=>{
                 </ButtonBase>
     });
 
-    const Indicator=()=>{
-        return <span className={classNames(`Indicator`)} style={inkStyle}></span>
-    }
+    const Indicator=(<span className={classNames(`Indicator`)} style={inkStyle}></span>)
 
     const onListHolderResize=useRaf(()=>{
 
@@ -139,8 +137,8 @@ const TabNavBar=React.forwardRef((props,ref)=>{
                                 )
                             }
                         >
-                            <TabNodes />
-                            <Indicator />
+                            {TabNodes}
+                            {Indicator}
                         </div>
                     </ResizeObserver>
                     

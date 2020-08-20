@@ -40,8 +40,8 @@ const Tabs=React.forwardRef((props,ref)=>{
         tabPosition="top",
         component:Component="div",
         color="primary",
-        activeKey:activeKeyProp=tabs[0]?.key,
-        defaultActiveKey,
+        activeKey:activeKeyProp,
+        defaultActiveKey=tabs[0]?.key,
         onTabClick,
         onChange,
         ...restProps
@@ -49,12 +49,11 @@ const Tabs=React.forwardRef((props,ref)=>{
 
     const prefixCls=usePrefixCls('Tabs',customizePrefixCls);
 
-    const [activeKey,setActiveKey]=useControlled({controlled:activeKeyProp,default:defaultActiveKey});
+    const [activeKey,setActiveKey,isKeyControlled]=useControlled({controlled:activeKeyProp,default:defaultActiveKey});
+
+    console.log(isKeyControlled)
 
     const onInternalTabClick=(key,e)=>{
-
-        console.log("onInternalTabClick");
-        console.log(key);
 
         onTabClick?.(key,e);
         setActiveKey(key);
