@@ -12,7 +12,8 @@ const Paper=React.forwardRef((props,ref)=>{
         component: Component = 'div',
         square=false,
         shadow=1,
-        children 
+        children,
+        style
     }=props;
 
     const prefixCls=usePrefixCls('Paper',customizePrefixCls);
@@ -29,6 +30,7 @@ const Paper=React.forwardRef((props,ref)=>{
             )}
             ref={ref}
             children={children}
+            style={style}
         />
              
     )
@@ -40,7 +42,8 @@ Paper.propTypes={
     children:PropTypes.any,
     component:PropTypes.string,
     square:PropTypes.bool,
-    shadow:PropTypes.number
+    shadow:PropTypes.number,
+    style:PropTypes.object
 };
 
 export default Paper;

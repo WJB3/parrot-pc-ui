@@ -9,9 +9,10 @@ import capitalize from '@packages/utils/capitalize';
 import ButtonBase from '@packages/core/ButtonBase';
 import useTabOffsets from '@packages/hooks/useTabOffsets';
 import useRefs from '@packages/hooks/useRefs';
+import Paper from '@packages/core/Paper';
 import "./index.scss";
 
-const TabNavBar=React.forwardRef((props,ref)=>{
+const TabNavBar=React.forwardRef(function(props,ref){
 
     const { tabs,color }=React.useContext(TabContext);
 
@@ -20,9 +21,12 @@ const TabNavBar=React.forwardRef((props,ref)=>{
         className, 
         children,
         tabPosition="top",
-        component:Component="div",
+        component=Paper,
         activeKey,
         onTabClick,
+        shadow,
+        style,
+        isCard,
         ...restProps
     }=props;
 
@@ -63,7 +67,7 @@ const TabNavBar=React.forwardRef((props,ref)=>{
                         prefixClsTab,
                         {
                             [`${prefixClsTab}-Color${capitalize(color)}`]:color,
-                            [`Selected`]:activeKey && activeKey===key
+                            [`Selected`]:activeKey && activeKey===key,
                         }
                     )}
                 >
@@ -71,7 +75,10 @@ const TabNavBar=React.forwardRef((props,ref)=>{
                 </ButtonBase>
     });
 
-    const Indicator=(<span className={classNames(`Indicator`)} style={inkStyle}></span>)
+    const Indicator=(<span 
+            className={classNames(`Indicator`)} 
+            style={{...inkStyle,visibility:isCard?"hidden":"auto"}}
+    ></span>)
 
     const onListHolderResize=useRaf(()=>{
 
@@ -112,13 +119,26 @@ const TabNavBar=React.forwardRef((props,ref)=>{
         onListHolderResize();
     },[activeKey,tabs.map(tab => tab.key).join('_')])
 
+    let ComponentProp;
+
+    if(isCard){
+        ComponentProp=component
+    }else{
+        ComponentProp=component
+    }
+
     return ( 
-            <Component
+            <ComponentProp
                 className={classNames(
                     prefixCls,
-                    className
+                    className,
+                    {
+                        [`${prefixCls}-Card`]:isCard
+                    }
                 )}
+                shadow={shadow}
                 ref={ref} 
+                style={style}
                 {...restProps}
             >
                 <div
@@ -128,6 +148,7 @@ const TabNavBar=React.forwardRef((props,ref)=>{
                         )
                     }
                 >
+                    
                     <ResizeObserver onResize={onListHolderResize}>
                         <div 
                             ref={tabListRef}
@@ -143,8 +164,8 @@ const TabNavBar=React.forwardRef((props,ref)=>{
                     </ResizeObserver>
                     
                 </div>
-                
-            </Component> 
+                {isCard && <div style={{...inkStyle}} className={classNames("HiddenDiv")}></div>}
+            </ComponentProp> 
     )
 });
 
@@ -156,7 +177,9 @@ TabNavBar.propTypes={
     component:PropTypes.string,
     restProps:PropTypes.object,
     activeKey:PropTypes.string,
-    onTabClick:PropTypes.func
+    onTabClick:PropTypes.func,
+    style:PropTypes.object,
+    isCard:PropTypes.bool
 };
 
 export default TabNavBar;

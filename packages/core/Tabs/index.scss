@@ -5,6 +5,7 @@
 
 $prefixCls:"#{$global-prefix}-Tabs";
 $prefixClsTabNavBar:"#{$global-prefix}-TabNavBar";
+$prefixClsTabPaneList:"#{$global-prefix}-TabPaneList";
 $prefixClsTab:"#{$global-prefix}-Tab";
 
 .#{$prefixCls}{
@@ -26,6 +27,30 @@ $prefixClsTab:"#{$global-prefix}-Tab";
         flex:none;
         align-items: center;
 
+        &-Card{
+            .#{$prefixClsTabNavBar}{
+                &-Wrap{ 
+                     
+                }
+            } 
+
+            .HiddenDiv{
+                position:absolute;
+                bottom:-2px;
+                height:3px;
+                background-color: #fff;
+                transition: width 0.3s, left 0.3s, right 0.3s;
+            }
+
+            .#{$prefixClsTab}{
+
+                border-radius: 2px 2px 0 0;  
+                box-shadow: 0 0 2px rgba(0, 0, 0, 1);
+                margin-right: 5px;
+
+            }
+        }
+
         &-Wrap{
             position: relative;
             display: flex;
@@ -42,11 +67,13 @@ $prefixClsTab:"#{$global-prefix}-Tab";
                     overflow:hidden;
                     position: relative;
                     max-width: 264px;
-                    min-width:160px;
+                    min-width: 70px;
                     min-height: 48px;
                     text-align: center;
                     box-sizing: border-box;
                     font-size:16px;
+
+                    
 
                     &-ColorPrimary{
                         color:$global-second-text-color;
@@ -59,7 +86,67 @@ $prefixClsTab:"#{$global-prefix}-Tab";
                            background-color: $primary-color;
                         }
                     }
+
+                    &-ColorSecond{
+                        color:$global-second-text-color;
+
+                        &.Selected{
+                            color:$second-color;
+                        }
+
+                        &+.Indicator{
+                           background-color: $second-color;
+                        }
+                    }
+
+                    &-ColorDanger{
+                        color:$global-second-text-color;
+
+                        &.Selected{
+                            color:$danger-color;
+                        }
+
+                        &+.Indicator{
+                           background-color: $danger-color;
+                        }
+                    }
  
+                    &-ColorWarning{
+                        color:$global-second-text-color;
+
+                        &.Selected{
+                            color:$warning-color;
+                        }
+
+                        &+.Indicator{
+                           background-color: $warning-color;
+                        }
+                    }
+
+                    &-ColorInfo{
+                        color:$global-second-text-color;
+
+                        &.Selected{
+                            color:$info-color;
+                        }
+
+                        &+.Indicator{
+                           background-color: $info-color;
+                        }
+                    }
+
+                    &-ColorSuccess{
+                        color:$global-second-text-color;
+
+                        &.Selected{
+                            color:$success-color;
+                        }
+
+                        &+.Indicator{
+                           background-color: $success-color;
+                        }
+                    }
+
                 }
                 
                 .Indicator{
@@ -74,6 +161,25 @@ $prefixClsTab:"#{$global-prefix}-Tab";
         }
 
         
+    }
+
+    .#{$prefixClsTabPaneList}{
+        &-Content{
+            flex: auto;
+            min-width: 0;
+            min-height: 0;    
+
+            &-ListWrap{
+                display: flex;
+                width:100%;
+            }
+        }
+
+        &-TabPane{
+            flex: none;
+            width: 100%;
+            outline: none;
+        }
     }
 
     
