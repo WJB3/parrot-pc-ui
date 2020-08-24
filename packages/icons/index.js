@@ -12,13 +12,14 @@ const Icon=React.forwardRef((IconProps,ref)=>{
         name, 
         onClick=()=>{},
         prefixCls:customizePrefixCls,
-        className
+        className,
+        style
     }=IconProps; 
 
     const prefixCls = usePrefixCls('Icon', customizePrefixCls);
 
     return(
-        <i  className={classNames(prefixCls,className)} onClick={(e)=>onClick(e)} ref={ref}>
+        <i  className={classNames(prefixCls,className)} onClick={(e)=>onClick(e)} ref={ref} style={style}>
             <svg width={"1em"} height={"1em"} fill={"currentcolor"} >
                 <use xlinkHref={`#${name}`}></use>
             </svg>

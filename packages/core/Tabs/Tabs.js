@@ -47,6 +47,8 @@ const Tabs=React.forwardRef(function(props,ref){
         tabBarStyle,
         type="line",
         isEdit=false,
+        onEdit,
+        centered,
         ...restProps
     }=props;
 
@@ -71,6 +73,9 @@ const Tabs=React.forwardRef(function(props,ref){
         shadow:tabBarShadow,
         style:tabBarStyle,
         isCard:type==="card",
+        isEdit:isEdit,
+        centered:centered,
+        onEdit:onEdit,
         onTabClick:onInternalTabClick
     }
     
@@ -126,7 +131,9 @@ Tabs.propTypes={
     //tab的type
     type:PropTypes.oneOf(['line','card']),
     //是否可以编辑
-    isEdit:PropTypes.bool
+    isEdit:PropTypes.bool,
+    //是否隐藏增加按钮
+    hideAdd:PropTypes.bool
 };
 
 export default Tabs;

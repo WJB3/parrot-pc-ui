@@ -6,7 +6,7 @@ export default function useForkRef(...refs){
         if (refs.every(item=>item==null)) {
             return null;
         }
-        return refValue => { 
+        return refValue => {  
             for(let i=0;i<refs.length;i++){
                 setRef(refs[i],refValue)
             }

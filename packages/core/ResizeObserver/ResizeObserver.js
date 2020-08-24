@@ -50,11 +50,11 @@ const ResizeObserverComponent=forwardRef((props,ref)=>{
         return ()=>destroyObserver()
     },[]);
 
-    const handleNodeRef=(node)=>{
+    const handleNodeRef=(node)=>{ 
         setRef(childNode,node)
     }
 
-    const handleRef =useForkRef(handleNodeRef,childrenProps.ref,ref);
+    const handleRef=useForkRef(handleNodeRef,childrenProps.ref,ref);
 
     return  React.cloneElement(childrenProps,{
         ref:handleRef

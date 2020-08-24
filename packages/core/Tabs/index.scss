@@ -25,12 +25,39 @@ $prefixClsTab:"#{$global-prefix}-Tab";
         position: relative;
         display: flex;
         flex:none;
-        align-items: center;
+        //align-items: center;
+
+        &-scollButton{
+            width: 40px;
+            opacity: 0.8; 
+            flex-shrink: 0;
+        }
+
+        &-centered{
+            justify-content: center;
+        }
 
         &-Card{
+
+           
+
             .#{$prefixClsTabNavBar}{
                 &-Wrap{ 
-                     
+                    &-TabList{ 
+
+                        .#{$prefixClsTab}{
+
+                            border-radius: 2px 2px 0 0;  
+                            box-shadow: 0 0 2px rgba(0, 0, 0, 1);
+                            margin-right: 5px;
+                            border-top: 1px solid rgba(0,0,0,.3);
+                            
+                            &:first-child{
+                                margin-left:5px;
+                            }
+                            
+                        }
+                    }
                 }
             } 
 
@@ -42,13 +69,7 @@ $prefixClsTab:"#{$global-prefix}-Tab";
                 transition: width 0.3s, left 0.3s, right 0.3s;
             }
 
-            .#{$prefixClsTab}{
-
-                border-radius: 2px 2px 0 0;  
-                box-shadow: 0 0 2px rgba(0, 0, 0, 1);
-                margin-right: 5px;
-
-            }
+            
         }
 
         &-Wrap{
@@ -61,9 +82,13 @@ $prefixClsTab:"#{$global-prefix}-Tab";
             &-TabList{
                 position: relative;
                 display: flex;
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+                
 
                 .#{$prefixClsTab}{
-                    padding:6px 12px;
+                    padding:6px 16px;
                     overflow:hidden;
                     position: relative;
                     max-width: 264px;
@@ -72,8 +97,7 @@ $prefixClsTab:"#{$global-prefix}-Tab";
                     text-align: center;
                     box-sizing: border-box;
                     font-size:16px;
-
-                    
+ 
 
                     &-ColorPrimary{
                         color:$global-second-text-color;
