@@ -198,6 +198,7 @@ const TabNavBar = React.forwardRef(function (props, ref) {
                         }}
                     >
                         {TabNodes}
+                        {isCard && <span className={`${prefixCls}-ExtraDiv`}></span>}
                         {Indicator}
                     </div>
                 </ResizeObserver>

@@ -13,7 +13,8 @@ const Button=React.forwardRef((props,ref)=>{
         size="default",
         children,
         color="default",
-        type="contained"
+        type="contained",
+        onClick
     }=props;
 
     const prefixCls=usePrefixCls('Button',customizePrefixCls);
@@ -30,6 +31,7 @@ const Button=React.forwardRef((props,ref)=>{
                 }
             )}
             ref={ref}
+            onClick={()=>onClick?.()}
         >
             {children}
         </ButtonBase>

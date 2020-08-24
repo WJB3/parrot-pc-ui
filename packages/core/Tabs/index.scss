@@ -25,7 +25,7 @@ $prefixClsTab:"#{$global-prefix}-Tab";
         position: relative;
         display: flex;
         flex:none;
-        //align-items: center;
+        align-items: center;
 
         &-scollButton{
             width: 40px;
@@ -59,6 +59,14 @@ $prefixClsTab:"#{$global-prefix}-Tab";
                         }
                     }
                 }
+
+                &-ExtraDiv{
+                    display: block;
+                    width: 1px;
+                    height: 20px;
+                    flex: none;
+
+                }
             } 
 
             .HiddenDiv{
@@ -88,7 +96,7 @@ $prefixClsTab:"#{$global-prefix}-Tab";
                 
 
                 .#{$prefixClsTab}{
-                    padding:6px 16px;
+                    padding:6px 20px;
                     overflow:hidden;
                     position: relative;
                     max-width: 264px;
@@ -97,6 +105,7 @@ $prefixClsTab:"#{$global-prefix}-Tab";
                     text-align: center;
                     box-sizing: border-box;
                     font-size:16px;
+                    flex:none;
  
 
                     &-ColorPrimary{
