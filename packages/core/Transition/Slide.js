@@ -84,7 +84,7 @@ const Slide = React.forwardRef(function (props, ref) {
 
     const childrenRef = useRef(null);
 
-    const handleEnter = function(node, isAppearing) {
+    const handleEnter = (node, isAppearing)=>{
 
         const node = childrenRef.current;
 
@@ -94,7 +94,19 @@ const Slide = React.forwardRef(function (props, ref) {
 
     };
 
-    const handleExit = function (node, isAppearing) {
+    const handleEntering = (_, isAppearing) => {
+        const node = childrenRef.current;
+         
+        node.style.webkitTransition="transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms";
+        node.style.transition="transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms";
+        node.style.webkitTransform = 'none';
+        node.style.transform = 'none';
+
+        onEntering?.(node,isAppearing);
+         
+      };
+
+    const handleExit = (node, isAppearing)=>{
 
         node.style.webkitTransition = `transform ${timeout && timeout.exit ? timeout.exit : timeout}ms`;
         node.style.transition = `transform ${timeout && timeout.exit ? timeout.exit : timeout}ms`;
@@ -103,18 +115,24 @@ const Slide = React.forwardRef(function (props, ref) {
 
     };
 
+    const handleExited=()=>{
+        const node = childrenRef.current;
+        node.style.webkitTransition="";
+        node.style.transition="";
+        onExited?.(node)
+    }
+
+
     const handleRef = useForkRef(childrenRef, children.ref, ref);
 
     return (
         <TransitionComponent
             appear
             in={visibleProp}
-            onEnter={handleEnter}
-            onEntered={(node, isAppearing) => onEntered?.(node, isAppearing)}
-            onEntering={(node, isAppearing) => onEntering?.(node, isAppearing)}
+            onEnter={handleEnter} 
+            onEntering={handleEntering}
             onExit={handleExit}
-            onExited={(node, isAppearing) => onExited?.(node, isAppearing)}
-            onExiting={(node, isAppearing) => onExiting?.(node, isAppearing)}
+            onExited={handleExited} 
             timeout={timeout}
             {...other}
         >
@@ -122,11 +140,9 @@ const Slide = React.forwardRef(function (props, ref) {
                 (state, childProps) => {
                     return React.cloneElement(children, {
                         style: {
-                            transform: 'scale(0)',
-                            visibility: state === 'exited' && !visibleProp ? 'hidden' : undefined,
+                            visibility: state === 'exited' && !inProp ? 'hidden' : undefined,
                             ...style,
-                            ...styles[state],
-                            ...children.props.style
+                            ...children.props.style,
                         },
                         ref: handleRef,
                         ...childProps
