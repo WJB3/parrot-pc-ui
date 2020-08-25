@@ -5,24 +5,33 @@ $prefixCls:"#{$global-prefix}-Transition";
 
 .#{$prefixCls}{
     
-    &-Fade{
+    &-Collapse{
         
-        &-enter{
-            opacity: 0;
-        }
-       
-        &-enter-active{
-            opacity:1;
-            transition: opacity 225ms;
+        &-Container{
+            height: 0;
+            overflow: hidden;
+            transition-property: height;
         }
 
-        &-exit{
-            opacity:1;
+        &-Entered{
+            height: auto;
+            overflow: visible;
         }
-        &-exit-active {
-            opacity: 0;
-            transition: opacity 195ms;
+       
+        &-Hidden{
+            visibility: hidden;
         }
+
+        &-Wrapper{
+            display: flex;
+
+            &Inner{
+                width:100%;
+            }
+        }
+
+
+    
     }
     
 }

@@ -44,7 +44,8 @@ Button.propTypes={
     size:PropTypes.oneOf(['small','default','large']),
     children:PropTypes.any,
     type:PropTypes.oneOf(['text', 'outlined', 'contained']),
-    color:PropTypes.string
+    color:PropTypes.string,
+    onClick:PropTypes.func
 };
 
 export default Button;

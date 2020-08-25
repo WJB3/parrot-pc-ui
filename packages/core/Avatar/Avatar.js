@@ -70,10 +70,14 @@ Avatar.propTypes = {
     className: PropTypes.string,
     size: PropTypes.oneOf(['small', 'default', 'large']),
     children: PropTypes.any,
+    type:PropTypes.oneOf(['circle','round']),
     component: PropTypes.string,
     alt: PropTypes.string,
+    src:PropTypes.string,
+    srcSet:PropTypes.string,
     imgProps:PropTypes.object,
-    restProps:PropTypes.object
+    restProps:PropTypes.object,
+    color:PropTypes.string
 };
 
 export default Avatar;

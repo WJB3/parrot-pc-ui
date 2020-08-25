@@ -1,22 +1,20 @@
 import React from 'react';
-import classNames from '@packages/utils/classNames';
 import PropTypes from 'prop-types';
-import usePrefixCls from '@packages/hooks/usePrefixCls';
-import capitalize from '@packages/utils/capitalize';
+import usePrefixCls from '@packages/hooks/usePrefixCls'; 
 import { Transition } from 'react-transition-group';
 import { duration } from '@packages/core/styles/transitions';
 import "./index.scss";
 
 const styles = {
     entering: {
-        opacity: 1,
+      transform: 'none',
     },
     entered: {
-        opacity: 1,
+      transform: 'none',
     },
 };
 
-const Fade = React.forwardRef(function (props, ref) {
+const Zoom = React.forwardRef(function (props, ref) {
     const {
         prefixCls: customizePrefixCls,
         className,
@@ -37,13 +35,13 @@ const Fade = React.forwardRef(function (props, ref) {
         ...other
     } = props;
 
-    const prefixCls = usePrefixCls('Transition-Fade', customizePrefixCls);
+    const prefixCls = usePrefixCls('Transition-Zoom', customizePrefixCls);
 
     const handleEnter = function(node, isAppearing){ 
        
  
-        node.style.webkitTransition = `opacity ${timeout && timeout.enter?timeout.enter:timeout}ms`;
-        node.style.transition =`opacity ${timeout && timeout.enter?timeout.enter:timeout}ms`;
+        node.style.webkitTransition = `transform ${timeout && timeout.enter?timeout.enter:timeout}ms`;
+        node.style.transition =`transform ${timeout && timeout.enter?timeout.enter:timeout}ms`;
 
         onEnter?.(node,isAppearing);
 
@@ -51,8 +49,8 @@ const Fade = React.forwardRef(function (props, ref) {
 
     const handleExit = function(node, isAppearing){ 
  
-        node.style.webkitTransition = `opacity ${timeout && timeout.exit?timeout.exit:timeout}ms`;
-        node.style.transition =  `opacity ${timeout && timeout.exit?timeout.exit:timeout}ms`;
+        node.style.webkitTransition = `transform ${timeout && timeout.exit?timeout.exit:timeout}ms`;
+        node.style.transition =  `transform ${timeout && timeout.exit?timeout.exit:timeout}ms`;
 
         onExit?.(node,isAppearing);
 
@@ -75,7 +73,7 @@ const Fade = React.forwardRef(function (props, ref) {
                 (state, childProps) => {
                     return React.cloneElement(children, {
                         style: {
-                            opacity: 0,
+                            transform: 'scale(0)',
                             visibility: state === 'exited' && !visibleProp ? 'hidden' : undefined,
                             ...style,
                             ...styles[state],
@@ -90,7 +88,7 @@ const Fade = React.forwardRef(function (props, ref) {
     )
 });
 
-Fade.propTypes = {
+Zoom.propTypes = {
     prefixCls: PropTypes.string,
     className: PropTypes.string,
     TransitionComponent: PropTypes.any,
@@ -106,4 +104,4 @@ Fade.propTypes = {
     style: PropTypes.object
 };
 
-export default Fade;
+export default Zoom;
