@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useRef } from 'react';
 import PropTypes from 'prop-types';
 import usePrefixCls from '@packages/hooks/usePrefixCls';
 import { Transition } from 'react-transition-group';
@@ -9,7 +9,7 @@ import "./index.scss";
 
 export function setTranslateValue(direction, node) {
     const transform = getTranslateValue(direction, node);
-
+ 
     if (transform) {
         node.style.webkitTransform = transform;
         node.style.transform = transform;
@@ -18,7 +18,7 @@ export function setTranslateValue(direction, node) {
 
 function getTranslateValue(direction, node) {
     const rect = node.getBoundingClientRect();
-
+ 
     let transform;
 
     if (node.fakeTransform) {
@@ -84,9 +84,9 @@ const Slide = React.forwardRef(function (props, ref) {
 
     const childrenRef = useRef(null);
 
-    const handleEnter = (node, isAppearing)=>{
+    const handleEnter = (_, isAppearing)=>{
 
-        const node = childrenRef.current;
+        const node = childrenRef.current; 
 
         setTranslateValue(direction, node);
 
@@ -97,8 +97,8 @@ const Slide = React.forwardRef(function (props, ref) {
     const handleEntering = (_, isAppearing) => {
         const node = childrenRef.current;
          
-        node.style.webkitTransition="transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms";
-        node.style.transition="transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms";
+        node.style.webkitTransition=`transform ${timeout && timeout.enter ? timeout.enter : timeout}ms cubic-bezier(0, 0, 0.2, 1) 0ms`;
+        node.style.transition=`transform ${timeout && timeout.enter ? timeout.enter : timeout}ms cubic-bezier(0, 0, 0.2, 1) 0ms`;
         node.style.webkitTransform = 'none';
         node.style.transform = 'none';
 
@@ -110,6 +110,8 @@ const Slide = React.forwardRef(function (props, ref) {
 
         node.style.webkitTransition = `transform ${timeout && timeout.exit ? timeout.exit : timeout}ms`;
         node.style.transition = `transform ${timeout && timeout.exit ? timeout.exit : timeout}ms`;
+
+        setTranslateValue(direction, node);
 
         onExit?.(node, isAppearing);
 
@@ -140,7 +142,7 @@ const Slide = React.forwardRef(function (props, ref) {
                 (state, childProps) => {
                     return React.cloneElement(children, {
                         style: {
-                            visibility: state === 'exited' && !inProp ? 'hidden' : undefined,
+                            visibility: state === 'exited' && !visibleProp ? 'hidden' : undefined,
                             ...style,
                             ...children.props.style,
                         },

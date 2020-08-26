@@ -1,5 +1,5 @@
 import React from 'react';
-import { Fade,Zoom,Collapse } from '@packages/core/Transition';
+import { Fade,Zoom,Collapse,Slide,Grow } from '@packages/core/Transition';
 import Button from '@packages/core/Button';
 import Paper from '@packages/core/Paper';
  
@@ -9,7 +9,7 @@ const Page= React.forwardRef((props,ref)=>{
 
     return <React.Fragment>
         <Button onClick={()=>setVisible(!visible)}>测试</Button>
-       
+{/*        
         <Fade visible={visible}>
             <Paper shadow={6} style={{height:100,width:100,backgroundColor:'yellow'}}></Paper>
         </Fade>
@@ -32,7 +32,23 @@ const Page= React.forwardRef((props,ref)=>{
 
         <Collapse visible={visible} timeout={5000}>
             <Paper shadow={6} style={{height:100,width:100,backgroundColor:'red'}}></Paper>
-        </Collapse>
+        </Collapse> */}
+
+        {/* <Slide visible={visible} direction={"left"}>
+            <Paper shadow={6} style={{height:100,width:100,backgroundColor:'red'}}></Paper>
+        </Slide>
+
+        <Slide visible={visible} timeout={5000} direction={"right"}>
+            <Paper shadow={6} style={{height:100,width:100,backgroundColor:'red'}}></Paper>
+        </Slide> */}
+
+        <Grow visible={visible} >
+            <Paper shadow={6} style={{height:100,width:100,backgroundColor:'red'}}></Paper>
+        </Grow>
+
+        <Grow visible={visible} >
+            <Paper shadow={6} style={{height:100,width:100,backgroundColor:'red'}}></Paper>
+        </Grow>
        
     </React.Fragment>
 });

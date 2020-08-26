@@ -1,8 +1,7 @@
-import React,{forwardRef,useRef, useEffect} from 'react';
-import setRef from '@packages/utils/setRef';
+import React,{forwardRef,useRef, useEffect} from 'react'; 
 import useForkRef from '@packages/hooks/useForkRef';
-import ResizeObserver from 'resize-observer-polyfill';
-import { findDOMNode } from 'react-dom';
+import ResizeObserver from 'resize-observer-polyfill'; 
+import PropTypes from 'prop-types';
 
 const ResizeObserverComponent=forwardRef((props,ref)=>{
 
@@ -18,7 +17,7 @@ const ResizeObserverComponent=forwardRef((props,ref)=>{
     const resizeObserver=useRef(null);
 
     const onComponentUpdated=()=>{
-        const element=findDOMNode(childNode.current);
+        const element=childNode.current;
         const elementChanged=element!==currentELement.current;
 
         if(elementChanged){
@@ -40,25 +39,27 @@ const ResizeObserverComponent=forwardRef((props,ref)=>{
     }
 
     const handleResize=()=>{ 
-        if(onResize){
-            onResize();
-        }
+        onResize?.(childNode.current);
     }
 
     useEffect(()=>{
         onComponentUpdated()
         return ()=>destroyObserver()
-    },[]);
+    },[]); 
 
-    const handleNodeRef=(node)=>{ 
-        setRef(childNode,node)
-    }
-
-    const handleRef=useForkRef(handleNodeRef,childrenProps.ref,ref);
+    const handleRef=useForkRef(childNode,childrenProps.ref,ref);
 
     return  React.cloneElement(childrenProps,{
         ref:handleRef
     });
 }); 
+
+ResizeObserverComponent.propTypes = { 
+    //传送门
+    children: PropTypes.any,
+    //节点变化的回调
+    onResize:PropTypes.func
+}
+
 
 export default ResizeObserverComponent;
