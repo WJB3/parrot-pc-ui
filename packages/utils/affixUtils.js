@@ -19,7 +19,7 @@ export function getFixedTop(placeholderReact,targetRect,offsetTop){
     return undefined;
 }
 
-export function getFixBottom(placeholderReact,targetRect,offsetBottom){
+export function getFixedBottom(placeholderReact,targetRect,offsetBottom){
     if (offsetBottom !== undefined && targetRect.bottom < placeholderReact.bottom + offsetBottom) {
         const targetBottomOffset = window.innerHeight - targetRect.bottom;
         return offsetBottom + targetBottomOffset;
@@ -52,7 +52,7 @@ export function addObserveTarget(target,affix){
         TRIGGER_EVENTS.forEach(eventName=>{
             entity.eventHandlers[eventName]=addEventListener(target,eventName,()=>{
                 entity.affixList.forEach(targetAffix=>{
-                    targetAffix.lazyUpdatePosition();
+                    targetAffix.updatePosition();
                 })
             });
         });
@@ -60,6 +60,8 @@ export function addObserveTarget(target,affix){
 }
 
 export function removeObserveTarget(affix){
+ 
+
     const observerEntity=observerEntities.find(oriObserverEntity=>{
         const hasAffix=oriObserverEntity.affixList.some(item=>item===affix);
         if(hasAffix){
@@ -70,12 +72,14 @@ export function removeObserveTarget(affix){
 
     if(observerEntity && observerEntity.affixList.length===0){
         observerEntities=observerEntities.filter(item=>item!==observerEntity);
+
+        TRIGGER_EVENTS.forEach(eventName => {
+            const handler = observerEntity.eventHandlers[eventName];
+            if (handler && handler.remove) {
+              handler.remove();
+            }
+        });
     }
 
-    TRIGGER_EVENTS.forEach(eventName => {
-        const handler = observerEntity.eventHandlers[eventName];
-        if (handler && handler.remove) {
-          handler.remove();
-        }
-    });
+   
 }

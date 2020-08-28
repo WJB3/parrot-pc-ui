@@ -7,6 +7,7 @@ import ResizeObserverPage from '@packages/pages/common/ResizeObserverPage';
 import AvatarPage from '@packages/pages/display/AvatarPage';
 import TabsPage from '@packages/pages/display/TabsPage';
 import TransitionPage from '@packages/pages/common/TransitionPage';
+import AffixPage from '@packages/pages/navigation/AffixPage';
 import "./index.scss";
 
 
@@ -16,5 +17,6 @@ ReactDOM.render((<HashRouter>
     <Route path="/tabs"  component={(props)=><TabsPage {...props}/>} />
     <Route path="/transitions"  component={(props)=><TransitionPage {...props}/>} />
     <Route path="/portal"  component={(props)=><PortalPage {...props}/>} />
-    <Route path="/"  component={(props)=><ResizeObserverPage {...props}/>} />
+    <Route path="/resizeobserver"  component={(props)=><ResizeObserverPage {...props}/>} />
+    <Route path="/"  component={(props)=><AffixPage {...props}/>} />
 </HashRouter>), document.getElementById("root"));
