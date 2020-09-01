@@ -1,0 +1,8 @@
+
+@import "../styles/variable.scss";
+
+$prefixCls:"#{$global-prefix}-Affix";
+
+.#{$prefixCls}{
+    z-index: 10; 
+}
