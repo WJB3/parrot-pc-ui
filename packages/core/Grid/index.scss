@@ -6,7 +6,7 @@ $prefixClsCol:"#{$global-prefix}-Col";
 
 .#{$prefixClsRow}{
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row wrap; 
 
     &-Top{
         align-items: flex-start;
@@ -43,6 +43,7 @@ $prefixClsCol:"#{$global-prefix}-Col";
     .#{$prefixClsCol}{
 
         position: relative;
+        
 
         @for $i from 1 through 24 {
             &-#{$i} {
