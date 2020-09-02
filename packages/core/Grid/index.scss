@@ -40,4 +40,284 @@ $prefixClsCol:"#{$global-prefix}-Col";
         justify-items:center;
     }
 
+    .#{$prefixClsCol}{
+
+        position: relative;
+
+        @for $i from 1 through 24 {
+            &-#{$i} {
+                display: block; 
+                -webkit-box-flex: 0;
+                flex:0 0 100%/(24/$i); 
+                max-width:100%/(24/$i);
+            }
+        }
+
+        @for $order from 1 through 100{
+            &-Order-#{$order}{
+                order:$order;
+            }
+        }
+
+        @for $pull from 1 through 24{
+            &-Pull-#{$pull}{
+                right: (100%/24) * $pull;
+            }
+        }
+
+        @for $push from 1 through 24{
+            &-Push-#{$push}{
+                left: (100%/24) * $push;
+            }
+        }
+
+        @for $offset from 1 through 24{
+            &-Offset-#{$offset}{
+                margin-left: (100%/24) * $offset;
+            }
+        }
+
+        @for $span from 1 through 24{
+            &-Xs-#{$span}{
+                display: block; 
+                flex:0 0 100%/(24/$span); 
+                max-width:100%/(24/$span);
+            }
+        }
+
+        @for $span from 1 through 24{
+            @media (min-width: 576px){
+                &-Sm-#{$span}{
+                    display: block; 
+                    flex:0 0 100%/(24/$span); 
+                    max-width:100%/(24/$span);
+                }
+            } 
+        }
+
+        @for $span from 1 through 24{
+            @media (min-width: 768px){
+                &-Md-#{$span}{
+                    display: block; 
+                    flex:0 0 100%/(24/$span); 
+                    max-width:100%/(24/$span);
+                }
+            } 
+        }
+
+        @for $span from 1 through 24{
+            @media (min-width: 992px){
+                &-Lg-#{$span}{
+                    display: block; 
+                    flex:0 0 100%/(24/$span); 
+                    max-width:100%/(24/$span);
+                }
+            }
+        }
+
+        @for $span from 1 through 24{
+            @media (min-width: 1200px){
+                &-Xl-#{$span}{
+                    display: block; 
+                    flex:0 0 100%/(24/$span); 
+                    max-width:100%/(24/$span);
+                }
+            } 
+        }
+
+        @for $span from 1 through 24{
+            @media (min-width: 1600px){
+                &-XXl-#{$span}{
+                    display: block;
+                    -webkit-box-flex: 0;//不可伸缩
+                    flex:0 0 100%/(24/$span); 
+                    max-width:100%/(24/$span);
+                }
+            } 
+        }
+
+        @for $order from 1 through 24{
+            &-Xs-Order-#{$order}{ 
+                order:$order;
+            }
+        }
+
+        @for $order from 1 through 24{
+            @media (min-width: 576px){
+                &-Sm-Order-#{$order}{ 
+                    order:$order;
+                }
+            } 
+        }
+
+        @for $order from 1 through 24{
+            @media (min-width: 768px){
+                &-Md-Order-#{$order}{
+                    order:$order;
+                }
+            } 
+        }
+
+        @for $order from 1 through 24{
+            @media (min-width: 992px){
+                &-Lg-Order-#{$order}{ 
+                    order:$order;
+                }
+            }
+        }
+
+        @for $order from 1 through 24{
+            @media (min-width: 1200px){
+                &-Xl-Order-#{$order}{
+                    order:$order;
+                }
+            } 
+        }
+
+        @for $order from 1 through 24{
+            @media (min-width: 1600px){
+                &-XXl-Order-#{$order}{
+                    order:$order;
+                }
+            } 
+        }
+
+        @for $offset from 1 through 24{
+            &-Xs-Offset-#{$offset}{ 
+                margin-left: (100%/24) * $offset;
+            }
+        }
+
+        @for $offset from 1 through 24{
+            @media (min-width: 576px){
+                &-Sm-Offset-#{$offset}{ 
+                    margin-left: (100%/24) * $offset;
+                }
+            } 
+        }
+
+        @for $offset from 1 through 24{
+            @media (min-width: 768px){
+                &-Md-Offset-#{$offset}{
+                    margin-left: (100%/24) * $offset;
+                }
+            } 
+        }
+
+        @for $offset from 1 through 24{
+            @media (min-width: 992px){
+                &-Lg-Offset-#{$offset}{ 
+                    margin-left: (100%/24) * $offset;
+                }
+            }
+        }
+
+        @for $offset from 1 through 24{
+            @media (min-width: 1200px){
+                &-Xl-Offset-#{$offset}{
+                    margin-left: (100%/24) * $offset;
+                }
+            } 
+        }
+
+        @for $offset from 1 through 24{
+            @media (min-width: 1600px){
+                &-XXl-Offset-#{$offset}{
+                    margin-left: (100%/24) * $offset;
+                }
+            } 
+        }
+
+        @for $pull from 1 through 24{
+            &-Xs-Pull-#{$pull}{ 
+                right: (100%/24) * $pull;
+            }
+        }
+
+        @for $pull from 1 through 24{
+            @media (min-width: 576px){
+                &-Sm-Pull-#{$pull}{ 
+                    right: (100%/24) * $pull;
+                }
+            } 
+        }
+
+        @for $pull from 1 through 24{
+            @media (min-width: 768px){
+                &-Md-Pull-#{$pull}{
+                    right: (100%/24) * $pull;
+                }
+            } 
+        }
+
+        @for $pull from 1 through 24{
+            @media (min-width: 992px){
+                &-Lg-Pull-#{$pull}{ 
+                    right: (100%/24) * $pull;
+                }
+            }
+        }
+
+        @for $pull from 1 through 24{
+            @media (min-width: 1200px){
+                &-Xl-Pull-#{$pull}{
+                    right: (100%/24) * $pull;
+                }
+            } 
+        }
+
+        @for $pull from 1 through 24{
+            @media (min-width: 1600px){
+                &-XXl-Pull-#{$pull}{
+                    right: (100%/24) * $pull;
+                }
+            } 
+        }
+
+        @for $push from 1 through 24{
+            &-Xs-Push-#{$push}{ 
+                left: (100%/24) * $push;
+            }
+        }
+
+        @for $push from 1 through 24{
+            @media (min-width: 576px){
+                &-Sm-Push-#{$push}{ 
+                    left: (100%/24) * $push;
+                }
+            } 
+        }
+
+        @for $push from 1 through 24{
+            @media (min-width: 768px){
+                &-Md-Push-#{$push}{
+                    left: (100%/24) * $push;
+                }
+            } 
+        }
+
+        @for $push from 1 through 24{
+            @media (min-width: 992px){
+                &-Lg-Push-#{$push}{ 
+                    left: (100%/24) * $push;
+                }
+            }
+        }
+
+        @for $push from 1 through 24{
+            @media (min-width: 1200px){
+                &-Xl-Push-#{$push}{
+                    left: (100%/24) * $push;
+                }
+            } 
+        }
+
+        @for $push from 1 through 24{
+            @media (min-width: 1600px){
+                &-XXl-Push-#{$push}{
+                    left: (100%/24) * $push;
+                }
+            } 
+        }
+    }
 }

@@ -16,7 +16,7 @@ const Row = React.forwardRef(function (props, ref) {
         children,
         style,
         className,
-        gutter = 0,
+        gutter:gutterProp = 0,
         align="top",
         justify="start"
     } = props;
@@ -30,7 +30,7 @@ const Row = React.forwardRef(function (props, ref) {
         xxl: true,
     });
 
-    const gutterRef = useRef(gutter);
+    const gutterRef = useRef(gutterProp);
 
     useEffect(() => {
         const token = ResponsiveObserve.subscribe(screen => {
@@ -52,11 +52,11 @@ const Row = React.forwardRef(function (props, ref) {
 
     const getGutter = () => {
         const results = [0, 0];
-        const normalizedGutter = Array.isArray(gutter) ? gutter : [gutter, 0];
+        const normalizedGutter = Array.isArray(gutterProp) ? gutterProp : [gutterProp, 0];
         normalizedGutter.forEach((g, index) => {
             if (typeof g === 'object') {
                 for (let i = 0; i < responsiveArray.length; i++) {
-                    const breakpoint = responsiveArray[i];
+                    const breakpoint = responsiveArray[i]; 
                     if (screens[breakpoint] && g[breakpoint] !== undefined) {
                         results[index] = g[breakpoint];
                         break;
@@ -69,11 +69,25 @@ const Row = React.forwardRef(function (props, ref) {
         return results;
     };
 
-    const gutterValues = getGutter(); 
+    const gutter = getGutter(); 
+
+    const rowStyle={
+        ...(gutter[0]>0?{
+            marginLeft:gutter[0]?gutter[0]/-2:undefined,
+            marginRight:gutter[0]?gutter[0]/-2:undefined
+        }:{}),
+        ...(gutter[1]>0?{
+            marginTop: gutter[1]?gutter[1]/ -2:undefined,
+            marginBottom: gutter[1]?gutter[1]/ 2:undefined,
+        }:{}),
+        ...style
+    }
+
+    console.log(rowStyle)
 
     return (
-       <RowContext.Provider value={{ gutter:gutterValues }}>
-            <div className={classNames(
+       <RowContext.Provider value={{ gutter }}>
+            <div style={rowStyle} className={classNames(
                 prefixCls,
                 className,
                 {
