@@ -1,8 +1,43 @@
 
 @import "../styles/variable.scss";
 
-$prefixCls:"#{$global-prefix}-Affix";
+$prefixClsRow:"#{$global-prefix}-Row";
+$prefixClsCol:"#{$global-prefix}-Col";
 
-.#{$prefixCls}{
-    z-index: 10; 
+.#{$prefixClsRow}{
+    display: flex;
+    flex-flow: row wrap;
+
+    &-Top{
+        align-items: flex-start;
+    }
+
+    &-Bottom{
+        align-items: flex-end;
+    }
+
+    &-Middle{
+        align-items: center;
+    }
+
+    &-Start{
+        justify-items: flex-start;
+    }
+
+    &-End{
+        justify-items: flex-end;
+    }
+
+    &-Space-around{
+        justify-items:space-around;
+    }
+
+    &-Space-between{
+        justify-items:space-between;
+    }
+
+    &-Center{
+        justify-items:center;
+    }
+
 }
