@@ -1,21 +1,6 @@
-import toChildrenArray from 'rc-util/lib/Children/toArray';
-import warning from 'rc-util/lib/warning';
+import toChildrenArray from 'rc-util/lib/Children/toArray'; 
 import * as React from 'react';
-import {
-  FieldEntity,
-  FormInstance,
-  InternalNamePath,
-  Meta,
-  NamePath,
-  NotifyInfo,
-  Rule,
-  Store,
-  ValidateOptions,
-  InternalFormInstance,
-  RuleObject,
-  StoreValue,
-  EventArgs,
-} from './interface';
+
 import FieldContext, { HOOK_MARK } from './FieldContext';
 import { toArray } from './utils/typeUtil';
 import { validateRules } from './utils/validateUtil';
@@ -25,61 +10,52 @@ import {
   getNamePath,
   getValue,
 } from './utils/valueUtil';
-
  
-
 function requireUpdate(
   shouldUpdate,
   prev,
   next,
   prevValue,
   nextValue,
-  info:,
+  info
 ) {
   if (typeof shouldUpdate === 'function') {
     return shouldUpdate(prev, next, 'source' in info ? { source: info.source } : {});
   }
   return prevValue !== nextValue;
 }
-
-
  
- 
-
 // We use Class instead of Hooks here since it will cost much code by using Hooks.
-class Field extends React.Component 
-  implements FieldEntity {
-  public static contextType = FieldContext;
+class Field extends React.Component {
+  static contextType = FieldContext;
 
-  public static defaultProps = {
+  static defaultProps = {
     trigger: 'onChange',
     valuePropName: 'value',
   };
 
-  context: InternalFormInstance;
+  context;
 
-  public state = {
-    resetCount: 0,
-  };
+   
 
-  private cancelRegisterFunc: (isListField?: boolean, preserve?: boolean) => void | null = null;
+  cancelRegisterFunc = null;
 
-  private destroy = false;
+  destroy = false;
 
   /**
    * Follow state should not management in State since it will async update by React.
    * This makes first render of form can not get correct state value.
    */
-  private touched: boolean = false;
+  touched = false;
 
   /** Mark when touched & validated. Currently only used for `dependencies` */
-  private dirty: boolean = false;
+  dirty = false;
 
-  private validatePromise: Promise<string[]> | null = null;
+  validatePromise = null;
 
-  private prevValidating: boolean;
+  prevValidating;
 
-  private errors: string[] = [];
+  errors = [];
 
   // ============================== Subscriptions ==============================
   componentDidMount() {
@@ -116,7 +92,7 @@ class Field extends React.Component
     return name !== undefined ? [...prefixName, ...name] : [];
   };
 
-  getRules = ()=> {
+  getRules = () => {
     const { rules = [] } = this.props;
 
     return rules.map(
@@ -129,25 +105,23 @@ class Field extends React.Component
     );
   };
 
- reRender() {
+  reRender() {
     if (this.destroy) return;
     this.forceUpdate();
   }
 
- refresh = () => {
+  refresh = () => {
     if (this.destroy) return;
 
     /**
      * Clean up current node.
      */
-    this.setState(({ resetCount }) => ({
-      resetCount: resetCount + 1,
-    }));
+     
   };
 
   // ========================= Field Entity Interfaces =========================
   // Trigger by store update. Check if need update the component
- onStoreChange = (prevStore, namePathList, info) => {
+  onStoreChange = (prevStore, namePathList, info) => {
     const { shouldUpdate, dependencies = [], onReset } = this.props;
     const { store } = info;
     const namePath = this.getNamePath();
@@ -256,7 +230,7 @@ class Field extends React.Component
 
   validateRules = (options) => {
     const { validateFirst = false, messageVariables } = this.props;
-    const { triggerName } = (options || {}) ;
+    const { triggerName } = (options || {});
     const namePath = this.getNamePath();
 
     let filteredRules = this.getRules();
@@ -296,16 +270,16 @@ class Field extends React.Component
     return promise;
   };
 
- isFieldValidating = () => !!this.validatePromise;
+  isFieldValidating = () => !!this.validatePromise;
 
- isFieldTouched = () => this.touched;
+  isFieldTouched = () => this.touched;
 
- isFieldDirty = () => this.dirty;
+  isFieldDirty = () => this.dirty;
 
- getErrors = () => this.errors;
+  getErrors = () => this.errors;
 
   // ============================= Child Component =============================
- getMeta = () => {
+  getMeta = () => {
     // Make error & validating in cache to save perf
     this.prevValidating = this.isFieldValidating();
 
@@ -320,7 +294,7 @@ class Field extends React.Component
   };
 
   // Only return validate child node. If invalidate, will do nothing about field.
- getOnlyChild = (
+  getOnlyChild = (
     children
   ) => {
     // Support render props
@@ -343,13 +317,13 @@ class Field extends React.Component
   };
 
   // ============================== Field Control ==============================
- getValue = (store) => {
+  getValue = (store) => {
     const { getFieldsValue } = this.context;
     const namePath = this.getNamePath();
     return getValue(store || getFieldsValue(true), namePath);
   };
 
- getControlled = (childProps = {}) => {
+  getControlled = (childProps = {}) => {
     const {
       trigger,
       validateTrigger,
@@ -432,8 +406,7 @@ class Field extends React.Component
     return control;
   };
 
- render() {
-    const { resetCount } = this.state;
+  render() { 
     const { children } = this.props;
 
     const { child, isFunction } = this.getOnlyChild(children);
@@ -442,31 +415,12 @@ class Field extends React.Component
     let returnChildNode
     if (isFunction) {
       returnChildNode = child;
-    } else if (React.isValidElement(child)) {
-      returnChildNode = React.cloneElement(
-        child ,
-        this.getControlled(child.props),
-      );
-    } else {
-      warning(!child, '`children` of Field is not validate ReactElement.');
-      returnChildNode = child;
-    }
+    } 
 
-    return <React.Fragment key={resetCount}>{returnChildNode}</React.Fragment>;
+    return <React.Fragment>{returnChildNode}</React.Fragment>;
   }
 }
 
-const WrapperField  = ({ name, ...restProps }) => {
-  const namePath = name !== undefined ? getNamePath(name) : undefined;
-
-  let key = 'keep';
-  if (!restProps.isListField) {
-    key = `_${(namePath || []).join('_')}`;
-  }
-
  
 
-  return <Field key={key} name={namePath} {...restProps} />;
-};
-
-export default WrapperField;
+export default Field;

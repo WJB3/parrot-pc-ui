@@ -4,9 +4,6 @@ import RowContext from './RowContext';
 import PropTypes from 'prop-types';
 import usePrefixCls from '@packages/hooks/usePrefixCls';
 import capitalize from '@packages/utils/capitalize';
-import ResponsiveObserve, {
-    responsiveArray
-} from '@packages/utils/responsiveObserve';
 import "./index.scss";
 
 

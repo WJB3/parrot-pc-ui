@@ -1,9 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import Col, { ColProps } from '../grid/col';
-import { FormLabelAlign } from './interface';
-import { FormContext, FormContextProps } from './context';
-import { RequiredMark } from './Form';
+import Col from '../grid/col'; 
+import { FormContext } from './context';
 import { useLocaleReceiver } from '../locale-provider/LocaleReceiver';
 import defaultLocale from '../locale/default';
 
@@ -12,10 +10,7 @@ import defaultLocale from '../locale/default';
 const FormItemLabel  = ({
   prefixCls,
   label,
-  htmlFor,
-  labelCol,
-  labelAlign,
-  colon,
+  htmlFor,  
   required,
   requiredMark,
 }) => {
@@ -25,29 +20,16 @@ const FormItemLabel  = ({
 
   return (
     <FormContext.Consumer key="label">
-      {({
-        vertical,
-        labelAlign: contextLabelAlign,
-        labelCol: contextLabelCol,
-        colon: contextColon,
-      }) => {
-        const mergedLabelCol = labelCol || contextLabelCol || {};
+      {({ 
+        labelAlign,
+        labelCol 
+      }) => {  
+ 
+  
 
-        const mergedLabelAlign = labelAlign || contextLabelAlign;
-
-        const labelClsBasic = `${prefixCls}-item-label`;
-        const labelColClassName = classNames(
-          labelClsBasic,
-          mergedLabelAlign === 'left' && `${labelClsBasic}-left`,
-          mergedLabelCol.className,
-        );
-
-        let labelChildren = label;
-        // Keep label is original where there should have no colon
-        const computedColon = colon === true || (contextColon !== false && colon !== false);
-        const haveColon = computedColon && !vertical;
-        // Remove duplicated user input colon
-        if (haveColon && typeof label === 'string' && (label).trim() !== '') {
+        let labelChildren = label; 
+  
+        if (typeof label === 'string' && (label).trim() !== '') {
           labelChildren = (label).replace(/[:|：]\s*$/, '');
         }
 
@@ -65,12 +47,11 @@ const FormItemLabel  = ({
 
         const labelClassName = classNames({
           [`${prefixCls}-item-required`]: required,
-          [`${prefixCls}-item-required-mark-optional`]: requiredMark === 'optional',
-          [`${prefixCls}-item-no-colon`]: !computedColon,
+          [`${prefixCls}-item-required-mark-optional`]: requiredMark === 'optional' 
         });
 
         return (
-          <Col {...mergedLabelCol} className={labelColClassName}>
+          <Col {...labelCol}  >
             <label
               htmlFor={htmlFor}
               className={labelClassName}

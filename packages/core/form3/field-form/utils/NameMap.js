@@ -1,4 +1,4 @@
-import { InternalNamePath } from '../interface';
+ 
 import { matchNamePath } from './valueUtil';
  
 

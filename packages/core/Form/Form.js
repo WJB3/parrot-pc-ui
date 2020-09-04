@@ -21,6 +21,12 @@ const Form=React.forwardRef((props,ref)=>{
         //统一设置字段校验规则
         form,
         //经 Form.useForm() 创建的 form 控制实例，不提供时会自动创建
+        labelCol,
+        //label的栅格布局方式
+        labelAlign,
+        //label文本的对齐方式
+        wrapperCol,
+        //input的栅格布局方式
     }=props;
 
     const prefixCls=usePrefixCls('Form',customizePrefixCls);
@@ -38,7 +44,12 @@ const Form=React.forwardRef((props,ref)=>{
     }, [formContext, formInstance, name]);
 
     const formContextValue=useMemo(()=>({
-        name
+        name,
+        labelCol,
+        labelAlign,
+        wrapperCol,
+        validateTrigger,
+        ...formInstance
     }),[name])
 
     return(
@@ -53,9 +64,7 @@ const Form=React.forwardRef((props,ref)=>{
                 {children}
             </Component>
         </FormContext.Provider>
-    )
-
-
+    ) 
 });
 
 

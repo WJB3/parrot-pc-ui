@@ -45,3 +45,25 @@ export function getValue(store,namePath){
     const value=get(store,namePath);
     return value;
 }
+
+export function setValue(store,namePath,value){
+    const newStore=set(store,namePath,value);
+    return newStore;
+}
+
+//匹配相同的namePath 相同返回true，否则返回false
+export function matchNamePath(namePath,changedNamePath){
+    if(!namePath||!changedNamePath||namePath.length!==changedNamePath.length){
+        return false;
+    }
+    return namePath.every((nameUnit,i)=>changedNamePath[i]===nameUnit);
+}
+
+export function cloneByNamePathList(store,namePathList){
+    let newStore={};
+    namePathList.forEach(namePath=>{
+        const value=getValue(store,namePath);
+        newStore=setValue(newStore,namePath,value);
+    });
+    return newStore;
+}
