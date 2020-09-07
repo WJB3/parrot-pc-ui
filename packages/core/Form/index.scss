@@ -1,0 +1,18 @@
+
+@import "../styles/variable.scss";
+
+$prefixCls:"#{$global-prefix}-Form";
+$prefixClsItem:"#{$global-prefix}-FormItem";
+
+.#{$prefixCls}{
+
+
+    &-Horizontal{
+        max-width: 600px;
+    }
+
+    .#{$prefixClsItem}{
+        margin-bottom:24px;
+    }
+
+}

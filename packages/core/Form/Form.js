@@ -1,10 +1,10 @@
-import React,{useMemo} from 'react';
-import classNames from '@packages/utils/classNames'; 
-import PropTypes from 'prop-types'; 
-import usePrefixCls from '@packages/hooks/usePrefixCls';
-import capitalize from '@packages/utils/capitalize';
+import React,{ useMemo } from 'react'; 
+import classNames from '@packages/utils/classNames';  
+import usePrefixCls from '@packages/hooks/usePrefixCls'; 
 import FormContext from './FormContext';
-import useForm from './useForm';
+import useForm ,{HOOK_MARK} from './useForm';
+import capitalize from '@packages/utils/capitalize';
+import "./index.scss";
 
 const Form=React.forwardRef((props,ref)=>{
 
@@ -27,7 +27,9 @@ const Form=React.forwardRef((props,ref)=>{
         //label文本的对齐方式
         wrapperCol,
         //input的栅格布局方式
-        children
+        children,
+        layout="horizontal",//表单布局
+        initialValues,
     }=props;
 
     const prefixCls=usePrefixCls('Form',customizePrefixCls);
@@ -35,6 +37,18 @@ const Form=React.forwardRef((props,ref)=>{
     const formContext = React.useContext(FormContext);
 
     const [formInstance]=useForm(form);
+
+    const {
+        setInitialValues
+    }=formInstance.getInternalHooks(HOOK_MARK);
+
+    // Set initial value, init store value when first mount
+    const mountRef = React.useRef(null);
+    setInitialValues(initialValues, !mountRef.current);
+    if (!mountRef.current) {
+        mountRef.current = true;
+    }
+
 
      // Register form into Context
     React.useEffect(() => {
@@ -56,11 +70,17 @@ const Form=React.forwardRef((props,ref)=>{
     return(
         <FormContext.Provider value={formContextValue}>
             <Component
-                id="name"
+                id={name}
                 onSubmit={(event) => {
                     event.preventDefault();
                     event.stopPropagation(); 
                 }}
+                className={classNames(
+                    prefixCls,
+                    {
+                        [`${prefixCls}-${capitalize(layout)}`]:true
+                    }
+                )}
             >
                 {children}
             </Component>

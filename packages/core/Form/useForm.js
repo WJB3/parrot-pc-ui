@@ -23,11 +23,15 @@ export class FormStore {
 
     fieldEntities = [];
 
+    store={};
+
     formHooked=false;//是否调用了formHooked
 
     subscribable=true;//是否具有订阅能力
 
     lastValidatePromise=null;
+
+    initialValues = {};
 
     constructor(forceRootUpdate) {
         this.forceRootUpdate = forceRootUpdate;
@@ -134,11 +138,20 @@ export class FormStore {
 
     }
 
-
+    /**
+   * First time `setInitialValues` should update store with initial value
+   */
+    setInitialValues = (initialValues, init) => {
+        this.initialValues = initialValues || {};
+        if (init) {
+            this.store = setValues({}, initialValues, this.store);
+        }
+    }; 
+ 
     getForm = () => ({
         getFieldValue: this.getFieldValue,
         getFieldsValue: this.getFieldsValue,
-
+        setInitialValues:this.setInitialValues,
         getInternalHooks:this.getInternalHooks,
     });
 

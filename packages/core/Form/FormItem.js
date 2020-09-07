@@ -1,20 +1,18 @@
 import React,{Fragment,useRef, useContext,isValidElement,cloneElement} from 'react';
 import classNames from '@packages/utils/classNames'; 
 import { Row } from '@packages/core/Grid';
-import PropTypes from 'prop-types'; 
 import usePrefixCls from '@packages/hooks/usePrefixCls';
 import FormItemLabel from './FormItemLabel';
 import FormItemInput from './FormItemInput';
-import capitalize from '@packages/utils/capitalize';
 import FormContext from './FormContext';
 import useForm ,{HOOK_MARK} from './useForm';
 import { getNamePath } from './utils/valueUtil';
- 
 import { 
     getValue,
     defaultGetValueFromEvent
 } from './utils/valueUtil';
 import { toArray } from './utils/typeUtil';
+import "./index.scss";
 
 const MemoInput=React.memo(
     ({children})=>children,  
@@ -53,6 +51,7 @@ const FormItem=function(props){
         getValueProps,//为子元素添加额外的属性
         valuePropName="value",//子节点的值的属性
         getValueFromEvent,//设置如何将 event 的值转换成字段值
+        label,//
     }=props;
 
     const prefixCls=usePrefixCls('FormItem',customizePrefixCls);
@@ -89,9 +88,10 @@ const FormItem=function(props){
     const {dispatch}=getInternalHooks(HOOK_MARK);
 
     function renderLayout(baseChildren,fieldId,meta,isRequired){
+
         if(noStyle && !hidden){
             return baseChildren;
-        }
+        } 
 
         return (
             <Row
@@ -102,9 +102,11 @@ const FormItem=function(props){
                     htmlFor={fieldId}
                     required={isRequired}
                     prefixCls={prefixCls}
+                    label={label}
                 />
                 <FormItemInput
                     prefixCls={prefixCls}
+                    label={label}
                     {...meta}
                 >
                     {baseChildren}
@@ -234,6 +236,7 @@ const FormItem=function(props){
     }else{
         childNode=children;
     }
+ 
 
     return(
         <Fragment>

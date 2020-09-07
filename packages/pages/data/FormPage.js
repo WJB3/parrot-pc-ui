@@ -1,10 +1,16 @@
 import React from 'react';
 import Form, { useForm } from '@packages/core/Form';
 
+const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
+};
+
 const Page = React.forwardRef((props, ref) => {
-    return <React.Fragment>
+    return <div>
         <Form
             name="basic"
+            {...layout}
         >
             <Form.Item
                 label="Username"
@@ -13,7 +19,7 @@ const Page = React.forwardRef((props, ref) => {
                 <input />
             </Form.Item> 
         </Form>
-    </React.Fragment>
+    </div>
 });
 
 export default Page;
