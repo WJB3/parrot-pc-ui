@@ -1,4 +1,4 @@
-import React,{Fragment,useRef, useContext} from 'react';
+import React,{Fragment,useRef, useContext,isValidElement,cloneElement} from 'react';
 import classNames from '@packages/utils/classNames'; 
 import { Row } from '@packages/core/Grid';
 import PropTypes from 'prop-types'; 
@@ -7,9 +7,23 @@ import FormItemLabel from './FormItemLabel';
 import FormItemInput from './FormItemInput';
 import capitalize from '@packages/utils/capitalize';
 import FormContext from './FormContext';
-import useForm from './useForm';
+import useForm ,{HOOK_MARK} from './useForm';
 import { getNamePath } from './utils/valueUtil';
+import {
+    supportRef
+} from '@packages/utils/ref';
+import { 
+    getValue,
+    defaultGetValueFromEvent
+} from './utils/valueUtil';
 import { toArray } from './utils/typeUtil';
+
+const MemoInput=React.memo(
+    ({children})=>children,  
+    (prev,next)=>{
+        return prev.value===next.value && prev.update===next.update
+    }
+);
 
 function getFieldId(namePath,formName){
     if(namePath.length) return undefined;
@@ -19,13 +33,17 @@ function getFieldId(namePath,formName){
     return formName?`${formName}_${mergedId}`:mergedId;
 }
 
+function hasValidName(name){
+    return !(name===undefined||name===null);
+}
+
 const FormItem=function(props){
 
     const {
         prefixCls:customizePrefixCls,
         //类名前缀
         className, 
-        children:childrenProp,
+        children,
         noStyle,//为true时不带样式，作为纯字段控件使用
         hidden,//是否隐藏字段（依然会收集和校验字段）
         style,
@@ -34,6 +52,9 @@ const FormItem=function(props){
         name,//	字段名，支持数组
         trigger="onChange",//设置收集字段值变更的时机,默认是onChange
         validateTrigger,//设置字段校验的时机,默认是onChange
+        getValueProps,//为子元素添加额外的属性
+        valuePropName="value",//子节点的值的属性
+        getValueFromEvent,//设置如何将 event 的值转换成字段值
     }=props;
 
     const prefixCls=usePrefixCls('FormItem',customizePrefixCls);
@@ -51,11 +72,19 @@ const FormItem=function(props){
 
     const touched=useRef(false);
 
+    const dirty=useRef(false);
+
     const errors=useRef([]);
 
     const isFieldValidating=()=>!!validatePromise.current;
 
     const isFieldTouched=()=>touched.current;
+
+    const hasName=hasValidName(name);
+
+    const mergedValidateTrigger=validateTrigger!==undefined?validateTrigger:contextValidateTrigger;
+
+    const {dispatch}=getInternalHooks(HOOK_MARK);
 
     function renderLayout(baseChildren,fieldId,meta,isRequired){
         if(noStyle && !hidden){
@@ -74,6 +103,7 @@ const FormItem=function(props){
                 />
                 <FormItemInput
                     prefixCls={prefixCls}
+                    {...meta}
                 >
                     {baseChildren}
                 </FormItemInput>
@@ -104,8 +134,103 @@ const FormItem=function(props){
     };
 
     const getControlled=(childProps={})=>{
-        const mergedValidateTrigger=validateTrigger!==undefined?validateTrigger:contextValidateTrigger;
+        
+        const value=getValue(getFieldsValue(true),getNamePath(name));
 
+        const mergedGetValueProps=getValueProps||((val)=>({[valuePropName]:val}));
+
+        const originTriggerFunc=childProps[trigger];
+
+        const control={
+            ...childProps,
+            ...mergedGetValueProps(value)
+        };
+
+        control[trigger]=(...args)=>{
+            touched.current=true;
+            dirty.current=true;
+
+            let newValue;
+            if(getValueFromEvent){
+                newValue=getValueFromEvent(...args);
+            }else{
+                newValue=defaultGetValueFromEvent(valuePropName,...args);
+            }
+
+            if(normalize){
+                newValue=normalize(newValue,value,getFieldsValue(true));
+            }
+
+            dispatch({
+                type:"updateValue",
+                namePath,
+                value:newValue
+            });
+
+            if(originTriggerFunc){
+                originTriggerFunc(...args);
+            } 
+        }
+
+        const validateTriggerList=toArray(mergedValidateTrigger || []);
+
+        validateTriggerList.forEach((triggerName)=>{
+            const originTrigger=control[triggerName];
+            control[triggerName]=(...args)=>{
+                if(originTrigger){
+                    originTrigger(...args);
+                }
+
+                if(rules &&rules.length){
+                    dispatch({
+                        type:"validateField",
+                        namePath,
+                        triggerName
+                    })
+                }
+            } 
+        })
+
+        return control;
+    }
+
+    //==================================Children=================================
+    const mergedControl={
+        ...getControlled(),
+    }
+
+    let childNode=null;
+
+    if(Array.isArray(children) && hasName){
+        childrenNode=children;
+    }else if(isValidElement(children)){
+        const childProps={...children.props,...mergedControl};
+        if(!childProps.id){
+            childProps.id=fieldId;
+        }
+         
+        const triggers=new Set([
+            ...toArray(trigger),
+            ...toArray(mergedValidateTrigger)
+        ])
+
+        triggers.forEach(eventName=>{
+            childProps[eventName]=(...args)=>{
+                mergedControl[eventName]?.(...args);
+                children.props[eventName]?.(...args);
+            }
+        });
+
+        childNode=(
+            <MemoInput
+                value={mergedControl[props.valuePropName||'value']}
+                update={updateRef.current}
+            >
+                {cloneElement(children,childProps)}
+            </MemoInput>
+        )
+    }else{
+        childNode=children;
     }
 
     return(

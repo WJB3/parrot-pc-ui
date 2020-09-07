@@ -67,3 +67,15 @@ export function cloneByNamePathList(store,namePathList){
     });
     return newStore;
 }
+
+export function containsNamePath(namePathList,namePath){
+    return namePathList && namePathList.some(path=>matchNamePath(path,namePath));
+}
+
+export function defaultGetValueFromEvent(valuePropName,...args){
+    const event=args[0];
+    if(event && event.target && valuePropName in event.target){
+        return (event.target)[valuePropName];
+    }
+    return eventl
+}
