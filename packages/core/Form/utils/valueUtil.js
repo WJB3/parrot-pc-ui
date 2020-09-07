@@ -79,3 +79,33 @@ export function defaultGetValueFromEvent(valuePropName,...args){
     }
     return eventl
 }
+
+function isObject(obj) {
+    return typeof obj === 'object' && obj !== null && Object.getPrototypeOf(obj) === Object.prototype;
+}
+
+export function setValues(store,...restValues){
+    return restValues.reduce(
+        (current,newStore)=>internalSetValues(current,newStore),
+        store
+    );
+}
+
+function internalSetValues(store,values){
+
+    const newStore=(Array.isArray(store)?[...store]:{...store});
+
+    if(!values){
+        return newStore;
+    }
+
+    Object.keys(values).forEach(key=>{
+        const prevValue=newStore[key];
+        const value=values[key];
+
+        const recursive=isObject(prevValue)&&isObject(value);
+        newStore[key]=recursive?internalSetValues(prevValue,value||{}):value;
+    })
+
+    return newStore;
+}

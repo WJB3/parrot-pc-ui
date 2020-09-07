@@ -5,7 +5,8 @@ import {
     getValue,
     cloneByNamePathList,
     setValue,
-    containsNamePath
+    containsNamePath,
+    setValues
 } from './utils/valueUtil'; 
 import {
     allPromiseFinish
@@ -151,7 +152,6 @@ export class FormStore {
     getForm = () => ({
         getFieldValue: this.getFieldValue,
         getFieldsValue: this.getFieldsValue,
-        setInitialValues:this.setInitialValues,
         getInternalHooks:this.getInternalHooks,
     });
 
@@ -234,7 +234,8 @@ export class FormStore {
             this.formHooked=true;
 
             return {
-                dispatch:this.dispatch
+                dispatch:this.dispatch,
+                setInitialValues:this.setInitialValues,
             }
         }
     }

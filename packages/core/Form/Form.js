@@ -42,8 +42,11 @@ const Form=React.forwardRef((props,ref)=>{
         setInitialValues
     }=formInstance.getInternalHooks(HOOK_MARK);
 
+    console.log(formInstance.getInternalHooks(HOOK_MARK))
+
     // Set initial value, init store value when first mount
     const mountRef = React.useRef(null);
+    console.log(setInitialValues)
     setInitialValues(initialValues, !mountRef.current);
     if (!mountRef.current) {
         mountRef.current = true;
