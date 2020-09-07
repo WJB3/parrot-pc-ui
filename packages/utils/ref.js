@@ -2,7 +2,7 @@
 
 import {
     isMemo
-} from '@packages/utils/ref';
+} from '@packages/utils/reactIs';
 import setRef from './setRef';
 
 

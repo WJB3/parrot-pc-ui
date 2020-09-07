@@ -10,6 +10,7 @@ import TransitionPage from '@packages/pages/common/TransitionPage';
 import AffixPage from '@packages/pages/navigation/AffixPage';
 import BreadcrumbPage from '@packages/pages/navigation/BreadcrumbPage';
 import GridPage from '@packages/pages/common/GridPage';
+import FormPage from '@packages/pages/data/FormPage';
 import "./index.scss";
 
 
@@ -21,5 +22,6 @@ ReactDOM.render((<HashRouter>
     <Route path="/portal"  component={(props)=><PortalPage {...props}/>} />
     <Route path="/resizeobserver"  component={(props)=><ResizeObserverPage {...props}/>} />
     <Route path="/affix"  component={(props)=><AffixPage {...props}/>} /> 
-    <Route path="/"  component={(props)=><GridPage {...props}/>} />
+    <Route path="/grid"  component={(props)=><GridPage {...props}/>} />
+    <Route path="/"  component={(props)=><FormPage {...props}/>} />
 </HashRouter>), document.getElementById("root"));

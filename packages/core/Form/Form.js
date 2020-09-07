@@ -27,6 +27,7 @@ const Form=React.forwardRef((props,ref)=>{
         //label文本的对齐方式
         wrapperCol,
         //input的栅格布局方式
+        children
     }=props;
 
     const prefixCls=usePrefixCls('Form',customizePrefixCls);

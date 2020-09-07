@@ -248,12 +248,7 @@ function FormItem(props) {
         if (Array.isArray(children) && hasName) {
           
           childNode = children;
-        } else if (isRenderProps && (!(shouldUpdate || dependencies) || hasName)) {
-           
-          
-        } else if (dependencies && !isRenderProps && !hasName) {
-           
-        } else if (isValidElement(children)) {
+        }  else if (isValidElement(children)) {
          
 
           const childProps = { ...children.props, ...mergedControl };

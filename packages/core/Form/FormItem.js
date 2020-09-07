@@ -9,9 +9,7 @@ import capitalize from '@packages/utils/capitalize';
 import FormContext from './FormContext';
 import useForm ,{HOOK_MARK} from './useForm';
 import { getNamePath } from './utils/valueUtil';
-import {
-    supportRef
-} from '@packages/utils/ref';
+ 
 import { 
     getValue,
     defaultGetValueFromEvent
@@ -65,6 +63,10 @@ const FormItem=function(props){
         getFieldsValue,
         getInternalHooks
     }=useContext(FormContext);
+
+    const updateRef = React.useRef(0);
+    
+    updateRef.current += 1;
 
     const fieldId=getFieldId(name,formName);
 

@@ -5,7 +5,8 @@ import FormContext from './FormContext';
 
 const FormItemInput=function({
     prefixCls,
-    children
+    children,
+    label
 }){
 
     if(!label) return null;

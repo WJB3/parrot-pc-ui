@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const FormContext = React.createContext({
+export default  React.createContext({
     registerForm: () => {},
     unregisterForm: () => {}
 });
