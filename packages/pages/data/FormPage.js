@@ -1,5 +1,5 @@
 import React from 'react';
-import   { Form } from 'antd';
+import  Form  from '@packages/core/Form';
 
 const layout = {
     labelCol: { span: 8 },
@@ -30,5 +30,6 @@ const Page = React.forwardRef((props, ref) => {
         </Form>
     </div>
 });
+
 
 export default Page;

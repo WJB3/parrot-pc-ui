@@ -1,7 +1,8 @@
-import React,{Fragment,useRef, useContext,isValidElement,cloneElement, useEffect} from 'react';
+import React,{Fragment,useRef, useContext,isValidElement,cloneElement, useEffect,useState} from 'react';
 import classNames from '@packages/utils/classNames'; 
 import { Row } from '@packages/core/Grid';
 import usePrefixCls from '@packages/hooks/usePrefixCls';
+import useForceUpdate from '@packages/hooks/useForceUpdate';
 import FormItemLabel from './FormItemLabel';
 import FormItemInput from './FormItemInput';
 import FormContext from './FormContext';
@@ -58,6 +59,10 @@ const FormItem=function(props){
     }=props;
 
     const prefixCls=usePrefixCls('FormItem',customizePrefixCls);
+
+    const [,forceUpdate]=useState({});
+
+    console.log("FormItem")
 
     const {
         name:formName,
@@ -181,6 +186,8 @@ const FormItem=function(props){
                 namePath:getNamePathItem(),
                 value:newValue
             });
+
+            forceUpdate({})
 
             if(originTriggerFunc){
                 originTriggerFunc(...args);
