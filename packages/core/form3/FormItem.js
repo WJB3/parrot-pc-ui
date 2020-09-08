@@ -5,13 +5,12 @@ import { Field } from 'rc-field-form';
 import FieldContext from 'rc-field-form/lib/FieldContext';
 import { supportRef } from 'rc-util/lib/ref';
 import omit from 'omit.js';
-import Row from '../grid/row';
-import { ConfigContext } from '../config-provider';  
+import Row from '../grid/row'; 
 import FormItemLabel from './FormItemLabel';
 import FormItemInput from './FormItemInput';
 import { FormContext, FormItemContext } from './context';
 import { toArray, getFieldId } from './util';
-import { cloneElement, isValidElement } from '../_util/reactNode';
+import { cloneElement, isValidElement } from 'react';
 import useFrameState from './hooks/useFrameState';
 import useItemRef from './hooks/useItemRef';
  
@@ -51,8 +50,7 @@ function FormItem(props) {
     hidden,
     ...restProps
   } = props;
-  const destroyRef = React.useRef(false);
-  const { getPrefixCls } = React.useContext(ConfigContext);
+  const destroyRef = React.useRef(false); 
   const { name: formName, requiredMark } = React.useContext(FormContext);
   const { updateItemErrors } = React.useContext(FormItemContext);
   const [domErrorVisible, innerSetDomErrorVisible] = React.useState(!!help);
@@ -82,7 +80,7 @@ function FormItem(props) {
     };
   }, []);
 
-  const prefixCls = getPrefixCls('form', customizePrefixCls);
+  const prefixCls = 'ant-form'
 
   // ======================== Errors ========================
   // Collect noStyle Field error to the top FormItem
@@ -198,6 +196,7 @@ function FormItem(props) {
   if (typeof label === 'string') {
     variables.label = label;
   }
+
 
   return (
     <Field

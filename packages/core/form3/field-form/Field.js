@@ -324,6 +324,7 @@ class Field extends React.Component {
   };
 
   getControlled = (childProps = {}) => {
+    
     const {
       trigger,
       validateTrigger,
@@ -407,6 +408,8 @@ class Field extends React.Component {
   };
 
   render() { 
+
+    
     const { children } = this.props;
 
     const { child, isFunction } = this.getOnlyChild(children);

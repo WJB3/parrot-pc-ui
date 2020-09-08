@@ -1,4 +1,4 @@
-import React,{Fragment,useRef, useContext,isValidElement,cloneElement} from 'react';
+import React,{Fragment,useRef, useContext,isValidElement,cloneElement, useEffect} from 'react';
 import classNames from '@packages/utils/classNames'; 
 import { Row } from '@packages/core/Grid';
 import usePrefixCls from '@packages/hooks/usePrefixCls';
@@ -22,6 +22,7 @@ const MemoInput=React.memo(
 );
 
 function getFieldId(namePath,formName){
+ 
     if(namePath.length) return undefined;
 
     const mergedId=namePath.join('_');
@@ -44,7 +45,7 @@ const FormItem=function(props){
         hidden,//是否隐藏字段（依然会收集和校验字段）
         style,
         required,//必填样式设置
-        rules,
+        rules,//校验规则，设置字段的校验逻辑。
         name,//	字段名，支持数组
         trigger="onChange",//设置收集字段值变更的时机,默认是onChange
         validateTrigger,//设置字段校验的时机,默认是onChange
@@ -52,6 +53,8 @@ const FormItem=function(props){
         valuePropName="value",//子节点的值的属性
         getValueFromEvent,//设置如何将 event 的值转换成字段值
         label,//
+        initialValue,//设置子元素默认值
+        normalize
     }=props;
 
     const prefixCls=usePrefixCls('FormItem',customizePrefixCls);
@@ -67,7 +70,7 @@ const FormItem=function(props){
     
     updateRef.current += 1;
 
-    const fieldId=getFieldId(name,formName);
+    const fieldId=getFieldId(toArray(name),formName); 
 
     const validatePromise=useRef(null);
 
@@ -85,7 +88,10 @@ const FormItem=function(props){
 
     const mergedValidateTrigger=validateTrigger!==undefined?validateTrigger:contextValidateTrigger;
 
-    const {dispatch}=getInternalHooks(HOOK_MARK);
+    const {
+        dispatch,
+        registerField
+    }=getInternalHooks(HOOK_MARK);
 
     function renderLayout(baseChildren,fieldId,meta,isRequired){
 
@@ -124,6 +130,11 @@ const FormItem=function(props){
             return false;
     }));
 
+    const getNamePathItem=()=>{
+
+        return getNamePath(name);
+    }
+
     const getMeta=()=>{
         let prevValidating=isFieldValidating();
 
@@ -131,7 +142,7 @@ const FormItem=function(props){
             touched:isFieldTouched(),
             validating:prevValidating,
             errors:errors.current,
-            name:getNamePath(name)
+            name:getNamePathItem()
         }
 
         return meta;
@@ -139,7 +150,7 @@ const FormItem=function(props){
 
     const getControlled=(childProps={})=>{
         
-        const value=getValue(getFieldsValue(true),getNamePath(name));
+        const value=getValue(getFieldsValue(true),getNamePathItem()); 
 
         const mergedGetValueProps=getValueProps||((val)=>({[valuePropName]:val}));
 
@@ -163,11 +174,11 @@ const FormItem=function(props){
 
             if(normalize){
                 newValue=normalize(newValue,value,getFieldsValue(true));
-            }
+            } 
 
             dispatch({
                 type:"updateValue",
-                namePath,
+                namePath:getNamePathItem(),
                 value:newValue
             });
 
@@ -188,12 +199,13 @@ const FormItem=function(props){
                 if(rules &&rules.length){
                     dispatch({
                         type:"validateField",
-                        namePath,
+                        namePath:getNamePathItem(),
                         triggerName
                     })
                 }
             } 
         })
+ 
 
         return control;
     }
@@ -223,11 +235,11 @@ const FormItem=function(props){
                 mergedControl[eventName]?.(...args);
                 children.props[eventName]?.(...args);
             }
-        });
+        }); 
 
         childNode=(
             <MemoInput
-                value={mergedControl[props.valuePropName||'value']}
+                value={mergedControl[valuePropName]}
                 update={updateRef.current}
             >
                 {cloneElement(children,childProps)}
@@ -237,6 +249,14 @@ const FormItem=function(props){
         childNode=children;
     }
  
+    useEffect(()=>{
+        registerField({
+            initialValue,
+            getNamePath:getNamePathItem,
+            rules,
+            getMeta,
+        })
+    },[])
 
     return(
         <Fragment>

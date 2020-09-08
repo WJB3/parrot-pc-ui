@@ -30,6 +30,8 @@ const Form=React.forwardRef((props,ref)=>{
         children,
         layout="horizontal",//表单布局
         initialValues,
+        onFinish,//提交表单且数据验证成功后回调事件
+        onFieldsChange,//
     }=props;
 
     const prefixCls=usePrefixCls('Form',customizePrefixCls);
@@ -39,19 +41,18 @@ const Form=React.forwardRef((props,ref)=>{
     const [formInstance]=useForm(form);
 
     const {
-        setInitialValues
-    }=formInstance.getInternalHooks(HOOK_MARK);
-
-    console.log(formInstance.getInternalHooks(HOOK_MARK))
+        setInitialValues,
+        setCallbacks
+    }=formInstance.getInternalHooks(HOOK_MARK); 
 
     // Set initial value, init store value when first mount
-    const mountRef = React.useRef(null);
-    console.log(setInitialValues)
+    const mountRef = React.useRef(null); 
+
     setInitialValues(initialValues, !mountRef.current);
+
     if (!mountRef.current) {
         mountRef.current = true;
-    }
-
+    } 
 
      // Register form into Context
     React.useEffect(() => {
@@ -60,6 +61,15 @@ const Form=React.forwardRef((props,ref)=>{
             formContext.unregisterForm(name);
         };
     }, [formContext, formInstance, name]);
+
+    setCallbacks({
+        onFinish:(values)=>{  
+            onFinish?.(values)
+        },
+        onFieldsChange:(changedFields,...rest)=>{
+            onFieldsChange?.(changedFields,...rest)
+        }
+    });
 
     const formContextValue=useMemo(()=>({
         name,
@@ -77,6 +87,8 @@ const Form=React.forwardRef((props,ref)=>{
                 onSubmit={(event) => {
                     event.preventDefault();
                     event.stopPropagation(); 
+
+                    formInstance.submit();
                 }}
                 className={classNames(
                     prefixCls,

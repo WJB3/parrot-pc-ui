@@ -15,7 +15,7 @@ const FormItemLabel=function({
         <FormContext.Consumer key="label">
             {
                 ({
-                    labelCol,
+                    labelCol={},
                     labelAlign
                 })=>{
                     return (

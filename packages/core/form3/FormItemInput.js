@@ -7,7 +7,7 @@ import useMemo from 'rc-util/lib/hooks/useMemo';
 import Col from '../grid/col'; 
 import { FormContext } from './context';
 import useCacheErrors from './hooks/useCacheErrors';
-import useForceUpdate from '../_util/hooks/useForceUpdate';
+import useForceUpdate from '@packages/hooks/useForceUpdate';
 
  
  

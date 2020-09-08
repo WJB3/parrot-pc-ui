@@ -1,26 +1,25 @@
 import * as React from 'react';
 import { useRef } from 'react';
 import raf from 'raf';
+ 
 
-type Updater<ValueType> = (prev?: ValueType) => ValueType;
-
-export default function useFrameState<ValueType>(
-  defaultValue: ValueType,
-): [ValueType, (updater: Updater<ValueType>) => void] {
+export default function useFrameState(
+  defaultValue ,
+)  {
   const [value, setValue] = React.useState(defaultValue);
-  const frameRef = useRef<number | null>(null);
-  const batchRef = useRef<Updater<ValueType>[]>([]);
+  const frameRef = useRef(null);
+  const batchRef = useRef([]);
   const destroyRef = useRef(false);
 
   React.useEffect(
     () => () => {
       destroyRef.current = true;
-      raf.cancel(frameRef.current!);
+      raf.cancel(frameRef.current);
     },
     [],
   );
 
-  function setFrameValue(updater: Updater<ValueType>) {
+  function setFrameValue(updater) {
     if (destroyRef.current) {
       return;
     }

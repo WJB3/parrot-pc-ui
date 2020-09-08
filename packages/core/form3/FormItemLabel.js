@@ -1,11 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import Col from '../grid/col'; 
-import { FormContext } from './context';
-import { useLocaleReceiver } from '../locale-provider/LocaleReceiver';
-import defaultLocale from '../locale/default';
-
- 
+import { FormContext } from './context';  
 
 const FormItemLabel  = ({
   prefixCls,
@@ -13,8 +9,7 @@ const FormItemLabel  = ({
   htmlFor,  
   required,
   requiredMark,
-}) => {
-  const [formLocale] = useLocaleReceiver('Form');
+}) => { 
 
   if (!label) return null;
 
@@ -38,8 +33,7 @@ const FormItemLabel  = ({
           labelChildren = (
             <>
               {labelChildren}
-              <span className={`${prefixCls}-item-optional`}>
-                {formLocale?.optional || defaultLocale.Form?.optional}
+              <span className={`${prefixCls}-item-optional`}> 
               </span>
             </>
           );

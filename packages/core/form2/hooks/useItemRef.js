@@ -5,14 +5,10 @@ import { InternalNamePath } from '../interface';
 
 export default function useItemRef() {
   const { itemRef } = React.useContext(FormContext);
-  const cacheRef = React.useRef<{
-    name?: string;
-    originRef?: React.Ref<any>;
-    ref?: React.Ref<any>;
-  }>({});
+  const cacheRef = React.useRef({});
 
-  function getRef(name: InternalNamePath, children: any) {
-    const childrenRef: React.Ref<React.ReactElement> =
+  function getRef(name , children) {
+    const childrenRef =
       children && typeof children === 'object' && children.ref;
     const nameStr = name.join('_');
     if (cacheRef.current.name !== nameStr || cacheRef.current.originRef !== childrenRef) {

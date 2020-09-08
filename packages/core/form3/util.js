@@ -1,4 +1,4 @@
-import { InternalNamePath } from './interface';
+ 
 
 export function toArray(candidate){
   if (candidate === undefined || candidate === false) return [];

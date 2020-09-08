@@ -81,9 +81,7 @@ const Row = React.forwardRef(function (props, ref) {
             marginBottom: gutter[1]?gutter[1]/ 2:undefined,
         }:{}),
         ...style
-    }
-
-    console.log(rowStyle)
+    } 
 
     return (
        <RowContext.Provider value={{ gutter }}>

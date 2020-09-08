@@ -14,7 +14,7 @@ const FormItemInput=function({
     return (
         <FormContext.Consumer key="input">
             {({
-                wrapperCol
+                wrapperCol={}
             })=>{
 
                 return (<Col {...wrapperCol} className={classNames(

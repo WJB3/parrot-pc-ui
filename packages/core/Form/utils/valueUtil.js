@@ -85,13 +85,14 @@ function isObject(obj) {
 }
 
 export function setValues(store,...restValues){
+ 
     return restValues.reduce(
         (current,newStore)=>internalSetValues(current,newStore),
         store
     );
 }
 
-function internalSetValues(store,values){
+function internalSetValues(store,values){ 
 
     const newStore=(Array.isArray(store)?[...store]:{...store});
 

@@ -1,23 +1,19 @@
 import * as React from 'react';
 import { useMemo } from 'react';
 import classNames from 'classnames';
-import FieldForm, { List } from 'rc-field-form';
-import { ConfigContext } from '../config-provider';
+import FieldForm, { List } from 'rc-field-form'; 
 import { FormContext } from './context';
-import useForm, { FormInstance } from './hooks/useForm';
-import SizeContext, { SizeContextProvider } from '../config-provider/SizeContext';
+import useForm, { FormInstance } from './hooks/useForm'; 
  
 
-const InternalForm  = (props, ref) => {
-  const contextSize = React.useContext(SizeContext);
-  const { getPrefixCls, direction } = React.useContext(ConfigContext);
+const InternalForm  = (props, ref) => {  
 
   const { name } = props;
 
   const {
-    prefixCls: customizePrefixCls,
+    prefixCls:customizePrefixCls,
     className = '',
-    size = contextSize,
+    size = "small",
     form, 
     labelAlign,
     labelCol,
@@ -41,7 +37,7 @@ const InternalForm  = (props, ref) => {
     return true;
   }, [hideRequiredMark, requiredMark]);
 
-  const prefixCls = getPrefixCls('form', customizePrefixCls);
+  const prefixCls ='ant-form';
 
   const formClassName = classNames(
     prefixCls,
