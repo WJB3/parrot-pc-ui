@@ -1,16 +1,16 @@
 import React,{Fragment,useRef, useContext,isValidElement,cloneElement, useEffect,useState} from 'react';
 import classNames from '@packages/utils/classNames'; 
 import { Row } from '@packages/core/Grid';
-import usePrefixCls from '@packages/hooks/usePrefixCls';
-import useForceUpdate from '@packages/hooks/useForceUpdate';
+import usePrefixCls from '@packages/hooks/usePrefixCls'; 
 import FormItemLabel from './FormItemLabel';
 import FormItemInput from './FormItemInput';
 import FormContext from './FormContext';
-import useForm ,{HOOK_MARK} from './useForm';
+import useForm ,{ HOOK_MARK } from './useForm';
 import { getNamePath } from './utils/valueUtil';
 import { 
     getValue,
-    defaultGetValueFromEvent
+    defaultGetValueFromEvent,
+    containsNamePath 
 } from './utils/valueUtil';
 import { toArray } from './utils/typeUtil';
 import "./index.scss";
@@ -18,7 +18,10 @@ import "./index.scss";
 const MemoInput=React.memo(
     ({children})=>children,  
     (prev,next)=>{
-        return prev.value===next.value && prev.update===next.update
+        console.log("MemoInput")
+        console.log(prev)
+        console.log(next)
+        return false;
     }
 );
 
@@ -33,6 +36,14 @@ function getFieldId(namePath,formName){
 
 function hasValidName(name){
     return !(name===undefined||name===null);
+}
+
+
+function requireUpdate(shouldUpdate,prev,next,prevValue,nextValue,info){
+    if(typeof shouldUpdate==='function'){
+        return shouldUpdate(prev,next,'source' in info?{source:info.source}:{});
+    }
+    return prevValue!==nextValue;
 }
 
 const FormItem=function(props){
@@ -55,14 +66,17 @@ const FormItem=function(props){
         getValueFromEvent,//设置如何将 event 的值转换成字段值
         label,//
         initialValue,//设置子元素默认值
-        normalize
+        normalize,
+        shouldUpdate,//自定义字段更新逻辑
+        dependencies=[],//设置依赖字段
+        
     }=props;
 
     const prefixCls=usePrefixCls('FormItem',customizePrefixCls);
 
     const [,forceUpdate]=useState({});
 
-    console.log("FormItem")
+    console.log(`FormItem-${name}`)
 
     const {
         name:formName,
@@ -90,6 +104,8 @@ const FormItem=function(props){
     const isFieldTouched=()=>touched.current;
 
     const hasName=hasValidName(name);
+
+    const destroy=useRef(false);
 
     const mergedValidateTrigger=validateTrigger!==undefined?validateTrigger:contextValidateTrigger;
 
@@ -135,8 +151,7 @@ const FormItem=function(props){
             return false;
     }));
 
-    const getNamePathItem=()=>{
-
+    const getNamePathItem=()=>{ 
         return getNamePath(name);
     }
 
@@ -185,10 +200,7 @@ const FormItem=function(props){
                 type:"updateValue",
                 namePath:getNamePathItem(),
                 value:newValue
-            });
-
-            forceUpdate({})
-
+            }); 
             if(originTriggerFunc){
                 originTriggerFunc(...args);
             } 
@@ -220,13 +232,14 @@ const FormItem=function(props){
     //==================================Children=================================
     const mergedControl={
         ...getControlled(),
-    }
+    } 
 
     let childNode=null;
 
     if(Array.isArray(children) && hasName){
         childrenNode=children;
     }else if(isValidElement(children)){
+ 
         const childProps={...children.props,...mergedControl};
         if(!childProps.id){
             childProps.id=fieldId;
@@ -242,8 +255,9 @@ const FormItem=function(props){
                 mergedControl[eventName]?.(...args);
                 children.props[eventName]?.(...args);
             }
-        }); 
-
+        });  
+        console.log(updateRef.current)
+        console.log(mergedControl[valuePropName])
         childNode=(
             <MemoInput
                 value={mergedControl[valuePropName]}
@@ -255,6 +269,50 @@ const FormItem=function(props){
     }else{
         childNode=children;
     }
+
+    //更新数据的方法
+    const onStoreChange=(prevStore,namePathList,info)=>{
+        const { store }=info;
+        const namePath=getNamePathItem();
+        const prevValue=getValue(prevStore||getFieldsValue(true),namePath);
+        const curValue=getValue(store||getFieldsValue(true),namePath);
+ 
+
+        const namePathMatch = namePathList && containsNamePath(namePathList, namePath);
+        console.log(`onStoreChange-${name}`)
+        // console.log(namePath)
+        // console.log(namePathList)
+        // console.log(namePathMatch)
+        console.log(store)
+
+
+        //使用setFieldsValue触发
+        if(info.type==="valueUpdate" && info.source==="enternal" && prevValue!==curValue){
+            touched.current=true;
+            dirty.current=true;
+            validatePromise.current=null;
+            errors.current=[];
+        }
+
+
+        switch(info.type){
+            case "reset":
+                break;
+            case "setFields":
+                break;
+            case "dependenciesUpdate":
+                break;
+            default:
+                if(namePathMatch
+                    ||((!dependencies.length||namePath.length||shouldUpdate)
+                    &&requireUpdate(shouldUpdate,prevStore,store,prevValue,curValue,info))){
+                        if(destroy.current) return ;
+                        forceUpdate();
+                        return ;
+                }
+                
+        }
+    }
  
     useEffect(()=>{
         registerField({
@@ -262,8 +320,16 @@ const FormItem=function(props){
             getNamePath:getNamePathItem,
             rules,
             getMeta,
+            onStoreChange:onStoreChange,
+            name:getNamePathItem()
         })
+
+        return ()=>{
+            destroy.current=true;
+        }
     },[])
+
+    console.log(childNode)
 
     return(
         <Fragment>

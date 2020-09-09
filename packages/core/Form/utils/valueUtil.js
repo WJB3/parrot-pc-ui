@@ -59,6 +59,7 @@ export function matchNamePath(namePath,changedNamePath){
     return namePath.every((nameUnit,i)=>changedNamePath[i]===nameUnit);
 }
 
+//通过传入store数据和namePath
 export function cloneByNamePathList(store,namePathList){
     let newStore={};
     namePathList.forEach(namePath=>{

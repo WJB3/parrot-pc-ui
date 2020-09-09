@@ -1,5 +1,8 @@
 import React from 'react';
 import  Form  from '@packages/core/Form';
+//import  {Form}  from 'antd';
+import Button from '@packages/core/Button';
+import axios from 'axios';
 
 const layout = {
     labelCol: { span: 8 },
@@ -7,6 +10,11 @@ const layout = {
 };
 
 const Page = React.forwardRef((props, ref) => {
+
+    const handleClick=()=>{
+        axios.get("http://erp.idodb.com/get/impower/res")
+    }
+
     return <div>
         <Form
             name="basic"
@@ -28,6 +36,8 @@ const Page = React.forwardRef((props, ref) => {
             </Form.Item>
             <button type="submit">提交</button>
         </Form>
+
+        {/* <Button onClick={handleClick}>请求</Button> */}
     </div>
 });
 

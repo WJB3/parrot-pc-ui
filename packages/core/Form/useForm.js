@@ -291,9 +291,23 @@ export class FormStore {
 
     }
 
+    setFieldsValue=(store)=>{
+        const prevStore=this.store;
+
+        if(store){
+            this.store=setValues(this.store,store);
+        }
+
+        this.notifyObservers(prevStore,null,{
+            type:"valueUpdate",
+            source:"external"
+        })
+    }
+
     getForm = () => ({
         getFieldValue: this.getFieldValue,
         getFieldsValue: this.getFieldsValue,
+        setFieldsValue:this.setFieldsValue,
         submit: this.submit,
         getInternalHooks: this.getInternalHooks,
     });
@@ -424,15 +438,19 @@ export class FormStore {
         this.preserve=preserve;
     }
 
-    updateValue = (name, value) => {
+    updateValue = (name, value) => { 
+
         const namePath = getNamePath(name);
         const prevStore = this.store;
-        this.store = setValue(this.store, namePath, value);
 
-        // this.notifyObservers(prevStore, [namePath], {
-        //     type: "valueUpdate",
-        //     source: "internal"
-        // })
+
+        this.store = setValue(this.store, namePath, value);
+ 
+
+        this.notifyObservers(prevStore, [namePath], {
+            type: "valueUpdate",
+            source: "internal"
+        })
 
         //notify dependencies children with parent update
         // const childrenFields = this.getDependencyChildrenFields(namePath);
@@ -450,19 +468,21 @@ export class FormStore {
             onValuesChange(changeValues, this.store);
         }
 
-        this.triggerOnFieldsChange([namePath ]);
+        this.triggerOnFieldsChange([namePath]);
 
 
     }
 
     notifyObservers = (prevStore, namePathList, info) => {
+ 
+
         if (this.subscribable) {
             const mergedInfo = {
                 ...info,
                 store: this.getFieldsValue(true)
             };
             this.getFieldEntities().forEach(({ onStoreChange }) => {
-                // onStoreChange(prevStore, namePathList, mergedInfo);
+                onStoreChange(prevStore, namePathList, mergedInfo);
             })
         } else {
             this.forceRootUpdate();

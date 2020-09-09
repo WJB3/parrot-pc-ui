@@ -80,6 +80,8 @@ const Form=React.forwardRef((props,ref)=>{
         ...formInstance
     }),[name])
 
+    console.log("Form")
+
     return(
         <FormContext.Provider value={formContextValue}>
             <Component
