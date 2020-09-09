@@ -11,10 +11,6 @@ const layout = {
 
 const Page = React.forwardRef((props, ref) => {
 
-    const handleClick=()=>{
-        axios.get("http://erp.idodb.com/get/impower/res")
-    }
-
     return <div>
         <Form
             name="basic"

@@ -16,14 +16,21 @@ import { toArray } from './utils/typeUtil';
 import "./index.scss";
 
 const MemoInput=React.memo(
-    ({children})=>children,  
+    ({children,childProps})=>{
+         
+      return   cloneElement(children,childProps)
+    
+    },  
     (prev,next)=>{
         console.log("MemoInput")
         console.log(prev)
         console.log(next)
-        return false;
+      
+        return prev.value===next.value && prev.update===next.update;
     }
 );
+
+let globalChildNode;
 
 function getFieldId(namePath,formName){
  
@@ -59,7 +66,7 @@ const FormItem=function(props){
         required,//必填样式设置
         rules,//校验规则，设置字段的校验逻辑。
         name,//	字段名，支持数组
-        trigger="onChange",//设置收集字段值变更的时机,默认是onChange
+        trigger="onInput",//设置收集字段值变更的时机,默认是onChange
         validateTrigger,//设置字段校验的时机,默认是onChange
         getValueProps,//为子元素添加额外的属性
         valuePropName="value",//子节点的值的属性
@@ -74,7 +81,7 @@ const FormItem=function(props){
 
     const prefixCls=usePrefixCls('FormItem',customizePrefixCls);
 
-    const [,forceUpdate]=useState({});
+    const [,forceUpdate]=useState();
 
     console.log(`FormItem-${name}`)
 
@@ -201,31 +208,11 @@ const FormItem=function(props){
                 namePath:getNamePathItem(),
                 value:newValue
             }); 
+
             if(originTriggerFunc){
                 originTriggerFunc(...args);
             } 
-        }
-
-        const validateTriggerList=toArray(mergedValidateTrigger || []);
-
-        validateTriggerList.forEach((triggerName)=>{
-            const originTrigger=control[triggerName];
-            control[triggerName]=(...args)=>{
-                if(originTrigger){
-                    originTrigger(...args);
-                }
-
-                if(rules &&rules.length){
-                    dispatch({
-                        type:"validateField",
-                        namePath:getNamePathItem(),
-                        triggerName
-                    })
-                }
-            } 
-        })
- 
-
+        } 
         return control;
     }
 
@@ -236,9 +223,7 @@ const FormItem=function(props){
 
     let childNode=null;
 
-    if(Array.isArray(children) && hasName){
-        childrenNode=children;
-    }else if(isValidElement(children)){
+    if(isValidElement(children)){
  
         const childProps={...children.props,...mergedControl};
         if(!childProps.id){
@@ -255,17 +240,23 @@ const FormItem=function(props){
                 mergedControl[eventName]?.(...args);
                 children.props[eventName]?.(...args);
             }
-        });  
-        console.log(updateRef.current)
+        });   
+
         console.log(mergedControl[valuePropName])
-        childNode=(
-            <MemoInput
-                value={mergedControl[valuePropName]}
-                update={updateRef.current}
-            >
-                {cloneElement(children,childProps)}
-            </MemoInput>
-        )
+
+        childNode=cloneElement(children,childProps)
+
+        // childNode=(
+        //     <MemoInput
+        //         value={mergedControl[valuePropName]}
+        //         update={updateRef.current}
+        //         children={children}
+        //         childProps={childProps}
+        //     >
+                
+        //     </MemoInput>
+        // )
+        
     }else{
         childNode=children;
     }
@@ -306,8 +297,10 @@ const FormItem=function(props){
                 if(namePathMatch
                     ||((!dependencies.length||namePath.length||shouldUpdate)
                     &&requireUpdate(shouldUpdate,prevStore,store,prevValue,curValue,info))){
-                        if(destroy.current) return ;
-                        forceUpdate();
+
+                        console.log("forceUpdate")
+                        // if(destroy.current) return ;
+                        forceUpdate({});
                         return ;
                 }
                 
@@ -327,9 +320,7 @@ const FormItem=function(props){
         return ()=>{
             destroy.current=true;
         }
-    },[])
-
-    console.log(childNode)
+    },[]) 
 
     return(
         <Fragment>
