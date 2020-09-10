@@ -1,4 +1,4 @@
-![哈哈](./assets/heibao.jpeg)
+![哈哈](./assets/grid/heibao.jpeg)
 
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1;'>
@@ -9,13 +9,13 @@
     
 </blockquote>
  
-# 一、Grid组件概述
+# 一、Grid珊格组件概述
 
 >我们这节课的内容是我们的Grid组件，在我们的组件库中，很多组件都用到了这个基础组件，比如我们的Form组件,这个组件的主要目的是保证页面的每个区域能够稳健地排布起来。考虑实际的场景：在一个表单中，如果是在大屏中，需要一行至少有4个input元素输入框，但是如果是在小屏中，只需要2个input输入框即可。
 
 如下图：
 
-![哈哈](./assets/grid_demo.jpg)
+![哈哈](./assets/grid/grid_demo.jpg)
 
 可以参考antd的grid组件，通过row行和col列可以将一行分成对应的不同大小、宽度的列。
 ```js
@@ -222,15 +222,16 @@ export default function capitalize(str){
 
 # 五、Row组件的编写
 
->Row组件是弹性布局属性，学习弹性盒子个人比较推荐 [阮一峰的Flex教程](http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html)
+>Row组件是基于弹性布局属性编写的，学习弹性盒子个人比较推荐 [阮一峰的Flex教程](http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html)
 
-## 1.属性align 	垂直对齐方式默认值是top
+## 1.属性align 
 
-align就是相当于align-items的角色，只是省略了baseline、stretch属性。
+align就是相当于align-items的角色，只是省略了baseline、stretch属性。垂直对齐方式默认值是top。
 
-## 2.属性justify 垂直对齐方式默认值是start
 
-justify就是相当于justify-content的角色。
+## 2.属性justify 
+
+justify就是相当于justify-content的角色,水平对齐方式默认值是start。
 
 ## 3.属性gutter 珊格之间的距离
 
@@ -280,11 +281,11 @@ justify就是相当于justify-content的角色。
 
 2. flex兼容性如下
 
-![flex兼容性](./assets/flex_support.png)
+![flex兼容性](./assets//grid/flex_support.png)
 
 3. window.matchMedia兼容性如下
 
-![window.matchMedia兼容性](./assets/matchmedia_support.png)
+![window.matchMedia兼容性](./assets/grid/matchmedia_support.png)
 
 > IE10以上基本没问题
 

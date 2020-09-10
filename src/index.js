@@ -15,13 +15,13 @@ import "./index.scss";
 
 
 ReactDOM.render((<HashRouter>
-    <Route path="/avatar"  component={(props)=><AvatarPage {...props}/>} />
-    <Route path="/button"  component={(props)=><ButtonPage {...props}/>} />
-    <Route path="/tabs"  component={(props)=><TabsPage {...props}/>} />
-    <Route path="/transitions"  component={(props)=><TransitionPage {...props}/>} />
-    <Route path="/portal"  component={(props)=><PortalPage {...props}/>} />
-    <Route path="/resizeobserver"  component={(props)=><ResizeObserverPage {...props}/>} />
-    <Route path="/affix"  component={(props)=><AffixPage {...props}/>} /> 
-    <Route path="/grid"  component={(props)=><GridPage {...props}/>} />
-    <Route path="/"  component={(props)=><FormPage {...props}/>} />
+    <Route path="/avatar" exact component={(props)=><AvatarPage {...props}/>} />
+    <Route path="/button" exact component={(props)=><ButtonPage {...props}/>} />
+    <Route path="/tabs" exact component={(props)=><TabsPage {...props}/>} />
+    <Route path="/transitions" exact component={(props)=><TransitionPage {...props}/>} />
+    <Route path="/portal" exact component={(props)=><PortalPage {...props}/>} />
+    <Route path="/resizeobserver" exact component={(props)=><ResizeObserverPage {...props}/>} />
+    <Route path="/affix" exact component={(props)=><AffixPage {...props}/>} /> 
+    <Route path="/grid" exact component={(props)=><GridPage {...props}/>} />
+    <Route path="/"  exact component={(props)=><FormPage {...props}/>} />
 </HashRouter>), document.getElementById("root"));

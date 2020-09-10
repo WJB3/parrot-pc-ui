@@ -1,12 +1,8 @@
-import React from 'react';
-import classNames from '@packages/utils/classNames';
+import React, { isValidElement } from 'react'; 
 import PropTypes from 'prop-types';
-import usePrefixCls from '@packages/hooks/usePrefixCls';
-import capitalize from '@packages/utils/capitalize';
+import usePrefixCls from '@packages/hooks/usePrefixCls'; 
 import { Transition } from 'react-transition-group';
-import { duration } from '@packages/core/styles/transitions';
-import "./index.scss";
-
+import { duration } from '@packages/core/styles/transitions'; 
 const styles = {
     entering: {
         opacity: 1,
@@ -37,11 +33,7 @@ const Fade = React.forwardRef(function (props, ref) {
         ...other
     } = props;
 
-    const prefixCls = usePrefixCls('Transition-Fade', customizePrefixCls);
-
     const handleEnter = function(node, isAppearing){ 
-       
- 
         node.style.webkitTransition = `opacity ${timeout && timeout.enter?timeout.enter:timeout}ms`;
         node.style.transition =`opacity ${timeout && timeout.enter?timeout.enter:timeout}ms`;
 
@@ -58,9 +50,11 @@ const Fade = React.forwardRef(function (props, ref) {
 
     };
 
+    
+
     return (
-        <TransitionComponent
-            appear
+        <TransitionComponent  
+        
             in={visibleProp}
             onEnter={handleEnter}
             onEntered={(node, isAppearing) => onEntered?.(node, isAppearing)}
@@ -72,14 +66,14 @@ const Fade = React.forwardRef(function (props, ref) {
             {...other}
         >
             {
-                (state, childProps) => {
+                (state, childProps) => {  
                     return React.cloneElement(children, {
                         style: {
                             opacity: 0,
                             visibility: state === 'exited' && !visibleProp ? 'hidden' : undefined,
                             ...style,
                             ...styles[state],
-                            ...children.props.style
+                            ...children.props?.style
                         },
                         ref:ref,
                         ...childProps

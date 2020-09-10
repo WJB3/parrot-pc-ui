@@ -5,6 +5,11 @@ $prefixClsRow:"#{$global-prefix}-Row";
 $prefixClsCol:"#{$global-prefix}-Col";
 
 .#{$prefixClsRow}{
+
+    *{
+        box-sizing: border-box;
+    }
+
     display: flex;
     flex-flow: row wrap; 
 
