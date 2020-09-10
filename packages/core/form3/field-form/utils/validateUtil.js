@@ -1,18 +1,11 @@
 import RawAsyncValidator from 'async-validator';
-import * as React from 'react';
-import warning from 'rc-util/lib/warning';
-import {
-  InternalNamePath,
-  ValidateOptions,
-  ValidateMessages,
-  RuleObject,
-  StoreValue,
-} from '../interface';
+import * as React from 'react'; 
+ 
 import { setValues } from './valueUtil';
 import { defaultValidateMessages } from './messages';
 
 // Remove incorrect original ts define
-const AsyncValidator;
+const AsyncValidator=RawAsyncValidator;
 
 /**
  * Replace with template.
@@ -62,7 +55,7 @@ function convertMessages(
   }
   /* eslint-enable */
 
-  return fillTemplate(setValues({}, defaultValidateMessages, messages)) as ValidateMessages;
+  return fillTemplate(setValues({}, defaultValidateMessages, messages)) ;
 }
 
 async function validateRule(
@@ -153,10 +146,7 @@ export function validateRules(
         const wrappedCallback = (...args ) => {
           // Wait a tick to make sure return type is a promise
           Promise.resolve().then(() => {
-            warning(
-              !hasPromise,
-              'Your validator function has already return a promise. `callback` will be ignored.',
-            );
+          
 
             if (!hasPromise) {
               callback(...args);
@@ -169,11 +159,7 @@ export function validateRules(
         hasPromise =
           promise && typeof promise.then === 'function' && typeof promise.catch === 'function';
 
-        /**
-         * 1. Use promise as the first priority.
-         * 2. If promise not exist, use callback with warning instead
-         */
-        warning(hasPromise, '`callback` is deprecated. Please return a promise instead.');
+        
 
         if (hasPromise) {
           promise 

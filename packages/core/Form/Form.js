@@ -4,6 +4,7 @@ import usePrefixCls from '@packages/hooks/usePrefixCls';
 import FormContext from './FormContext';
 import useForm ,{HOOK_MARK} from './useForm';
 import capitalize from '@packages/utils/capitalize';
+import { defaultValidateMessages } from './utils/message';
 import "./index.scss";
 
 const Form=React.forwardRef((props,ref)=>{
@@ -32,6 +33,7 @@ const Form=React.forwardRef((props,ref)=>{
         initialValues,
         onFinish,//提交表单且数据验证成功后回调事件
         onFieldsChange,//
+        validateMessages=defaultValidateMessages,//验证提示模板
     }=props;
 
     const prefixCls=usePrefixCls('Form',customizePrefixCls);
@@ -42,13 +44,16 @@ const Form=React.forwardRef((props,ref)=>{
 
     const {
         setInitialValues,
-        setCallbacks
+        setCallbacks,
+        setValidateMessages
     }=formInstance.getInternalHooks(HOOK_MARK); 
 
     // Set initial value, init store value when first mount
     const mountRef = React.useRef(null); 
 
     setInitialValues(initialValues, !mountRef.current);
+
+    setValidateMessages(validateMessages);
 
     if (!mountRef.current) {
         mountRef.current = true;
@@ -78,15 +83,13 @@ const Form=React.forwardRef((props,ref)=>{
         wrapperCol,
         validateTrigger,
         ...formInstance
-    }),[name])
-
-    console.log("Form")
+    }),[name]) 
 
     return(
         <FormContext.Provider value={formContextValue}>
             <Component
                 id={name}
-                onSubmit={(event) => {
+                onSubmit={(event) => { 
                     event.preventDefault();
                     event.stopPropagation(); 
 

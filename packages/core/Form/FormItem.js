@@ -13,24 +13,15 @@ import {
     containsNamePath 
 } from './utils/valueUtil';
 import { toArray } from './utils/typeUtil';
+import { validateRules as validateRulesUtil } from './utils/validateUtil';
 import "./index.scss";
 
 const MemoInput=React.memo(
-    ({children,childProps})=>{
-         
-      return   cloneElement(children,childProps)
-    
-    },  
-    (prev,next)=>{
-        console.log("MemoInput")
-        console.log(prev)
-        console.log(next)
-      
+    ({children})=> children,
+    (prev,next)=>{ 
         return prev.value===next.value && prev.update===next.update;
     }
-);
-
-let globalChildNode;
+); 
 
 function getFieldId(namePath,formName){
  
@@ -64,7 +55,7 @@ const FormItem=function(props){
         hidden,//是否隐藏字段（依然会收集和校验字段）
         style,
         required,//必填样式设置
-        rules,//校验规则，设置字段的校验逻辑。
+        rules=[],//校验规则，设置字段的校验逻辑。
         name,//	字段名，支持数组
         trigger="onInput",//设置收集字段值变更的时机,默认是onChange
         validateTrigger,//设置字段校验的时机,默认是onChange
@@ -76,7 +67,7 @@ const FormItem=function(props){
         normalize,
         shouldUpdate,//自定义字段更新逻辑
         dependencies=[],//设置依赖字段
-        
+        validateFirst=false,//当某一规则校验不通过时，是否停止剩下的规则的校验
     }=props;
 
     const prefixCls=usePrefixCls('FormItem',customizePrefixCls);
@@ -202,6 +193,7 @@ const FormItem=function(props){
             if(normalize){
                 newValue=normalize(newValue,value,getFieldsValue(true));
             } 
+ 
 
             dispatch({
                 type:"updateValue",
@@ -240,22 +232,16 @@ const FormItem=function(props){
                 mergedControl[eventName]?.(...args);
                 children.props[eventName]?.(...args);
             }
-        });   
+        });      
 
-        console.log(mergedControl[valuePropName])
-
-        childNode=cloneElement(children,childProps)
-
-        // childNode=(
-        //     <MemoInput
-        //         value={mergedControl[valuePropName]}
-        //         update={updateRef.current}
-        //         children={children}
-        //         childProps={childProps}
-        //     >
-                
-        //     </MemoInput>
-        // )
+        childNode=(
+            <MemoInput
+                value={mergedControl[valuePropName]}
+                update={updateRef.current} 
+            >
+                {cloneElement(children,childProps)}
+            </MemoInput>
+        )
         
     }else{
         childNode=children;
@@ -267,15 +253,8 @@ const FormItem=function(props){
         const namePath=getNamePathItem();
         const prevValue=getValue(prevStore||getFieldsValue(true),namePath);
         const curValue=getValue(store||getFieldsValue(true),namePath);
- 
-
-        const namePathMatch = namePathList && containsNamePath(namePathList, namePath);
-        console.log(`onStoreChange-${name}`)
-        // console.log(namePath)
-        // console.log(namePathList)
-        // console.log(namePathMatch)
-        console.log(store)
-
+  
+        const namePathMatch = namePathList && containsNamePath(namePathList, namePath); 
 
         //使用setFieldsValue触发
         if(info.type==="valueUpdate" && info.source==="enternal" && prevValue!==curValue){
@@ -297,15 +276,49 @@ const FormItem=function(props){
                 if(namePathMatch
                     ||((!dependencies.length||namePath.length||shouldUpdate)
                     &&requireUpdate(shouldUpdate,prevStore,store,prevValue,curValue,info))){
-
-                        console.log("forceUpdate")
-                        // if(destroy.current) return ;
+ 
+                        if(destroy.current) return ;
                         forceUpdate({});
                         return ;
                 }
                 
         }
     }
+
+    const validateRules=(options)=>{ 
+
+        const namePath=getNamePathItem();
+
+        const promise=validateRulesUtil(
+            namePath,
+            getValue(getFieldsValue(true),getNamePathItem()),
+            rules,
+            options,
+            validateFirst
+        );
+
+        dirty.current=true;
+        validatePromise.current=promise;
+        errors.current=[];
+
+        console.log(promise);
+
+        promise
+            .catch(e=>e)
+            .then((promiseErrors=[])=>{
+                if(validatePromise===promise){
+                    validatePromise.current=null;
+                    errors.current=promiseErrors;
+
+                    if(destroy.current) return;
+                    forceUpdate({})
+                }
+        })
+
+        return promise;
+    }
+
+  
  
     useEffect(()=>{
         registerField({
@@ -314,7 +327,8 @@ const FormItem=function(props){
             rules,
             getMeta,
             onStoreChange:onStoreChange,
-            name:getNamePathItem()
+            name:getNamePathItem(),
+            validateRules:validateRules
         })
 
         return ()=>{

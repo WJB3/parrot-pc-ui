@@ -21,6 +21,7 @@ const Page = React.forwardRef((props, ref) => {
             <Form.Item
                 label="姓名"
                 name="username" 
+                rules={[{ required: true, message: 'Please input your username!' }]}
             >
                 <input />
             </Form.Item> 
@@ -30,7 +31,7 @@ const Page = React.forwardRef((props, ref) => {
             >
                 <input />
             </Form.Item>
-            <button type="submit">提交</button>
+            <button>提交</button>
         </Form>
 
         {/* <Button onClick={handleClick}>请求</Button> */}

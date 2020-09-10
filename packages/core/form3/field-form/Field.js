@@ -91,19 +91,7 @@ class Field extends React.Component {
 
     return name !== undefined ? [...prefixName, ...name] : [];
   };
-
-  getRules = () => {
-    const { rules = [] } = this.props;
-
-    return rules.map(
-      (rule) => {
-        if (typeof rule === 'function') {
-          return rule(this.context);
-        }
-        return rule;
-      },
-    );
-  };
+ 
 
   reRender() {
     if (this.destroy) return;
@@ -229,13 +217,12 @@ class Field extends React.Component {
   };
 
   validateRules = (options) => {
-    const { validateFirst = false, messageVariables } = this.props;
+    const { validateFirst = false, messageVariables,rules } = this.props;
     const { triggerName } = (options || {});
     const namePath = this.getNamePath();
-
-    let filteredRules = this.getRules();
+  
     if (triggerName) {
-      filteredRules = filteredRules.filter((rule) => {
+      rules = rules.filter((rule) => {
         const { validateTrigger } = rule;
         if (!validateTrigger) {
           return true;
@@ -248,7 +235,7 @@ class Field extends React.Component {
     const promise = validateRules(
       namePath,
       this.getValue(),
-      filteredRules,
+      rules,
       options,
       validateFirst,
       messageVariables,

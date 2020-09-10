@@ -1,8 +1,14 @@
 ![哈哈](./assets/heibao.jpeg)
 
->蹭一波热度，瓦坎达forever哈哈哈😂。最近一直在忙着写自己的组件库，但是由于写的组件越来越多，如果不及时地做总结的话，很快就会遗忘之前写过的代码。本人只是记录写组件的过程，认可也大程度的抄袭了antd的相关代码，所以也相当于ANTD源码解析，大佬勿喷。
 
-
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1;'>
+    <div>
+        <div><i>Every breath you take is mercy from me.</i></div>
+        <div style="text-align:right;"><b>——Marvel·Black Panther</b></div>
+    <div> 
+    
+</blockquote>
+ 
 # 一、Grid组件概述
 
 >我们这节课的内容是我们的Grid组件，在我们的组件库中，很多组件都用到了这个基础组件，比如我们的Form组件,这个组件的主要目的是保证页面的每个区域能够稳健地排布起来。考虑实际的场景：在一个表单中，如果是在大屏中，需要一行至少有4个input元素输入框，但是如果是在小屏中，只需要2个input输入框即可。
@@ -36,7 +42,7 @@
 
 # 二、重点Hook:useBreakpoint介绍
 
-能够根据屏幕大小进行自适应栅格是重要的一个功能，那么Grid是怎么做的呢？antd内部有一个hooks函数:useBreakpoint。这个hooks函数引用了一个工具类函数：
+该Hooks功能：能够根据屏幕大小进行自适应栅格是重要的一个功能，那么Grid是怎么做的呢？antd内部有一个hooks函数:useBreakpoint。这个hooks函数引用了一个工具类函数：
 ```js
 
 //ResponsiveObserve 工具类函数
@@ -122,7 +128,7 @@ export default function useBreakpoint(){
 
 1. [Window.matchMedia()](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/matchMedia)Api可以监听媒体查询条件的变化，通过屏幕的变化来。其中mql对象中的监听函数有一个方法matches，表示当前是否匹配这个媒体查询。
 2. useBreakpoint在每次媒体查询条件匹配变化的时候，会重新触发setScreens设置屏幕。
-3. 执行流程分析：useEffect(()=>{},[])相当于componentDidMount，全文中只执行一次->调用subscribe方法，传递一个改变screens的方法->进入subscribe方法，此时subscribers是一个空Map,从而调用register方法->循环屏幕媒体查询调用dispatch方法->将对应的媒体查询结果赋值给内部变量screens->将func存到subscribers变量里面，执行func来改变屏幕->之后每一次屏幕的修改都会被matchMedia监听到，然后触发dispatch方法->subscribers.forEach(func=>func(screens))执行存在subscribers里面的函数func->即修改了state,state变化，页面会重新渲染。
+3. 执行流程分析：useEffect(()=>{},[])相当于class组件中的componentDidMount，全文中只执行一次->调用subscribe方法，传递一个改变screens的方法->进入subscribe方法，此时subscribers是一个空Map,从而调用register方法->循环屏幕媒体查询调用dispatch方法->将对应的媒体查询结果赋值给内部变量screens->将func存到subscribers变量里面，执行func来改变屏幕->之后每一次屏幕的修改都会被matchMedia监听到，然后触发dispatch方法->subscribers.forEach(func=>func(screens))执行存在subscribers里面的函数func->即修改了state,state变化，页面会重新渲染。
 
 # 三、RowContext的创建
 
@@ -245,9 +251,7 @@ justify就是相当于justify-content的角色。
 
 ## 2.属性span 栅格占位格数，为 0 时相当于 display: none
 
-通过弹性盒子元素属性:`flex:0 0 100%/(24/$i)`(每一行有24格栏栅)即可设置
-
-## 3.属性gutter 
+通过弹性盒子元素属性:`flex:0 0 100%/(24/$i)`(每一行有24格栏栅)即可设置 
 
 > flex属性有三个参数：第一个参数flex-grow定义项目的放大比例,第二个参数flex-shrink定义项目的缩小比例，第三个参数flex-basis属性定义了在分配多余空间之前，项目占据的主轴空间。
 

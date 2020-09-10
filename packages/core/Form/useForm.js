@@ -13,7 +13,6 @@ import {
 } from './utils/asyncUtil'
 import NameMap from './utils/NameMap';
 import useForceUpdate from '@packages/hooks/useForceUpdate';
-import { defaultValidateMessages } from '../form3/field-form/utils/messages';
 
 export const HOOK_MARK = "FORM_INTERNAL_HOOKS";
 
@@ -35,12 +34,13 @@ export class FormStore {
 
     callbacks = {};
 
-    preserve=null;
+    preserve = null;
+
+    validateMessages = null;
 
     constructor(forceRootUpdate) {
         this.forceRootUpdate = forceRootUpdate;
-    }
-
+    } 
     //=========== value =============//
 
     getFieldValue = (name) => {
@@ -166,7 +166,7 @@ export class FormStore {
 
     submit = () => {
         this.validateFields()
-            .then(values => {
+            .then(values => { 
                 const { onFinish } = this.callbacks;
                 if (onFinish) {
                     try {
@@ -176,7 +176,7 @@ export class FormStore {
                     }
                 }
             })
-            .catch(e => {
+            .catch(e => { 
                 const { onFinishFailed } = this.callbacks;
                 if (onFinishFailed) {
                     onFinishFailed(e);
@@ -188,8 +188,7 @@ export class FormStore {
         const { onFieldsChange } = this.callbacks;
 
         if (onFieldsChange) {
-            const fields = this.getFields();
-
+            const fields = this.getFields(); 
 
             const changedFields = fields.filter(({ name: fieldName }) =>
                 containsNamePath(namePathList, fieldName)
@@ -291,35 +290,37 @@ export class FormStore {
 
     }
 
-    setFieldsValue=(store)=>{
-        const prevStore=this.store;
+    setFieldsValue = (store) => {
+        const prevStore = this.store;
 
-        if(store){
-            this.store=setValues(this.store,store);
+        if (store) {
+            this.store = setValues(this.store, store);
         }
 
-        this.notifyObservers(prevStore,null,{
-            type:"valueUpdate",
-            source:"external"
+        this.notifyObservers(prevStore, null, {
+            type: "valueUpdate",
+            source: "external"
         })
     }
 
     getForm = () => ({
         getFieldValue: this.getFieldValue,
         getFieldsValue: this.getFieldsValue,
-        setFieldsValue:this.setFieldsValue,
+        setFieldsValue: this.setFieldsValue,
         submit: this.submit,
         getInternalHooks: this.getInternalHooks,
     });
 
     //===================validateFields================================
-    validateFields = (nameList, options) => {
+    validateFields = (nameList) => {
+        //判断是否有提供nameList
         const provideNameList = !!nameList;
         const namePathList = provideNameList ? nameList.map(getNamePath) : [];
 
-        const promiseList = []; 
+        const promiseList = [];
 
         this.getFieldEntities(true).forEach((field) => {
+
             if (!provideNameList) {
                 namePathList.push(field.getNamePath());
             }
@@ -330,14 +331,13 @@ export class FormStore {
 
             const fieldNamePath = field.getNamePath();
 
+            console.log(!provideNameList);
+
             if (!provideNameList || containsNamePath(namePathList, fieldNamePath)) {
                 const promise = field.validateRules({
-                    validateMessages: {
-                        ...defaultValidateMessages,
-                        ...this.validateMessages
-                    },
-                    ...options,
+                    validateMessages:this.validateMessages
                 })
+ 
 
                 promiseList.push(
                     promise
@@ -351,8 +351,10 @@ export class FormStore {
                 )
             }
         })
+
+  
         const summaryPromise = allPromiseFinish(promiseList);
-       
+
         this.lastValidatePromise = summaryPromise;
 
         summaryPromise
@@ -364,8 +366,6 @@ export class FormStore {
                 });
                 this.triggerOnFieldsChange(resultNamePathList, results);
             });
-
- 
 
         const returnPromise = summaryPromise
             .then(
@@ -385,8 +385,6 @@ export class FormStore {
                 })
             })
 
-            console.log(returnPromise)
-
         returnPromise.catch(e => e);
         return returnPromise;
     }
@@ -400,7 +398,8 @@ export class FormStore {
                 dispatch: this.dispatch,
                 setInitialValues: this.setInitialValues,
                 setCallbacks: this.setCallbacks,
-                setPreserve:this.setPreserve,
+                setPreserve: this.setPreserve,
+                setValidateMessages: this.setValidateMessages,
                 registerField: this.registerField,
             }
         }
@@ -434,18 +433,24 @@ export class FormStore {
         this.callbacks = callbacks;
     }
 
-    setPreserve=(preserve)=>{
-        this.preserve=preserve;
+    setPreserve = (preserve) => {
+        this.preserve = preserve;
     }
 
-    updateValue = (name, value) => { 
+    setValidateMessages = (validateMessages) => {
+        this.validateMessages = validateMessages;
+    }
+
+    updateValue = (name, value) => {
 
         const namePath = getNamePath(name);
         const prevStore = this.store;
 
 
         this.store = setValue(this.store, namePath, value);
- 
+
+        console.log(this.store)
+
 
         this.notifyObservers(prevStore, [namePath], {
             type: "valueUpdate",
@@ -473,9 +478,7 @@ export class FormStore {
 
     }
 
-    notifyObservers = (prevStore, namePathList, info) => {
- 
-
+    notifyObservers = (prevStore, namePathList, info) => { 
         if (this.subscribable) {
             const mergedInfo = {
                 ...info,
