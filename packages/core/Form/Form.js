@@ -76,6 +76,10 @@ const Form=React.forwardRef((props,ref)=>{
         }
     });
 
+    React.useEffect(()=>()=>{
+        //....
+    },[num])
+
     const formContextValue=useMemo(()=>({
         name,
         labelCol,
