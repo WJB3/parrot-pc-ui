@@ -3,7 +3,7 @@ import Form from '@packages/core/Form';
 //import  {Form}  from 'antd';
 import Button from '@packages/core/Button';
 import axios from 'axios';
-import { Transition } from 'react-transition-group';
+import { Transition,SwitchTransition } from 'react-transition-group';
 import { Fade } from '@packages/core/Transition';
 
 const layout = {
@@ -27,10 +27,11 @@ const Page = React.forwardRef((props, ref) => {
 
     const [children,setChildren]=useState([]);
     
+    console.log(visible)
 
     return <div>
        
-
+   
         <Fade
             in={visible}
             onEnter={() => console.log("onenter")}
@@ -39,15 +40,15 @@ const Page = React.forwardRef((props, ref) => {
             onExit={() => console.log("onexit")}
             onExiting={() => console.log("onexiting")}
             onExited={() => console.log("onexited")}
-            timeout={1000}  
-            mountOnEnter
+            timeout={1000}   
+            mountOnEnter 
         >
             <div style={{
                 width: 100,
                 height: 100,
                 backgroundColor: 'red',
             }}></div>
-        </Fade>
+        </Fade> 
 
         <Button onClick={() => setVisible(!visible)}>切换</Button>
     </div>

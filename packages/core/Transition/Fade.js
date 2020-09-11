@@ -1,6 +1,5 @@
 import React, { isValidElement } from 'react'; 
-import PropTypes from 'prop-types';
-import usePrefixCls from '@packages/hooks/usePrefixCls'; 
+import PropTypes from 'prop-types'; 
 import { Transition } from 'react-transition-group';
 import { duration } from '@packages/core/styles/transitions'; 
 const styles = {
@@ -33,7 +32,7 @@ const Fade = React.forwardRef(function (props, ref) {
         ...other
     } = props;
 
-    const handleEnter = function(node, isAppearing){ 
+    const handleEnter = function(node, isAppearing){  
         node.style.webkitTransition = `opacity ${timeout && timeout.enter?timeout.enter:timeout}ms`;
         node.style.transition =`opacity ${timeout && timeout.enter?timeout.enter:timeout}ms`;
 
@@ -49,12 +48,10 @@ const Fade = React.forwardRef(function (props, ref) {
         onExit?.(node,isAppearing);
 
     };
-
-    
+ 
 
     return (
         <TransitionComponent  
-        
             in={visibleProp}
             onEnter={handleEnter}
             onEntered={(node, isAppearing) => onEntered?.(node, isAppearing)}

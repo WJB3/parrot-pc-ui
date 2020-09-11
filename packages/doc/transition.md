@@ -38,13 +38,13 @@
 
 >默认情况下，子组件将与父Transition组件一起立即安装。意思是说默认他默认是存在节点，只是不显示而已，如果设成true的话，节点默认一开始是不在dom树上的，在in为true时，才将节点挂在dom树上。
 
-### 5.unmountOnEnter
+### 5.unmountOnExit
 
 >默认情况下，子组件在达到'exited'状态后会保持挂载状态。如果将这个设置为true时，当组件“离开”这个页面时，dom树上的这个节点会卸载。
 
 ### 6.appear
 
->默认情况下，子组件在初次安装时不执行回车转换。
+>默认情况下，子组件在初次安装时不执行回车转换。意思是如果这个节点刚被挂在到节点上时，是默认没有过渡转换的，也就是设置成mountOnEnter时。
 
 ### 7.enter
 
@@ -88,3 +88,17 @@
 ### 16、onExited
 
 > 应用“退出”状态后触发的回调。
+
+## 2.CSSTransition组件
+
+>CSSTransition组件继承了组件的所有功能，受到vue-animate,ng-animate库的启发，增加了一个classNames属性。即不用通过style属性或js属性控制样式。
+
+动画classNames应用于出现，进入，退出或已完成过渡的组件。可以提供一个名称，该名称将在每个阶段后缀，例如classNames="fade"适用：
+
+```js
+fade-appear，fade-appear-active，fade-appear-done
+
+fade-enter，fade-enter-active，fade-enter-done
+
+fade-exit，fade-exit-active，fade-exit-done
+```
