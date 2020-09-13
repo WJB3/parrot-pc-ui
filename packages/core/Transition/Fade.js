@@ -1,7 +1,9 @@
-import React, { isValidElement } from 'react'; 
+import React  from 'react'; 
 import PropTypes from 'prop-types'; 
 import { Transition } from 'react-transition-group';
 import { duration } from '@packages/core/styles/transitions'; 
+import { reflow } from './utils';
+
 const styles = {
     entering: {
         opacity: 1,
@@ -32,9 +34,12 @@ const Fade = React.forwardRef(function (props, ref) {
         ...other
     } = props;
 
-    const handleEnter = function(node, isAppearing){  
-        node.style.webkitTransition = `opacity ${timeout && timeout.enter?timeout.enter:timeout}ms`;
-        node.style.transition =`opacity ${timeout && timeout.enter?timeout.enter:timeout}ms`;
+    const handleEnter = function(node, isAppearing){   
+
+        reflow(node);
+
+        node.style.webkitTransition = `opacity ${timeout && timeout.enter?timeout.enter:timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`;
+        node.style.transition =`opacity ${timeout && timeout.enter?timeout.enter:timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`;
 
         onEnter?.(node,isAppearing);
 
@@ -42,8 +47,8 @@ const Fade = React.forwardRef(function (props, ref) {
 
     const handleExit = function(node, isAppearing){ 
  
-        node.style.webkitTransition = `opacity ${timeout && timeout.exit?timeout.exit:timeout}ms`;
-        node.style.transition =  `opacity ${timeout && timeout.exit?timeout.exit:timeout}ms`;
+        node.style.webkitTransition = `opacity ${timeout && timeout.exit?timeout.exit:timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`;
+        node.style.transition =  `opacity ${timeout && timeout.exit?timeout.exit:timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`;
 
         onExit?.(node,isAppearing);
 
@@ -51,7 +56,7 @@ const Fade = React.forwardRef(function (props, ref) {
  
 
     return (
-        <TransitionComponent  
+        <TransitionComponent   
             in={visibleProp}
             onEnter={handleEnter}
             onEntered={(node, isAppearing) => onEntered?.(node, isAppearing)}
@@ -63,7 +68,7 @@ const Fade = React.forwardRef(function (props, ref) {
             {...other}
         >
             {
-                (state, childProps) => {  
+                (state, childProps) => {   
                     return React.cloneElement(children, {
                         style: {
                             opacity: 0,

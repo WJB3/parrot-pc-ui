@@ -42,9 +42,9 @@
 
 >默认情况下，子组件在达到'exited'状态后会保持挂载状态。如果将这个设置为true时，当组件“离开”这个页面时，dom树上的这个节点会卸载。
 
-### 6.appear
+### 6.appear（不准确）
 
->默认情况下，子组件在初次安装时不执行回车转换。意思是如果这个节点刚被挂在到节点上时，是默认没有过渡转换的，也就是设置成mountOnEnter时。
+>默认情况下，子组件在初次安装时不执行回车转换。意思是如果这个节点刚被挂在到节点上时，是默认没有过渡转换的，也就是设置成mountOnEnter时。（事实上我测试并无作用）
 
 ### 7.enter
 
@@ -102,3 +102,703 @@ fade-enter，fade-enter-active，fade-enter-done
 
 fade-exit，fade-exit-active，fade-exit-done
 ```
+
+## 3.CSSTransition组件
+
+>我们这里并没有使用到，所以我们在这里就不多做介绍了，大家可以自己看官网哦！！
+
+
+## 4.TransitionGroup组件
+
+>我们这里并没有使用到，所以我们在这里就不多做介绍了，大家可以自己看官网哦！！
+
+
+# 三、Fade淡入淡出组件（从透明到不透明）
+> 就是常规的渐隐操作，就是opacity由0 - > 1的过程，或者opacity1 -> 0的过程
+
+```js
+import React, { isValidElement } from 'react';  
+import { Transition } from 'react-transition-group';
+import { duration } from '@packages/core/styles/transitions'; 
+
+const reflow=(node)=>node.scrollTop;
+
+const styles = {
+    entering: {
+        opacity: 1,
+    },
+    entered: {
+        opacity: 1,
+    },
+};
+
+const Fade = React.forwardRef(function (props, ref) {
+    const {
+        prefixCls: customizePrefixCls,
+        className,
+        TransitionComponent = Transition,
+        children,
+        visible: visibleProp,
+        onEnter,
+        onEntered,
+        onEntering,
+        onExit,
+        onExited,
+        onExiting,
+        timeout = {
+            enter: duration.enteringScreen,
+            exit: duration.leavingScreen
+        },
+        style,
+        ...other
+    } = props;
+
+    const handleEnter = function(node, isAppearing){   
+
+        reflow(node);
+
+        node.style.webkitTransition = `opacity ${timeout && timeout.enter?timeout.enter:timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`;
+        node.style.transition =`opacity ${timeout && timeout.enter?timeout.enter:timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`;
+
+        onEnter?.(node,isAppearing);
+
+    };
+
+    const handleExit = function(node, isAppearing){ 
+ 
+        node.style.webkitTransition = `opacity ${timeout && timeout.exit?timeout.exit:timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`;
+        node.style.transition =  `opacity ${timeout && timeout.exit?timeout.exit:timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`;
+
+        onExit?.(node,isAppearing);
+
+    };
+ 
+
+    return (
+        <TransitionComponent   
+            in={visibleProp}
+            onEnter={handleEnter}
+            onEntered={(node, isAppearing) => onEntered?.(node, isAppearing)}
+            onEntering={(node, isAppearing) => onEntering?.(node, isAppearing)}
+            onExit={handleExit}
+            onExited={(node, isAppearing) => onExited?.(node, isAppearing)}
+            onExiting={(node, isAppearing) => onExiting?.(node, isAppearing)}
+            timeout={timeout}
+            {...other}
+        >
+            {
+                (state, childProps) => {   
+                    return React.cloneElement(children, {
+                        style: {
+                            opacity: 0,
+                            visibility: state === 'exited' && !visibleProp ? 'hidden' : undefined,
+                            ...style,
+                            ...styles[state],
+                            ...children.props?.style
+                        },
+                        ref:ref,
+                        ...childProps
+                    })
+                }
+            }
+        </TransitionComponent>
+    )
+});
+
+ 
+
+export default Fade;
+```
+
+要点分析：
+1. 通过onEnter(表示在安装前)和onExit(表示在卸载前后)给节点设置过渡CSS,通过状态的不同给节点设置不同的opacity,刚开始节点opacity为0，然后在entering状态下设置opacity:1,注意此时需要在entered下也设置opacity:1，使节点显示。
+2. 当节点初次被挂载到节点上时，设置过渡效果会失效，需要上文中的过渡效果，具体原因暂未得知，希望大佬能解答哦。
+
+
+
+# 四、Zoom组件放大组件（从子元素的中心向外扩展）
+
+直接上code吧
+
+```js
+import React from 'react';
+import PropTypes from 'prop-types'; 
+import { Transition } from 'react-transition-group';
+import { duration } from '@packages/core/styles/transitions';
+import "./index.scss";
+
+const styles = {
+    entering: {
+      transform: 'none',
+    },
+    entered: {
+      transform: 'none',
+    },
+};
+
+const reflow=node=>node.scrollTop;
+
+const Zoom = React.forwardRef(function (props, ref) {
+    const {
+        prefixCls: customizePrefixCls,
+        className,
+        TransitionComponent = Transition,
+        children,
+        visible: visibleProp,
+        onEnter,
+        onEntered,
+        onEntering,
+        onExit,
+        onExited,
+        onExiting,
+        timeout = {
+            enter: duration.enteringScreen,
+            exit: duration.leavingScreen
+        },
+        style,
+        ...other
+    } = props; 
+
+
+    
+    const handleEnter = function(node, isAppearing){ 
+       
+        reflow(node);
+        
+        node.style.webkitTransition = `transform ${timeout && timeout.enter?timeout.enter:timeout}ms`;
+        node.style.transition =`transform ${timeout && timeout.enter?timeout.enter:timeout}ms`;
+
+        onEnter?.(node,isAppearing);
+
+    };
+
+    const handleExit = function(node, isAppearing){ 
+ 
+        node.style.webkitTransition = `transform ${timeout && timeout.exit?timeout.exit:timeout}ms`;
+        node.style.transition =  `transform ${timeout && timeout.exit?timeout.exit:timeout}ms`;
+
+        onExit?.(node,isAppearing);
+
+    };
+
+    return (
+        <TransitionComponent 
+            in={visibleProp}
+            onEnter={handleEnter}
+            onEntered={(node, isAppearing) => onEntered?.(node, isAppearing)}
+            onEntering={(node, isAppearing) => onEntering?.(node, isAppearing)}
+            onExit={handleExit}
+            onExited={(node, isAppearing) => onExited?.(node, isAppearing)}
+            onExiting={(node, isAppearing) => onExiting?.(node, isAppearing)}
+            timeout={timeout}
+            {...other}
+        >
+            {
+                (state, childProps) => {
+                    return React.cloneElement(children, {
+                        style: {
+                            transform: 'scale(0)',
+                            visibility: state === 'exited' && !visibleProp ? 'hidden' : undefined,
+                            ...style,
+                            ...styles[state],
+                            ...children.props.style
+                        },
+                        ref:ref,
+                        ...childProps
+                    })
+                }
+            }
+        </TransitionComponent>
+    )
+});
+
+ 
+export default Zoom;
+
+```
+
+重点解析：
+1. 和Fade组件几乎是一样的，唯一的区别就是css属性一个是opacity，另一个则是transform:scale(1);
+
+# 五、Grow扩展组件（从子元素的中心向外扩展同时设置透明度）
+
+这个组件是我们组件库的基准动效组件，可以说我们的组件库都会基于这个组件进行开发。
+
+```JS
+
+import React from 'react';
+import PropTypes from 'prop-types'; 
+import { Transition } from 'react-transition-group';
+import { duration } from '@packages/core/styles/transitions';
+
+import "./index.scss";
+function getScale(value) {
+    return `scale(${value}, ${value ** 2})`;
+}
+
+const styles = {
+    entering: {
+        opacity: 1,
+        transform: getScale(1),
+    },
+    entered: {
+        opacity: 1,
+        transform: 'none',
+    },
+};
+
+const Grow = React.forwardRef(function (props, ref) {
+    const {
+        prefixCls: customizePrefixCls,
+        className,
+        TransitionComponent = Transition,
+        children,
+        visible: visibleProp,
+        onEnter,
+        onEntered,
+        onEntering,
+        onExit,
+        onExited,
+        onExiting,
+        timeout = {
+            enter: duration.enteringScreen,
+            exit: duration.leavingScreen
+        },
+        style,
+        ...other
+    } = props;
+
+    const handleEnter = function(node, isAppearing){ 
+
+        reflow(node);
+       
+ 
+        node.style.webkitTransition = `opacity ${timeout && timeout.enter?timeout.enter:timeout}ms cubic-bezier(0.4, 0, 0.2, 1), transform ${timeout && timeout.enter?timeout.enter:timeout}ms cubic-bezier(0.4, 0, 0.2, 1)`;
+        node.style.transition =`opacity ${timeout && timeout.enter?timeout.enter:timeout}ms cubic-bezier(0.4, 0, 0.2, 1), transform ${timeout && timeout.enter?timeout.enter:timeout}ms cubic-bezier(0.4, 0, 0.2, 1)`;
+
+        onEnter?.(node,isAppearing);
+
+    };
+
+    const handleExit = function(node, isAppearing){ 
+ 
+        node.style.webkitTransition = `opacity ${timeout && timeout.enter?timeout.enter:timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, transform ${timeout && timeout.leave?timeout.leave:timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;`;
+        node.style.transition =  `opacity ${timeout && timeout.enter?timeout.enter:timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, transform ${timeout && timeout.leave?timeout.leave:timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;`;
+
+        node.style.opacity = '0';
+        node.style.transform = getScale(0.75);
+
+        onExit?.(node,isAppearing);
+
+    };
+
+    return (
+        <TransitionComponent
+            appear
+            in={visibleProp}
+            onEnter={handleEnter} 
+            onExit={handleExit} 
+            timeout={timeout}
+            {...other}
+        >
+            {
+                (state, childProps) => {
+                    return React.cloneElement(children, {
+                        style: {
+                            opacity: 0,
+                            transform: getScale(0.75),
+                            visibility: state === 'exited' && !visibleProp ? 'hidden' : undefined,
+                            ...style,
+                            ...styles[state],
+                            ...children.props.style
+                        },
+                        ref:ref,
+                        ...childProps
+                    })
+                }
+            }
+        </TransitionComponent>
+    )
+});
+
+ 
+export default Grow;
+```
+
+重点解析：
+1. 和前2个组件是一样的，只是相当于俩个CSS属性结合在一起了opacity、transform
+2. 为了让scale变化更加丰富增加了getScale
+
+
+# 六、Collapse折叠组件（从子元素的顶部展开而来）
+
+> 这个组件相比较来说比较复杂。老规矩先上代码。
+
+```js
+
+import React from 'react';
+import classNames from '@packages/utils/classNames';
+import PropTypes from 'prop-types';
+import usePrefixCls from '@packages/hooks/usePrefixCls'; 
+import { Transition } from 'react-transition-group';
+import { duration } from '@packages/core/styles/transitions';
+import "./index.scss"; 
+
+
+const Collapse = React.forwardRef(function(props, ref) {
+    const {
+        prefixCls: customizePrefixCls,
+        className,
+        TransitionComponent = Transition,
+        component: Component = 'div',
+        children,
+        visible: visibleProp,
+        onEnter,
+        onEntered,
+        onEntering,
+        onExit,
+        onExited,
+        onExiting,
+        collapsedHeight: collapsedHeightProp = '0px',
+        timeout = duration.standard,
+        style,
+        ...other
+    } = props;
+
+    const wrapperRef = React.useRef(null);
+
+    const collapsedHeight =
+        typeof collapsedHeightProp === 'number' ? `${collapsedHeightProp}px` : collapsedHeightProp;
+
+    const prefixCls = usePrefixCls('Transition-Collapse', customizePrefixCls);
+
+    const handleEnter = (node, isAppearing) => {
+        node.style.height = collapsedHeight;
+
+        onEnter?.(node, isAppearing);
+    };
+
+    const handleEntering = (node, isAppearing) => {
+        const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0;
+
+        node.style.transitionDuration = `${timeout && timeout.enter?timeout.enter:timeout}ms`;
+
+        node.style.height = `${wrapperHeight}px`;
+
+        onEntering?.(node, isAppearing)
+
+    };
+
+    const handleEntered = (node, isAppearing) => {
+        node.style.height = 'auto';
+        onEntered?.(node, isAppearing)
+    };
+
+    const handleExit = node => {
+        const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0;
+        node.style.height = `${wrapperHeight}px`;
+        onExit?.(node)
+    };
+
+    const handleExiting = node => {
+        const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0;
+ 
+        node.style.transitionDuration = `${timeout && timeout.leave?timeout.leave:timeout}ms`;
+     
+        node.style.height = collapsedHeight;
+
+        onExiting?.(node);
+
+    };
+
+    return (
+        <TransitionComponent
+            in={visibleProp}
+            onEnter={handleEnter}
+            onEntered={handleEntered}
+            onEntering={handleEntering}
+            onExit={handleExit} 
+            onExiting={handleExiting} 
+            timeout={timeout === 'auto' ? null : timeout}
+            {...other}
+        >
+            {(state, childProps) => (
+                <Component
+                    className={classNames(
+                        `${prefixCls}-Container`,
+                        {
+                            [`${prefixCls}-Entered`]: state === 'entered',
+                            [`${prefixCls}-Hidden`]: state === 'exited' && !visibleProp && collapsedHeight === '0px',
+                        },
+                        className,
+                    )}
+                    style={{
+                        minHeight: collapsedHeight,
+                        ...style,
+                    }}
+                    ref={ref}
+                    {...childProps}
+                >
+                    <div className={`${prefixCls}-Wrapper`} ref={wrapperRef}>
+                        <div className={`${prefixCls}-WrapperInner`}>{children}</div>
+                    </div>
+                </Component>
+            )}
+        </TransitionComponent>
+    )
+});
+ 
+
+export default Collapse;
+
+//index.scss样式
+
+@import "../styles/variable.scss";
+
+$prefixCls:"#{$global-prefix}-Transition";
+
+.#{$prefixCls}{
+    
+    &-Collapse{
+        
+        &-Container{
+            height: 0;
+            overflow: hidden;
+            transition-property: height;
+        }
+
+        &-Entered{
+            height: auto;
+            overflow: visible;
+        }
+       
+        &-Hidden{
+            visibility: hidden;
+        }
+
+        &-Wrapper{
+            display: flex;
+
+            &Inner{
+                width:100%;
+            }
+        }
+
+
+    
+    }
+    
+}
+```
+ 
+ # 七、Slide滑动组件（从屏幕边缘划入）
+
+> 这个组件在抽屉组件中常用到。
+
+```js
+
+import React,{ useEffect, useRef } from 'react';
+import PropTypes from 'prop-types'; 
+import { Transition } from 'react-transition-group';
+import { duration } from '@packages/core/styles/transitions';
+import useForkRef from '@packages/hooks/useForkRef';
+import "./index.scss";
+
+
+export function setTranslateValue(direction, node) {
+    const transform = getTranslateValue(direction, node);
+ 
+    if (transform) {
+        node.style.webkitTransform = transform;
+        node.style.transform = transform;
+    }
+}
+
+function getTranslateValue(direction, node) {
+    const rect = node.getBoundingClientRect();
+ 
+    let transform;
+
+    if (node.fakeTransform) {
+        transform = node.fakeTransform;
+    } else {
+        const computedStyle = window.getComputedStyle(node);
+        transform =
+            computedStyle.getPropertyValue('-webkit-transform') ||
+            computedStyle.getPropertyValue('transform');
+    }
+
+    let offsetX = 0;
+    let offsetY = 0;
+
+    if (transform && transform !== 'none' && typeof transform === 'string') {
+        const transformValues = transform
+            .split('(')[1]
+            .split(')')[0]
+            .split(',');
+        offsetX = parseInt(transformValues[4], 10);
+        offsetY = parseInt(transformValues[5], 10);
+    }
+
+    if (direction === 'left') {
+        return `translateX(${window.innerWidth}px) translateX(-${rect.left - offsetX}px)`;
+    }
+
+    if (direction === 'right') {
+        return `translateX(-${rect.left + rect.width - offsetX}px)`;
+    }
+
+    if (direction === 'up') {
+        return `translateY(${window.innerHeight}px) translateY(-${rect.top - offsetY}px)`;
+    }
+
+    // direction === 'down'
+    return `translateY(-${rect.top + rect.height - offsetY}px)`;
+}
+
+const Slide = React.forwardRef(function (props, ref) {
+    const {
+        prefixCls: customizePrefixCls,
+        className,
+        direction = 'down',
+        TransitionComponent = Transition,
+        children,
+        visible: visibleProp,
+        onEnter,
+        onEntered,
+        onEntering,
+        onExit,
+        onExited,
+        onExiting,
+        timeout = {
+            enter: duration.enteringScreen,
+            exit: duration.leavingScreen
+        },
+        style,
+        ...other
+    } = props; 
+
+    const childrenRef = useRef(null);
+
+    const handleEnter = (_, isAppearing)=>{
+
+        const node = childrenRef.current; 
+
+        setTranslateValue(direction, node);
+
+        onEnter?.(node, isAppearing);
+
+    };
+
+    const handleEntering = (_, isAppearing) => {
+        const node = childrenRef.current;
+         
+        node.style.webkitTransition=`transform ${timeout && timeout.enter ? timeout.enter : timeout}ms cubic-bezier(0, 0, 0.2, 1) 0ms`;
+        node.style.transition=`transform ${timeout && timeout.enter ? timeout.enter : timeout}ms cubic-bezier(0, 0, 0.2, 1) 0ms`;
+        node.style.webkitTransform = 'none';
+        node.style.transform = 'none';
+
+        onEntering?.(node,isAppearing);
+         
+      };
+
+    const handleExit = (node, isAppearing)=>{
+
+        node.style.webkitTransition = `transform ${timeout && timeout.exit ? timeout.exit : timeout}ms`;
+        node.style.transition = `transform ${timeout && timeout.exit ? timeout.exit : timeout}ms`;
+
+        setTranslateValue(direction, node);
+
+        onExit?.(node, isAppearing);
+
+    };
+
+    const handleExited=()=>{
+        const node = childrenRef.current;
+        node.style.webkitTransition="";
+        node.style.transition="";
+        onExited?.(node)
+    }
+
+
+    const handleRef = useForkRef(childrenRef, children.ref, ref);
+
+    useEffect(()=>{
+        if(!visibleProp){
+            if (childrenRef.current) {
+                setTranslateValue(direction, childrenRef.current);
+            }
+        }
+    },[visibleProp])
+
+    return (
+        <TransitionComponent 
+            in={visibleProp}
+            onEnter={handleEnter} 
+            onEntering={handleEntering}
+            onExit={handleExit}
+            onExited={handleExited} 
+            timeout={timeout}
+            {...other}
+        >
+            {
+                (state, childProps) => {
+                    return React.cloneElement(children, {
+                        style: {
+                            visibility: state === 'exited' && !visibleProp ? 'hidden' : undefined,
+                            ...style,
+                            ...children.props.style,
+                        },
+                        ref: handleRef,
+                        ...childProps
+                    })
+                }
+            }
+        </TransitionComponent>
+    )
+});
+
+ 
+
+export default Slide;
+```
+
+## 1.Hooks函数:useForkRef 
+
+> 在这里我们介绍一个hooks函数，这个函数可以同时设置多个Ref节点变量，很实用哦！
+
+```js
+import React from 'react';
+import setRef from '@packages/utils/setRef';
+
+export default function useForkRef(...refs){
+    return React.useMemo(()=>{
+        if (refs.every(item=>item==null)) {
+            return null;
+        }
+        return refValue => {  
+            for(let i=0;i<refs.length;i++){
+                setRef(refs[i],refValue)
+            }
+        };
+    },[refs])
+}
+
+//setRef
+export default function setRef(ref, value) {
+ 
+    if (typeof ref === 'function') {
+      ref(value);
+    } else if (ref) { 
+      ref.current = value;
+    } 
+}
+  
+
+```
+
+## 2.重点解析
+
+1. 自定义setTranslateValue函数通过getBoundingClientRect和方向来计算并设置节点的translateX/translateY。
+
+2. 记得在in为false的情况下，需要设置translate效果，否则无法过渡。

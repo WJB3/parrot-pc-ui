@@ -3,13 +3,10 @@ import Form from '@packages/core/Form';
 //import  {Form}  from 'antd';
 import Button from '@packages/core/Button';
 import axios from 'axios';
-import { Transition,SwitchTransition } from 'react-transition-group';
-import { Fade } from '@packages/core/Transition';
-
-const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
-};
+//import Slide from '@material-ui/core/Slide';
+import { Fade,Zoom ,Grow,Collapse,Slide} from '@packages/core/Transition';
+ 
+ 
 
 const t = {
     entering: {
@@ -30,25 +27,18 @@ const Page = React.forwardRef((props, ref) => {
     console.log(visible)
 
     return <div>
-       
-   
-        <Fade
+        <Slide
             in={visible}
-            onEnter={() => console.log("onenter")}
-            onEntering={() => console.log("onentering")}
-            onEntered={() => console.log("onentered")}
-            onExit={() => console.log("onexit")}
-            onExiting={() => console.log("onexiting")}
-            onExited={() => console.log("onexited")}
-            timeout={1000}   
-            mountOnEnter 
+            timeout={10000}
+            direction="up"
+            mountOnEnter
         >
             <div style={{
                 width: 100,
                 height: 100,
                 backgroundColor: 'red',
             }}></div>
-        </Fade> 
+        </Slide> 
 
         <Button onClick={() => setVisible(!visible)}>切换</Button>
     </div>

@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import usePrefixCls from '@packages/hooks/usePrefixCls'; 
+import PropTypes from 'prop-types'; 
 import { Transition } from 'react-transition-group';
 import { duration } from '@packages/core/styles/transitions';
+import { reflow } from './utils'
 import "./index.scss";
 function getScale(value) {
     return `scale(${value}, ${value ** 2})`;
@@ -40,9 +40,9 @@ const Grow = React.forwardRef(function (props, ref) {
         ...other
     } = props;
 
-    const prefixCls = usePrefixCls('Transition-Grow', customizePrefixCls);
-
     const handleEnter = function(node, isAppearing){ 
+
+        reflow(node);
        
  
         node.style.webkitTransition = `opacity ${timeout && timeout.enter?timeout.enter:timeout}ms cubic-bezier(0.4, 0, 0.2, 1), transform ${timeout && timeout.enter?timeout.enter:timeout}ms cubic-bezier(0.4, 0, 0.2, 1)`;

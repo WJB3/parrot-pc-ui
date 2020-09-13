@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import usePrefixCls from '@packages/hooks/usePrefixCls'; 
+import PropTypes from 'prop-types'; 
 import { Transition } from 'react-transition-group';
 import { duration } from '@packages/core/styles/transitions';
+import { reflow } from './utils';
 import "./index.scss";
 
 const styles = {
@@ -33,13 +33,12 @@ const Zoom = React.forwardRef(function (props, ref) {
         },
         style,
         ...other
-    } = props;
-
-    const prefixCls = usePrefixCls('Transition-Zoom', customizePrefixCls);
+    } = props; 
 
     const handleEnter = function(node, isAppearing){ 
        
- 
+        reflow(node);
+        
         node.style.webkitTransition = `transform ${timeout && timeout.enter?timeout.enter:timeout}ms`;
         node.style.transition =`transform ${timeout && timeout.enter?timeout.enter:timeout}ms`;
 
@@ -57,8 +56,7 @@ const Zoom = React.forwardRef(function (props, ref) {
     };
 
     return (
-        <TransitionComponent
-            appear
+        <TransitionComponent 
             in={visibleProp}
             onEnter={handleEnter}
             onEntered={(node, isAppearing) => onEntered?.(node, isAppearing)}

@@ -1,9 +1,9 @@
-import React,{ useRef } from 'react';
-import PropTypes from 'prop-types';
-import usePrefixCls from '@packages/hooks/usePrefixCls';
+import React,{ useEffect, useRef } from 'react';
+import PropTypes from 'prop-types'; 
 import { Transition } from 'react-transition-group';
 import { duration } from '@packages/core/styles/transitions';
 import useForkRef from '@packages/hooks/useForkRef';
+import { reflow } from './utils';
 import "./index.scss";
 
 
@@ -78,17 +78,19 @@ const Slide = React.forwardRef(function (props, ref) {
         },
         style,
         ...other
-    } = props;
-
-    const prefixCls = usePrefixCls('Transition-Slide', customizePrefixCls);
+    } = props; 
 
     const childrenRef = useRef(null);
 
     const handleEnter = (_, isAppearing)=>{
 
+       
+
         const node = childrenRef.current; 
 
         setTranslateValue(direction, node);
+
+        reflow(_);
 
         onEnter?.(node, isAppearing);
 
@@ -127,9 +129,16 @@ const Slide = React.forwardRef(function (props, ref) {
 
     const handleRef = useForkRef(childrenRef, children.ref, ref);
 
+    useEffect(()=>{
+        if(!visibleProp){
+            if (childrenRef.current) {
+                setTranslateValue(direction, childrenRef.current);
+            }
+        }
+    },[visibleProp])
+
     return (
-        <TransitionComponent
-            appear
+        <TransitionComponent 
             in={visibleProp}
             onEnter={handleEnter} 
             onEntering={handleEntering}

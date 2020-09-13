@@ -275,17 +275,3 @@ justify就是相当于justify-content的角色,水平对齐方式默认值是sta
 >其实是通过传递的属性来给节点添加对应的class，再给class通过媒体查询设置相对应的样式
 
 
-# 七、浏览器兼容性
-
-1. React兼容IE9以上版本
-
-2. flex兼容性如下
-
-![flex兼容性](./assets//grid/flex_support.png)
-
-3. window.matchMedia兼容性如下
-
-![window.matchMedia兼容性](./assets/grid/matchmedia_support.png)
-
-> IE10以上基本没问题
-
