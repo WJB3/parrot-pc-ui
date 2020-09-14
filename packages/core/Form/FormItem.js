@@ -15,6 +15,7 @@ import {
 import { toArray } from './utils/typeUtil';
 import { validateRules as validateRulesUtil } from './utils/validateUtil';
 import "./index.scss";
+import { isForwardRef } from 'react-is';
 
 const MemoInput=React.memo(
     ({children})=> children,
@@ -68,13 +69,13 @@ const FormItem=function(props){
         shouldUpdate,//自定义字段更新逻辑
         dependencies=[],//设置依赖字段
         validateFirst=false,//当某一规则校验不通过时，是否停止剩下的规则的校验
+        help,
+        validateStatus,//校验状态，如不设置，则会根据校验规则自动生成，
     }=props;
 
     const prefixCls=usePrefixCls('FormItem',customizePrefixCls);
 
-    const [,forceUpdate]=useState();
-
-    console.log(`FormItem-${name}`)
+    const [,forceUpdate]=useState(); 
 
     const {
         name:formName,
@@ -88,6 +89,8 @@ const FormItem=function(props){
     updateRef.current += 1;
 
     const fieldId=getFieldId(toArray(name),formName); 
+
+    const [ domErrorVisible,innerSetDomErrorVisible ]=useState(!!help);
 
     const validatePromise=useRef(null);
 
@@ -105,6 +108,8 @@ const FormItem=function(props){
 
     const destroy=useRef(false);
 
+    const prevValidateStatusRef=React.useRef(validateStatus);
+
     const mergedValidateTrigger=validateTrigger!==undefined?validateTrigger:contextValidateTrigger;
 
     const {
@@ -112,33 +117,12 @@ const FormItem=function(props){
         registerField
     }=getInternalHooks(HOOK_MARK);
 
-    function renderLayout(baseChildren,fieldId,meta,isRequired){
-
-        if(noStyle && !hidden){
-            return baseChildren;
-        } 
-
-        return (
-            <Row
-                className={classNames(prefixCls)}
-                style={style}
-            >
-                <FormItemLabel 
-                    htmlFor={fieldId}
-                    required={isRequired}
-                    prefixCls={prefixCls}
-                    label={label}
-                />
-                <FormItemInput
-                    prefixCls={prefixCls}
-                    label={label}
-                    {...meta}
-                >
-                    {baseChildren}
-                </FormItemInput>
-            </Row>
-        )
+    function setDomErrorsVisible(visible){
+        if(!destroy.current){
+            innerSetDomErrorVisible(visible)
+        }
     }
+    
      
     //有设置required或者在规则里面有定义字段
     const isRequired=required!==undefined?
@@ -318,6 +302,29 @@ const FormItem=function(props){
         return promise;
     }
 
+    
+
+    //=====================Errors===========================
+    const meta=getMeta();
+
+    let mergedErrors;
+    if(help!==undefined&&help!==null){
+        mergedErrors=toArray(help);
+    }else{
+        mergedErrors=meta?meta.errors:[];
+    }
+
+    //=====================Status===========================
+    let mergedValidateStatus='';
+    if(validateStatus!==undefined){
+        mergedValidateStatus=validateStatus;
+    }else if(meta?.validating){
+        mergedValidateStatus="validating";
+    }else if(meta?.errors?.length){
+        mergedValidateStatus="error";
+    }else if(meta?.touched){
+        mergedValidateStatus="success";
+    }
   
  
     useEffect(()=>{
@@ -336,9 +343,39 @@ const FormItem=function(props){
         }
     },[]) 
 
+    function renderLayout(baseChildren,fieldId,meta,isRequired){
+
+        if(noStyle && !hidden){
+            return baseChildren;
+        } 
+
+        return (
+            <Row
+                className={classNames(prefixCls)}
+                style={style}
+            >
+                <FormItemLabel 
+                    htmlFor={fieldId}
+                    required={isRequired}
+                    prefixCls={prefixCls}
+                    label={label}
+                />
+                <FormItemInput
+                    prefixCls={prefixCls}
+                    label={label} 
+                    {...meta}
+                    errors={mergedErrors}
+                    onDomErrorVisibleChange={setDomErrorsVisible}
+                >
+                    {baseChildren}
+                </FormItemInput>
+            </Row>
+        )
+    }
+
     return(
         <Fragment>
-            {renderLayout(childNode,fieldId,getMeta(),isRequired)}
+            {renderLayout(childNode,fieldId,meta,isRequired)}
         </Fragment>
     ) 
 };

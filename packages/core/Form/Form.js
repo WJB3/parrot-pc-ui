@@ -32,6 +32,7 @@ const Form=React.forwardRef((props,ref)=>{
         layout="horizontal",//表单布局
         initialValues,
         onFinish,//提交表单且数据验证成功后回调事件
+        onFinishFailed,//提交表单且数据验证失败后回调事件
         onFieldsChange,//
         validateMessages=defaultValidateMessages,//验证提示模板
     }=props;
@@ -70,6 +71,9 @@ const Form=React.forwardRef((props,ref)=>{
     setCallbacks({
         onFinish:(values)=>{  
             onFinish?.(values)
+        },
+        onFinishFailed:(values)=>{
+            onFinishFailed?.(values)
         },
         onFieldsChange:(changedFields,...rest)=>{
             onFieldsChange?.(changedFields,...rest)

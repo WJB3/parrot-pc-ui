@@ -1,46 +1,41 @@
-import React, { useState } from 'react';
-import Form from '@packages/core/Form';
-//import  {Form}  from 'antd';
+import React from 'react';
+//import  Form  from '@packages/core/Form';
+import  {Form}  from 'antd';
 import Button from '@packages/core/Button';
 import axios from 'axios';
-//import Slide from '@material-ui/core/Slide';
-import { Fade,Zoom ,Grow,Collapse,Slide} from '@packages/core/Transition';
- 
- 
 
-const t = {
-    entering: {
-        opacity: 1,
-    },
-    entered: {
-        opacity: 1,
-    },
-}
-
+const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
+};
 
 const Page = React.forwardRef((props, ref) => {
 
-    const [visible, setVisible] = useState(false);
-
-    const [children,setChildren]=useState([]);
-    
-    console.log(visible)
-
     return <div>
-        <Slide
-            in={visible}
-            timeout={10000}
-            direction="up"
-            mountOnEnter
+        <Form
+            name="basic"
+            initialValues={{username:"wujiabao",age:20}}
+            {...layout}
+            onFinish={(value)=>console.log(value)}
+            onFinishFailed={()=>console.log("onFinishFailed")}
         >
-            <div style={{
-                width: 100,
-                height: 100,
-                backgroundColor: 'red',
-            }}></div>
-        </Slide> 
+            <Form.Item
+                label="姓名"
+                name="username" 
+                rules={[{ required: true, message: 'Please input your username!' }]}
+            >
+                <input />
+            </Form.Item> 
+            <Form.Item
+                label="年龄"
+                name="age" 
+            >
+                <input />
+            </Form.Item>
+            <button>提交</button>
+        </Form>
 
-        <Button onClick={() => setVisible(!visible)}>切换</Button>
+        {/* <Button onClick={handleClick}>请求</Button> */}
     </div>
 });
 
