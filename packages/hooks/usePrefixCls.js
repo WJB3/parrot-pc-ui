@@ -1,5 +1,5 @@
 
-import { ConfigContext } from '@packages/core/ConfigContext';
+import { ConfigContext } from '@packages/core/ConfigProvider';
 import React from 'react';
 
 export default function usePrefixCls(name,customizePrefixCls){

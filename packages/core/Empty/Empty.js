@@ -1,10 +1,8 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import classNames from '@packages/utils/classNames'; 
 import PropTypes from 'prop-types'; 
-import usePrefixCls from '@packages/hooks/usePrefixCls';
-import childrenToArray from '@packages/utils/childrenToArray';
-import capitalize from '@packages/utils/capitalize';
-
+import ConfigContext from '@packages/cores/ConfigCotext';
+import usePrefixCls from '@packages/hooks/usePrefixCls'; 
 import "./index.scss";
 
 
@@ -18,21 +16,22 @@ const Input=React.forwardRef(function(props,ref){
     const {
         prefixCls:customizePrefixCls,
         className, 
-        children,
-        component:Component='div',  
+        children, 
         size="default"
     }=props;
 
     const prefixCls=usePrefixCls('Input',customizePrefixCls);
 
+    const {size}=useContext();
+
    
 
     return (
-        <Component ref={ref} className={classNames(
+        <div ref={ref} className={classNames(
             prefixCls,className 
         )}>
              
-        </Component>
+        </div>
     )
 });
 

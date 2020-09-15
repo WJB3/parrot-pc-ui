@@ -11,6 +11,8 @@ import AffixPage from '@packages/pages/navigation/AffixPage';
 import BreadcrumbPage from '@packages/pages/navigation/BreadcrumbPage';
 import GridPage from '@packages/pages/common/GridPage';
 import FormPage from '@packages/pages/data/FormPage';
+import ConfigProviderPage from '@packages/pages/else/ConfigProviderPage';
+import InputTextPage from '@packages/pages/data/InputPage';
 import "./index.scss";
 
 
@@ -23,5 +25,7 @@ ReactDOM.render((<HashRouter>
     <Route path="/resizeobserver" exact component={(props)=><ResizeObserverPage {...props}/>} />
     <Route path="/affix" exact component={(props)=><AffixPage {...props}/>} /> 
     <Route path="/grid" exact component={(props)=><GridPage {...props}/>} />
-    <Route path="/"  exact component={(props)=><FormPage {...props}/>} />
+    <Route path="/form"  exact component={(props)=><FormPage {...props}/>} />
+    <Route path="/configprovider"  exact component={(props)=><ConfigProviderPage {...props}/>} />
+    <Route path="/"  exact component={(props)=><InputTextPage {...props}/>} />
 </HashRouter>), document.getElementById("root"));
