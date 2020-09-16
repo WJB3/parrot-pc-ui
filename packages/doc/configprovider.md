@@ -20,7 +20,7 @@
 ## 2.为什么需要这个组件
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    在我们日常开发中，往往需要一个很简单的操作，就可以完成全局的配置。比如下拉框选择中文和英文需要全文切换语言，选择大、中、小尺寸使得全文中的输入框等实现大小的切换。所以我们希望可以通过一个组件传递一些参数就可以实现这些功能。
+    在我们日常开发中，往往需要一个很简单的操作，就可以完成全局的配置。比如下拉框选择中文和英文需要全文切换语言，选择大、中、小尺寸使得全文中的输入框等实现大小尺寸的切换。所以我们希望可以通过一个通用组件传递一些参数就可以实现这些功能。
 </blockquote>
 
 # 二、ConfigProvider组件设计
@@ -37,13 +37,15 @@
 ## 2.原理解析
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    就是在ConfigProvider这个组件中提供Provider生产者将全局属性传递给消费组件。在每个需要全局配置的组件也就是消费组件通过是否有通过ConfigProvider中传递的context属性值和自身组件的props属性值来得出正确的props值再继续进行后续操作。
+    就是在ConfigProvider这个组件中提供Provider生产者将全局属性传递给消费组件。在每个需要全局配置的组件也就是消费组件通过是否有通过ConfigProvider中传递的context属性值和自身组件的props属性值来得出合并的值（ConfigProvider优先级高）即如果Context对象中存在size属性值，组件本身也有size属性值，则取Context中的属性值，再继续进行后续操作。
 </blockquote>
+
+![哈哈](./assets/configprovider/thoery.jpg)
 
 # 三、ConfigProvider组件实战
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    这里我们只设计 `componentSize、prefixCls`这2个常用API。
+    这里我们只设计 componentSize、prefixCls这2个常用API。
 </blockquote> 
 
 ## 1、SizeContext设计
@@ -84,5 +86,57 @@ export default ConfigContext;
 ```
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    这个Context提供了一个默认的获取类名前缀的方法，因为后面需要使用这个方法。
+    这个Context提供了一个默认的获取类名前缀的方法，因为后面每个组件都需要使用这个方法来获取类名。
+</blockquote> 
+
+## 3、ConfigContext组件的设计
+
+```js
+
+
+import React,{useContext} from 'react';
+import SizeContext from './SizeContext';
+import ConfigContext from './ConfigContext';
+
+ 
+const ConfigProvider=props=>{
+
+    const {
+        children,
+        componentSize,
+        prefixCls
+    }=props;
+
+    const configContext=useContext(ConfigContext);
+
+    const getPrefixClsWrapper=(context)=>{
+        return (suffixCls,customizePrefixCls)=>{ 
+
+            if(customizePrefixCls) return customizePrefixCls;
+
+            const mergePrefixCls=prefixCls||context.getPrefixCls('');
+
+            return suffixCls?`${mergePrefixCls}-${suffixCls}`:mergePrefixCls;
+        }
+    }
+
+    const config={
+        ...configContext,
+        getPrefixCls:getPrefixClsWrapper(configContext),
+    }
+
+    return (
+        <SizeContext.Provider value={componentSize}>
+            <ConfigContext.Provider value={config}>
+                {children}
+            </ConfigContext.Provider>
+        </SizeContext.Provider>
+    ) 
+}
+
+export default ConfigProvider;
+```
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
+    这个组件就是全文的核心文件，通过引入SizeContext和ConfigContext对象使用Context.Provider属性包裹children。这个组件运用在顶层容器上，所以被包裹的所有组件都可以使用useContext(Context)获取出对应的Provider中传入的值。如果顶层没有ConfigContext包裹的话会默认使用初始化时传入的getPrefixCls，即前缀为parrot-pc,如果有被包裹，将会重新
 </blockquote> 
