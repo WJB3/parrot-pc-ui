@@ -45,7 +45,7 @@
 # 三、ConfigProvider组件实战
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    这里我们只设计 componentSize、prefixCls这2个常用API。
+    这里我们只设计 componentSize、prefixCls这2个后续会使用到的API。
 </blockquote> 
 
 ## 1、SizeContext设计
@@ -138,5 +138,47 @@ export default ConfigProvider;
 ```
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    这个组件就是全文的核心文件，通过引入SizeContext和ConfigContext对象使用Context.Provider属性包裹children。这个组件运用在顶层容器上，所以被包裹的所有组件都可以使用useContext(Context)获取出对应的Provider中传入的值。如果顶层没有ConfigContext包裹的话会默认使用初始化时传入的getPrefixCls，即前缀为parrot-pc,如果有被包裹，将会重新
+    这个组件就是全文的核心文件，通过引入SizeContext和ConfigContext对象使用Context.Provider属性包裹children。这个组件运用在顶层容器上，所有被包裹的所有组件都可以使用useContext(Context)获取出对应的Provider中传入的值。如果顶层没有ConfigContext包裹的话会默认使用初始化时传入的getPrefixCls，即前缀为parrot-pc。如果有被包裹，将会通过ConfigProvider传入的属性prefixCls来得到类名。
 </blockquote> 
+
+# 四、ConfigProvider组件设计核心要素
+
+## 1.React.Context API 使用
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
+    <div>1.createContext可以创建Context对象，并且可以设置初始化的值</div>
+    <div>2.Context.Provider是生产者，可以提供需要传递的属性名</div>
+    <div>3.useContext(Context)可以获取传递的属性值，仅可在HOOKS中使用</div>
+    <div>4.在class组件中可以使用Context.Consumer来或者传递的属性值</div>
+</blockquote>
+
+
+## 2.在组件中也要相对应的设计
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
+    这个组件仅仅是单纯的传递一个context属性值而已，当然仅仅是一个值不能够这么神奇的改变全文类名前缀、组件大小等，还是需要自己在组件库的其他组件中对应写出相关的代码的：
+</blockquote>
+
+```js
+//Button组件
+...
+
+import SizeContext from '...';
+import ConfigContext from '...';
+
+...
+
+const Button=(props)=>{
+
+    ......
+
+    const contextSize=React.useContext(SizeContext);
+    const contextConfig=React.useContext(ConfigContext);
+
+    const mergeSize=context||props.size;
+    const {getPrefixCls}=contextConfig
+
+    ......
+}
+
+```
