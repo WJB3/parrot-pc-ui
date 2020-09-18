@@ -1,9 +1,10 @@
 import React,{useContext} from 'react';
 import classNames from '@packages/utils/classNames';
-import {ConfigContext} from '@packages/core/ConfigProvider';
+import {ConfigContext,SizeContext} from '@packages/core/ConfigProvider';
 import {
     svgBaseProps
 } from '../utils';
+import capitalize from '@packages/utils/capitalize';
 
 const Icon=React.forwardRef((props,ref)=>{
     const {
@@ -12,12 +13,15 @@ const Icon=React.forwardRef((props,ref)=>{
         component:Component,
         children,
         rotate,
-        prefixCls:customizePrefixCls
+        prefixCls:customizePrefixCls,
+        size:sizeProp="default"
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("Icon",customizePrefixCls); 
 
     const svgStyle=rotate?{msTransform:`rotate(${rotate}deg)`,transform:`rotate(${rotate}deg)`}:undefined;
+
+    const size=useContext(SizeContext)||sizeProp;
 
     const innerSvgProps={
         ...svgBaseProps,
@@ -48,6 +52,9 @@ const Icon=React.forwardRef((props,ref)=>{
                 classNames(
                     className,
                     prefixCls,
+                    {
+                        [`${prefixCls}-${capitalize(size)}`]:size
+                    }
                 )
             }
         >

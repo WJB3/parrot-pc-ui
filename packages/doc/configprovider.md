@@ -141,6 +141,13 @@ export default ConfigProvider;
     这个组件就是全文的核心文件，通过引入SizeContext和ConfigContext对象使用Context.Provider属性包裹children。这个组件运用在顶层容器上，所有被包裹的所有组件都可以使用useContext(Context)获取出对应的Provider中传入的值。如果顶层没有ConfigContext包裹的话会默认使用初始化时传入的getPrefixCls，即前缀为parrot-pc。如果有被包裹，将会通过ConfigProvider传入的属性prefixCls来得到类名。
 </blockquote> 
 
+## 4、ConfigProvider组件的目录结构
+
+|-ConfigContext
+|-ConfigProvider
+|-index.js
+|-SizeContext.js
+
 # 四、ConfigProvider组件设计核心要素
 
 ## 1.React.Context API 使用

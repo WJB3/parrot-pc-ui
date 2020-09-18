@@ -1,6 +1,7 @@
 import React ,{useContext} from 'react'; 
-import { ConfigContext } from '@packages/core/ConfigProvider';
+import { ConfigContext,SizeContext } from '@packages/core/ConfigProvider';
 import classNames from '@packages/utils/classNames';
+import capitalize from '@packages/utils/capitalize';
 import { generate } from '../utils';
 
 const ParrotIcon=React.forwardRef((props,ref)=>{
@@ -10,13 +11,18 @@ const ParrotIcon=React.forwardRef((props,ref)=>{
         className,
         icon:target,
         rotate,
-        prefixCls:customizePrefixCls
+        prefixCls:customizePrefixCls,
+        size:sizeProp="default",
+        spin,
+        style
     }=props;
 
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("Icon",customizePrefixCls); 
 
-    const svgStyle=rotate?{msTransform:`rotate(${rotate}deg)`,transform:`rotate(${rotate})deg`}:undefined;
+    const svgStyle=rotate?{msTransform:`rotate(${rotate}deg)`,transform:`rotate(${rotate}deg)`}:undefined;
+
+    const size=useContext(SizeContext)||sizeProp; 
 
     const renderIcon=()=>{
         return generate(target.icon,`svg-${target.name}m`,{ 
@@ -24,6 +30,11 @@ const ParrotIcon=React.forwardRef((props,ref)=>{
             style:svgStyle,
             width:'1em',
             height:'1em',
+            className:classNames(
+                {
+                    [`${prefixCls}-Spin`]:!!spin
+                }
+            ),
             fill:"currentColor",
         })
     }
@@ -32,9 +43,13 @@ const ParrotIcon=React.forwardRef((props,ref)=>{
         <span
             ref={ref}
             onClick={onClick}
+            style={style}
             className={classNames(
                 prefixCls,
                 className,
+                {
+                    [`${prefixCls}-${capitalize(size)}`]:size
+                }
             )}
         >
             {
