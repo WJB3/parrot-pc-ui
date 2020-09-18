@@ -7,7 +7,7 @@ import {
 } from '@packages/core/ConfigProvider'; 
 import useControlled from '@packages/hooks/useControlled';
 import capitalize from '@packages/utils/capitalize';
-import Icon from '@packages/icons';
+import Icon from '@packages/icon';
 import { Fade } from '@packages/core/Transition';
 import "./index.scss"; 
 

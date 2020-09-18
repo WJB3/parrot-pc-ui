@@ -1,10 +1,9 @@
 
 
 import React from 'react';
-import InputText from '@packages/core/InputText';
-import ConfigProvider from '@packages/core/ConfigProvider';
-import 'rsuite/dist/styles/rsuite-default.css'; 
-import AccountBookFilledSvg from '@ant-design/icons-svg/lib/asn/AccountBookFilled';  
+import InputText from '@packages/core/InputText'; 
+import ConfigProvider from '@packages/core/ConfigProvider'; 
+import 'rsuite/dist/styles/rsuite-default.css';  
 
 import {
     HomeOutlined,
@@ -13,12 +12,12 @@ import {
     SyncOutlined,
     LoadingOutlined,
     LeftOutlined
-} from '@ant-design/icons';
+} from '@ant-design/icons';    
 
-import { Icon } from 'rsuite';
+import { Icon } from 'rsuite';      
 
-import { AccessAlarm } from '@material-ui/icons/'; 
-
+import { AccessAlarm } from '@material-ui/icons';     
+  
 import { Transition } from 'react-transition-group';
 
 const Page=(props)=>{
@@ -31,6 +30,7 @@ const Page=(props)=>{
             <AccessAlarm />
 
             <Icon icon='star' />
+
             <Icon icon='shield' />
             
             <InputText size="small" allowClear placeholder="Basic usage" maxLength={5} prefix={"A"} suffix={"A"} /> 

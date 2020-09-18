@@ -10,7 +10,7 @@ import ButtonBase from '@packages/core/ButtonBase';
 import useTabOffsets from '@packages/hooks/useTabOffsets';
 import useRefs from '@packages/hooks/useRefs';
 import Paper from '@packages/core/Paper';
-import Icon from '@packages/icons';
+import Icon from '@packages/icon';
 import TabScrollable from '@packages/utils/scrollable';
 import animate from '@packages/utils/animate';
 import "./index.scss";

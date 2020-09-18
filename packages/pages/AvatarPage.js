@@ -1,7 +1,7 @@
 import React from 'react';
 import Tabs,{TabPane} from '@packages/core/Tabs';
 import Paper from '@packages/core/Paper';
-import Icon from '@packages/icons';
+import Icon from '@packages/icon';
 // import { Tabs  } from 'antd';
 // const { TabPane } = Tabs;
 

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import usePrefixCls from '@packages/hooks/usePrefixCls';
 import capitalize from '@packages/utils/capitalize';
 import useImageLoad from '@packages/hooks/useImageLoad';
-import Icon from '@packages/icons';
+import Icon from '@packages/icon';
 import "./index.scss";
 
 const Avatar = React.forwardRef((props, ref) => {

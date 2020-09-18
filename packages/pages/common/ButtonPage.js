@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '@packages/core/Button';
-import Icon from '@packages/icons';
+import Icon from '@packages/icon';
 
 
 const Page= React.forwardRef((props,ref)=>{
