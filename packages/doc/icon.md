@@ -95,8 +95,9 @@ export { default } from './components/Icon';
  
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
 <h5>详解：</h5>
-<div>1.将icons目录下的图标全都导出以供使用。</div> 
-<div>2.没有引入svg，采用js直接生成svg。</div>
+<div>1.将icons目录下存放的是图标。</div> 
+<div>2.当引入icons下的一个图标时，会将一个存放了生成对应svg的属性的对象传入一个自定义组件。通过一个方法生成一个对应的组件。</div> 
+<div>3.没有引入svg，只是记录了svg对应的的属性值如path标签的ds属性来绘制图标的路径。采用js直接生成svg。</div>
 </blockquote>
 
 ## 3.Material Icon
@@ -176,7 +177,7 @@ const Icon: RsRefForwardingComponent<'i', IconProps> = React.forwardRef((props: 
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
 <h5>详解</h5>
-看JS部分可能看的不是很清楚，我们看CSS部分，@font-family-icon实际上是引用的他自定义的一个字体文件，其实这里使用的就是我们前文提到的Iconfont写法。我们可以下载引入的<a href="https://cdn.jsdelivr.net/npm/rsuite/dist/styles/fonts/rsuite-icon-font.ttf">字体文件</a>发现有210kb的大小，也就是说不管你是引入一个组件或者是多个组件，都需要引入这个ttf文件字体，会造成资源的一个浪费。
+看JS部分可能看的不是很清楚，我们看CSS部分，@font-family-icon实际上是引用的他自定义的一个字体文件，其实这里使用的就是我们前文提到的Iconfont写法。通过类名就可以轻松的定义图标。我们可以下载引入的<a href="https://cdn.jsdelivr.net/npm/rsuite/dist/styles/fonts/rsuite-icon-font.ttf">字体文件</a>发现有210kb的大小，也就是说不管你是引入一个组件或者是多个组件，都需要引入这个ttf文件字体，会造成资源的一个浪费。
 </blockquote>
 
 ## 五、原理解析
@@ -194,7 +195,7 @@ const Icon: RsRefForwardingComponent<'i', IconProps> = React.forwardRef((props: 
 # 三、Icon组件实战
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
-在前文中，我们也大概了解了常用组件库（Antd）和小众组件库（Rsuite）Icon组件的写法。这里我们介绍2种组件库的写法。
+在前文中，我们也大概了解了常用组件库（Antd）和小众组件库（Rsuite）Icon组件的写法。这里我们介绍2种常用的组件库的写法。
 </blockquote>
 
 ## 1.普通Icon组件写法（简单、方便、比较耗费资源）
@@ -367,7 +368,7 @@ export default Add;
 
 ```
 
-### 5、ConfigProvider组件的目录结构
+### 5.ConfigProvider组件的目录结构
 
 |-components
 |-------icons
@@ -416,8 +417,8 @@ try{
 ## 3.svg属性的viewBox和path
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
-<div>1、这里我给大家推荐2篇文章<a href="https://www.jianshu.com/p/4422c05ff0f2">秒懂<SVG\/>里的viewbox</a>、<a href="https://segmentfault.com/a/1190000009226427?utm_source=tag-newest">SVG之ViewBox</a></div>
-<div>2、用来定义路径，我们的图标主要就是靠这个来制作的<a href="https://www.w3school.com.cn/svg/svg_path.asp">W3c svg path</a></div>
+<div>viewBox:这里我给大家推荐2篇文章<a href="https://www.jianshu.com/p/4422c05ff0f2">秒懂<SVG\/>里的viewbox</a>、<a href="https://segmentfault.com/a/1190000009226427?utm_source=tag-newest">SVG之ViewBox</a></div>
+<div>path:用来定义路径，我们的图标主要就是靠这个来制作的<a href="https://www.w3school.com.cn/svg/svg_path.asp">W3c svg path</a></div>
 </blockquote>
 
 

@@ -141,7 +141,8 @@ const TouchRipple=React.forwardRef((props,ref)=>{
         [pulsate, start, stop],
     );     
  
- 
+  
+
     return (
         <span className={classNames(prefixCls)} ref={container}>
             <TransitionGroup component={null} exit {...restProps}>

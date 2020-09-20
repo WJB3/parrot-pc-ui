@@ -8,9 +8,9 @@ $ripple-animation-duration:500ms;
 
 .#{$prefixCls}{
     cursor: pointer;
-    border:0;
+    border:none;
     display: inline-flex;
-    outline: 0;
+    outline:none;
     padding:0;
     margin:0;
     position:relative;

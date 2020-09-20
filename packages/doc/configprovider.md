@@ -154,7 +154,7 @@ export default ConfigProvider;
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
     <div>1.createContext可以创建Context对象，并且可以设置初始化的值</div>
-    <div>2.Context.Provider是生产者，可以提供需要传递的属性名</div>
+    <div>2.Context.Provider是生产者，可以提供需要传递的属性值</div>
     <div>3.useContext(Context)可以获取传递的属性值，仅可在HOOKS中使用</div>
     <div>4.在class组件中可以使用Context.Consumer来或者传递的属性值</div>
 </blockquote>

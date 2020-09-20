@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import ButtonPage from '@packages/pages/common/ButtonPage';
+import RipplePage from '@packages/pages/common/RipplePage';
 import PortalPage from '@packages/pages/common/PortalPage';
 import ResizeObserverPage from '@packages/pages/common/ResizeObserverPage';
 import AvatarPage from '@packages/pages/display/AvatarPage';
@@ -30,4 +31,5 @@ ReactDOM.render((<HashRouter>
     <Route path="/configprovider"  exact component={(props)=><ConfigProviderPage {...props}/>} />
     <Route path="/inputtext"  exact component={(props)=><InputTextPage {...props}/>} />
     <Route path="/"  exact component={(props)=><IconPage {...props}/>} />
+    <Route path="/ripple"  exact component={(props)=><RipplePage {...props}/>} />
 </HashRouter>), document.getElementById("root"));

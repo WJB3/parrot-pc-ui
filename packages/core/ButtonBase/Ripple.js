@@ -16,7 +16,6 @@ const Ripple=(props)=>{
         in:inProp,
         timeout
     }=props;
-
    
 
     const prefixCls=`${customizePrefixCls}-Ripple`
@@ -54,7 +53,7 @@ const Ripple=(props)=>{
              
             setLeaving(true);
 
-            const timeoutId = setTimeout(handleExited, 100000);
+            const timeoutId = setTimeout(handleExited, timeout);
             return () => {
                 clearTimeout(timeoutId);
             };

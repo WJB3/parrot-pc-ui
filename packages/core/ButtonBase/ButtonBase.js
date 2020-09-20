@@ -1,8 +1,8 @@
-import React from 'react';
+import React ,{useContext} from 'react';
 import classNames from '@packages/utils/classNames'; 
 import PropTypes from 'prop-types'; 
 import TouchRipple from './TouchRipple';
-import usePrefixCls from '@packages/hooks/usePrefixCls';
+import {ConfigContext} from '@packages/core/ConfigProvider';
 import "./index.scss";
 
 const ButtonBase=React.forwardRef((props,ref)=>{
@@ -32,7 +32,7 @@ const ButtonBase=React.forwardRef((props,ref)=>{
         ...restProps
     }=props;
  
-    const prefixCls=usePrefixCls('ButtonBase',customizePrefixCls);
+    const prefixCls=useContext(ConfigContext)?.getPrefixCls("ButtonBase",customizePrefixCls); 
 
     let ComponentProp=Component;
 
@@ -105,7 +105,6 @@ const ButtonBase=React.forwardRef((props,ref)=>{
             onFocus={handleFocus}
             onMouseDown={handleMouseDown}
             onBlur={handleBlur}
-            
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseLeave}
             onKeyDown={handleKeyDown}
