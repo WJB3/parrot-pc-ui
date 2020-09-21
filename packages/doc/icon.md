@@ -95,7 +95,7 @@ export { default } from './components/Icon';
  
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
 <h5>详解：</h5>
-<div>1.将icons目录下存放的是图标。</div> 
+<div>1.icons目录下存放的是图标。</div> 
 <div>2.当引入icons下的一个图标时，会将一个存放了生成对应svg的属性的对象传入一个自定义组件。通过一个方法生成一个对应的组件。</div> 
 <div>3.没有引入svg，只是记录了svg对应的的属性值如path标签的ds属性来绘制图标的路径。采用js直接生成svg。</div>
 </blockquote>

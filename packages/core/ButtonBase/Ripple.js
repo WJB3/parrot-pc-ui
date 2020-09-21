@@ -44,22 +44,20 @@ const Ripple=(props)=>{
         top: -(rippleSize / 2) + rippleY,
         left: -(rippleSize / 2) + rippleX,
     };
+ 
 
-    const handleExited=useEventCallback(onExited);
-
-    React.useEffect(()=>{
+    React.useEffect(()=>{ 
         //transitiongroup通过onExited回调来判断移除节点的时机
-        if (!inProp) {
-             
+        if (!inProp) { 
             setLeaving(true);
 
-            const timeoutId = setTimeout(handleExited, timeout);
+            const timeoutId = setTimeout(onExited, 100000);
             return () => {
                 clearTimeout(timeoutId);
             };
         }
         return undefined;
-    },[handleExited,inProp,timeout])
+    },[onExited,inProp,timeout])
 
     return (
         <span className={rippleClassName} style={rippleStyles}>

@@ -329,9 +329,7 @@ const TouchRipple=React.forwardRef((props,ref)=>{
         }),
         [pulsate, start, stop],
     );     
- 
- 
-    console.log(ripples);
+  
     
     return (
         <span className={classNames(prefixCls)} ref={container}>
@@ -559,9 +557,9 @@ $ripple-animation-duration:500ms;
 
 ```js
 
- const handleMouseDown = useRippleHandler('start', onMouseDown);
+const handleMouseDown = useRippleHandler('start', onMouseDown);
 
- function useRippleHandler(rippleAction,eventCallback,skipRippleAction=disableTouchRipple){
+function useRippleHandler(rippleAction,eventCallback,skipRippleAction=disableTouchRipple){
         return event=>{
             if(eventCallback){
                 eventCallback(event)
@@ -572,7 +570,7 @@ $ripple-animation-duration:500ms;
             }
             return true;
         }
-    }
+}
 
 React.useImperativeHandle(
         ref,
@@ -584,4 +582,149 @@ React.useImperativeHandle(
         [pulsate, start, stop],
 );     
  
+```
+
+
+## 3.计算ripple波纹的大小
+
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    因为波纹是相对于波纹组的div进行绝对定位的，所以计算出波纹组（一个圆）的直径、top、left值尤为关键。
+</blockquote>
+
+```css
+        //波纹组的样式
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        z-index:0;
+        overflow: hidden;
+        position:absolute;
+        border-radius: inherit;
+        pointer-events: none;
+```
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+当centerRipple时，Ripple的原点在包裹组件的中心。所以只需要求出圆的直径就可以得出top、left等值。由下图得知，圆的半径是包裹组件的长和宽的平方和的开平方。
+</blockquote>
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(7,121,228,1); background: rgb(239, 235, 233);line-height:1.5;'>
+1.勾股定理：a²+b²=c²;<br />
+2.<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Range/getBoundingClientRect">getBoundingClientRight</a>可以得出元素相对于视窗的top、left、right、以及元素的宽高。<br />
+3.Math.sqrt相当于数学中的开根号 <br />
+4.Math.pow相当于数学中的平方 <br />
+5.* 相当于数学中的乘，**相当于数学中的平方，Math.pow(a,2)===a ** 2 <br />
+</blockquote>
+
+![哈哈](./assets/ripple/center-ripple.jpg)
+
+```js
+//一个存在width\height\top\left的对象
+const rect = element
+        ? element.getBoundingClientRect()
+        : {
+            width: 0,
+            height: 0,
+            left: 0,
+            top: 0,
+          };
+//即上图中的x,y
+rippleX = Math.round(rect.width / 2);
+rippleY = Math.round(rect.height / 2);
+
+
+//由勾股定理得出radius半径，乘2得出直径
+let radius=Math.sqrt(Math.pow(rippleX,2)+Math.pow(rippleY,2));
+rippleSize = radius*2; 
+
+//可以得出top和left的值
+const rippleStyles = {
+        width: rippleSize,
+        height: rippleSize,
+        top: -(rippleSize / 2) + rippleY,
+        left: -(rippleSize / 2) + rippleX,
+};
+```
+
+![哈哈](./assets/ripple/nocenter-ripple.jpg)
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+由上图得知当centerRipple为false时，点击在元素的中心点左上角时，以最长斜边画圆。同时可以根据勾股定理算出波纹的长宽、top、left。
+</blockquote>
+
+```js
+
+const clientX = event.clientX ? event.clientX : event.touches[0].clientX;
+const clientY = event.clientY ? event.clientY : event.touches[0].clientY;
+//得出相对于元素的x、y
+rippleX = Math.round(clientX - rect.left);
+rippleY = Math.round(clientY - rect.top);
+
+//勾股定理得出rippleSize
+const sizeX =Math.max(Math.abs((element ? element.clientWidth : 0) - rippleX), rippleX);
+const sizeY =Math.max(Math.abs((element ? element.clientHeight : 0) - rippleY), rippleY);
+rippleSize = Math.sqrt(sizeX ** 2 + sizeY ** 2)*2;
+```
+
+## 4.波纹的动画样式设计
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+其实动画还是比较简单的，当ripple被装载时，给予一个动画，当ripple被卸载时，给与一个动画。
+</blockquote>
+
+```css
+    //组件加载
+    &-Visible{
+                opacity: 0.3;
+                transform: scale(1);
+                animation: ripple-enter $ripple-animation-duration cubic-bezier(0.4, 0, 0.2, 1);;
+    }
+    
+    @keyframes ripple-enter {
+                0% {
+                    transform: scale(0);
+                    opacity: 0.1;
+                }
+                100% {
+                    transform: scale(1);
+                    opacity: 0.3;
+                }
+    }
+    &-ChildLeaving{
+                opacity: 0;
+                animation: ripple-exit $ripple-animation-duration cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    //组件卸载
+    @keyframes ripple-exit {
+                0% {
+                    opacity: 1;
+                }
+                100% {
+                    opacity: 0;
+                }
+    }
+
+```
+
+## 5.TransitionGroup组件
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+1.当项目被删除或添加时，in道具将自由切换<br />
+2.当项目从节点上被卸载时，leaving状态为true，加载卸载动画，给个定时器当timeout时间后，也就是动画执行结束，将onExited传出，transitiongroup会自动判断出动画结束，进而移除节点。
+</blockquote>
+
+```js
+React.useEffect(()=>{ 
+        //transitiongroup通过onExited回调来判断移除节点的时机
+        if (!inProp) { 
+            setLeaving(true);
+
+            const timeoutId = setTimeout(onExited, timeout);
+            return () => {
+                clearTimeout(timeoutId);
+            };
+        }
+        return undefined;
+},[onExited,inProp,timeout])
 ```

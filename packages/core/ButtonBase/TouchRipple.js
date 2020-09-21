@@ -84,22 +84,21 @@ const TouchRipple=React.forwardRef((props,ref)=>{
         } else {
             const clientX = event.clientX ? event.clientX : event.touches[0].clientX;
             const clientY = event.clientY ? event.clientY : event.touches[0].clientY;
+            //相对于元素的x、y
             rippleX = Math.round(clientX - rect.left);
             rippleY = Math.round(clientY - rect.top);
         }
-        if (center) {
-            rippleSize = Math.sqrt((2 * rect.width ** 2 + rect.height ** 2) / 3);
-    
-            // For some reason the animation is broken on Mobile Chrome if the size if even.
-            if (rippleSize % 2 === 0) {
-              rippleSize += 1;
-            }
-        }else {
+        if (center) { 
+            let radius=Math.sqrt(Math.pow(rippleX,2)+Math.pow(rippleY,2));
+            rippleSize = radius*2; 
+        }else { 
+
             const sizeX =
-              Math.max(Math.abs((element ? element.clientWidth : 0) - rippleX), rippleX) * 2 + 2;
+              Math.max(Math.abs((element ? element.clientWidth : 0) - rippleX), rippleX);
             const sizeY =
-              Math.max(Math.abs((element ? element.clientHeight : 0) - rippleY), rippleY) * 2 + 2;
-            rippleSize = Math.sqrt(sizeX ** 2 + sizeY ** 2);
+              Math.max(Math.abs((element ? element.clientHeight : 0) - rippleY), rippleY);
+
+            rippleSize = Math.sqrt(sizeX ** 2 + sizeY ** 2)*2;
         }
 
         startCommit({ pulsate, rippleX, rippleY, rippleSize, cb });

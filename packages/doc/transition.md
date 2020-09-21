@@ -1,7 +1,7 @@
 ![哈哈](./assets/transition/doctor.jpg)
 
 
-<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1;'>
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
     <div>
         <div><i>Be careful which path you travel now,Strange.Stronger men than you hava lost their way.</i></div>
         <div style="text-align:right;"><b>——Marvel·Stephen Steve Vincent Strange</b></div>
@@ -9,113 +9,174 @@
     
 </blockquote>
 
-# 一、Transition动画组件概述
+# 一、Transition动画组件介绍
 
-在21世纪，尤其是在信息技术如此发达的今天，一个软件如何脱颖而出，良好的用户体验是不可缺少的，而动画是提升用户体验必不可少的一个功能之一。而且在我们后续的开发中，动画是经常需要贯穿在组件内部的，我们可以将这些动画封装成一个又一个组件。
+## 1.组件概述
 
-> 其实相比较Vue自带的[Transition](https://cn.vuejs.org/v2/guide/transitions.html)组件，React中并没有自带的Transition组件可以获取到节点的离开/进入时机，由于实践起来也是比较复杂，同时也是为了避免重复造轮子，我们在这里直接使用别人的库[React-Transition-Group](https://reactcommunity.org/react-transition-group/)。
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    全局的过渡效果组件。
+</blockquote>
+
+
+## 2.为什么需要这个组件
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    在21世纪，尤其是在信息技术如此发达的今天，一个软件如何脱颖而出，良好的用户体验是不可缺少的，而动画是提升用户体验必不可少的一个功能之一。而且在我们后续的开发中，动画是经常需要贯穿在组件内部的，我们可以将这些动画封装成一个又一个组件。<br />
+ 其实相比较Vue自带的<a href="https://cn.vuejs.org/v2/guide/transitions.html">Transition</a>组件，React中并没有自带的Transition组件可以获取到节点的离开/进入时机，由于实践起来也是比较复杂，同时也是为了避免重复造轮子，我们在这里直接使用别人的库<a href="https://reactcommunity.org/react-transition-group/">React-Transition-Group</a>。
+</blockquote>
+
+
+
+
 
 # 二、React-Transition-Group介绍
 
-> 鉴于以下的所有的组件都是基于这个基础组件来，我们详细扒一扒这个组件的API,看看他都给我们带来了哪些功能。
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    鉴于以下的所有的组件都是基于这个基础组件来，我们详细扒一扒这个组件的API,看看他都给我们带来了哪些功能。
+</blockquote>
+
 
 ## 1.Transition组件
 
 ### 1.nodeRef
 
->对node的引用，意思就是直接通过这个属性可以获取到需要添加过渡效果的DOM节点。如果有了这个属性，在过渡回调如onEnter(节点刚进入前触发的回调)，就不会将DOM节点传递给你，因为你已经可以直接获取这个DOM节点了。
-
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    对node的引用，意思就是直接通过这个属性可以获取到需要添加过渡效果的DOM节点。如果有了这个属性，在过渡回调如onEnter(节点刚进入前触发的回调)，就不会将DOM节点传递给你，因为你已经可以直接获取这个DOM节点了。
+</blockquote>
+ 
 ### 2.children
 
->这里的children就是正常的孩子节点，不同的是这里可以是一个函数，函数参数是一个state描述组件的各个状态，可以通过这个状态给组件添加不同的style样式和class类名
-
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    这里的children就是正常的孩子节点，不同的是这里可以是一个函数，函数参数是一个state描述组件的各个状态，可以通过这个状态给组件添加不同的style样式和class类名
+</blockquote>
 
 ### 3.in
 
->显示组件，触发进入或退出的状态，当in从false变为true时，组件就要进行渲染进屏幕，从true变为false时，组件就会慢慢从屏幕上消失。
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    显示组件，触发进入或退出的状态，当in从false变为true时，组件就要进行渲染进屏幕，从true变为false时，组件就会慢慢从屏幕上消失。
+</blockquote>
+
+
 
 ### 4.mountOnEnter
 
->默认情况下，子组件将与父Transition组件一起立即安装。意思是说默认他默认是存在节点，只是不显示而已，如果设成true的话，节点默认一开始是不在dom树上的，在in为true时，才将节点挂在dom树上。
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+   默认情况下，子组件将与父Transition组件一起立即安装。意思是说默认他默认是存在节点，只是不显示而已，如果设成true的话，节点默认一开始是不在dom树上的，在in为true时，才将节点挂在dom树上。
+</blockquote>
+
+
 
 ### 5.unmountOnExit
 
->默认情况下，子组件在达到'exited'状态后会保持挂载状态。如果将这个设置为true时，当组件“离开”这个页面时，dom树上的这个节点会卸载。
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+   默认情况下，子组件在达到'exited'状态后会保持挂载状态。如果将这个设置为true时，当组件“离开”这个页面时，dom树上的这个节点会卸载。
+</blockquote>
+
 
 ### 6.appear（不准确）
 
->默认情况下，子组件在初次安装时不执行回车转换。意思是如果这个节点刚被挂在到节点上时，是默认没有过渡转换的，也就是设置成mountOnEnter时。（事实上我测试并无作用）
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(247, 31, 85,1); background: rgb(239, 235, 233);line-height:1.5;'>
+   默认情况下，子组件在初次安装时不执行回车转换。意思是如果这个节点刚被挂在到节点上时，是默认没有过渡转换的，也就是设置成mountOnEnter时。（事实上我测试并无作用）
+</blockquote>
+ 
 
 ### 7.enter
 
->启用或禁用输入转换.即对应的onEnter、onEntering、onEntered不会调用。
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+   启用或禁用输入转换.即对应的onEnter、onEntering、onEntered不会调用。
+</blockquote>
+ 
 
 ### 8、exit
 
->启用或禁用退出转换。即对应的onExit、onExiting、onExited不会调用。
-
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+   启用或禁用退出转换。即对应的onExit、onExiting、onExited不会调用。
+</blockquote>
+ 
 ### 9、timeout
 
->过渡持续时间（以毫秒为单位）。除非addEndListener提供，否则为必需。
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+过渡持续时间（以毫秒为单位）。除非addEndListener提供，否则为必需。<br />
 
->如果是进入的话 timeout设置的值就是onEntering->onEntered的事件
->如果是退出的话 timeout设置的值就是onExiting->onExited的事件
+如果是进入的话 timeout设置的值就是onEntering->onEntered的时间。<br />
+
+如果是退出的话 timeout设置的值就是onExiting->onExited的时间。
+</blockquote>
+
+
 
 ### 10、addEndListener
 
-> 不常用，添加自定义过渡结束触发器。通过过渡的DOM节点和done回调进行调用。允许使用更细粒度的过渡结束逻辑。如果提供超时，仍将其用作备用。
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+   不常用，添加自定义过渡结束触发器。通过过渡的DOM节点和done回调进行调用。允许使用更细粒度的过渡结束逻辑。如果提供超时，仍将其用作备用。
+</blockquote>
+
+
 
 ### 11、onEnter
 
-> 在应用“进入”状态之前触发了回调。提供了一个额外的参数 isAppearing来指示进入阶段是否在初始安装中发生。
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+   在应用“进入”状态之前触发了回调。提供了一个额外的参数 isAppearing来指示进入阶段是否在初始安装中发生。
+</blockquote>
+
 
 ### 12、onEntering
 
-> 应用“输入”状态后触发的回调。提供了一个额外的参数 isAppearing来指示进入阶段是否在初始安装中发生。
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+   应用“输入”状态后触发的回调。提供了一个额外的参数 isAppearing来指示进入阶段是否在初始安装中发生。
+</blockquote>
+
 
 ### 13、onEntered
 
-> 应用“已进入”状态后触发的回调。提供了一个额外的参数 isAppearing来指示进入阶段是否在初始安装中发生。
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    应用“已进入”状态后触发的回调。提供了一个额外的参数 isAppearing来指示进入阶段是否在初始安装中发生。
+</blockquote>
 
 ### 14、onExit
 
-> 在应用“退出”状态之前触发了回调。
-
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    在应用“退出”状态之前触发了回调。
+</blockquote>
+ 
 ### 15、onExiting
 
-> 应用“退出”状态后触发的回调。
-
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    应用“退出”状态后触发的回调。
+</blockquote>
+ 
 ### 16、onExited
 
-> 应用“退出”状态后触发的回调。
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+ 应用“退出”状态后触发的回调。
+</blockquote>
+
 
 ## 2.CSSTransition组件
 
->CSSTransition组件继承了组件的所有功能，受到vue-animate,ng-animate库的启发，增加了一个classNames属性。即不用通过style属性或js属性控制样式。
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+ CSSTransition组件继承了组件的所有功能，受到vue-animate,ng-animate库的启发，增加了一个classNames属性。即不用通过style属性或js属性控制样式。动画classNames应用于出现，进入，退出或已完成过渡的组件。可以提供一个名称，该名称将在每个阶段后缀，例如classNames="fade"适用：
 
-动画classNames应用于出现，进入，退出或已完成过渡的组件。可以提供一个名称，该名称将在每个阶段后缀，例如classNames="fade"适用：
+</blockquote>
+ 
 
-```js
+
+```css
 fade-appear，fade-appear-active，fade-appear-done
 
 fade-enter，fade-enter-active，fade-enter-done
 
 fade-exit，fade-exit-active，fade-exit-done
 ```
-
-## 3.CSSTransition组件
-
->我们这里并没有使用到，所以我们在这里就不多做介绍了，大家可以自己看官网哦！！
-
-
-## 4.TransitionGroup组件
-
->我们这里并没有使用到，所以我们在这里就不多做介绍了，大家可以自己看官网哦！！
-
-
+ 
 # 三、Fade淡入淡出组件（从透明到不透明）
-> 就是常规的渐隐操作，就是opacity由0 - > 1的过程，或者opacity1 -> 0的过程
 
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+就是常规的渐隐操作，就是opacity由0 - > 1的过程，或者opacity1 -> 0的过程
+</blockquote>
+ 
 ```js
 import React, { isValidElement } from 'react';  
 import { Transition } from 'react-transition-group';
@@ -210,15 +271,15 @@ const Fade = React.forwardRef(function (props, ref) {
 export default Fade;
 ```
 
-要点分析：
-1. 通过onEnter(表示在安装前)和onExit(表示在卸载前后)给节点设置过渡CSS,通过状态的不同给节点设置不同的opacity,刚开始节点opacity为0，然后在entering状态下设置opacity:1,注意此时需要在entered下也设置opacity:1，使节点显示。
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+要点分析：<br />
+1. 通过onEnter(表示在安装前)和onExit(表示在卸载前后)给节点设置过渡CSS,通过状态的不同给节点设置不同的opacity,刚开始节点opacity为0，然后在entering状态下设置opacity:1,注意此时需要在entered下也设置opacity:1，使节点显示。<br />
 2. 当节点初次被挂载到节点上时，设置过渡效果会失效，需要上文中的过渡效果，具体原因暂未得知，希望大佬能解答哦。
+</blockquote>
+  
 
 
-
-# 四、Zoom组件放大组件（从子元素的中心向外扩展）
-
-直接上code吧
+# 四、Zoom组件放大组件（从子元素的中心向外扩展） 
 
 ```js
 import React from 'react';
@@ -317,12 +378,18 @@ export default Zoom;
 
 ```
 
-重点解析：
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+要点分析：<br />
 1. 和Fade组件几乎是一样的，唯一的区别就是css属性一个是opacity，另一个则是transform:scale(1);
+</blockquote>  
 
 # 五、Grow扩展组件（从子元素的中心向外扩展同时设置透明度）
 
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+要点分析：<br />
 这个组件是我们组件库的基准动效组件，可以说我们的组件库都会基于这个组件进行开发。
+</blockquote>  
+
 
 ```JS
 
@@ -424,15 +491,20 @@ const Grow = React.forwardRef(function (props, ref) {
  
 export default Grow;
 ```
-
-重点解析：
-1. 和前2个组件是一样的，只是相当于俩个CSS属性结合在一起了opacity、transform
-2. 为了让scale变化更加丰富增加了getScale
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+要点分析：<br />
+1. 和前2个组件是一样的，只是相当于俩个CSS属性结合在一起了opacity、transform<br />
+2.为了让scale变化更加丰富增加了getScale
+</blockquote>  
+ 
 
 
 # 六、Collapse折叠组件（从子元素的顶部展开而来）
 
-> 这个组件相比较来说比较复杂。老规矩先上代码。
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+这个组件相比较来说比较复杂。老规矩先上代码。
+</blockquote>  
+ 
 
 ```js
 
@@ -593,8 +665,10 @@ $prefixCls:"#{$global-prefix}-Transition";
  
  # 七、Slide滑动组件（从屏幕边缘划入）
 
-> 这个组件在抽屉组件中常用到。
-
+ <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+这个组件在抽屉组件中常用到。
+</blockquote>
+ 
 ```js
 
 import React,{ useEffect, useRef } from 'react';
@@ -763,9 +837,23 @@ const Slide = React.forwardRef(function (props, ref) {
 export default Slide;
 ```
 
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+要点分析：<br />
+1. 自定义setTranslateValue函数通过getBoundingClientRect和方向来计算并设置节点的translateX/translateY。<br />
+2.记得在in为false的情况下，需要设置translate效果，否则无法过渡。
+</blockquote>  
+ 
+
+
+
+# 八、Transition组件设计核心要素
+
 ## 1.Hooks函数:useForkRef 
 
-> 在这里我们介绍一个hooks函数，这个函数可以同时设置多个Ref节点变量，很实用哦！
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+ 在这里我们介绍一个hooks函数，这个函数可以同时设置多个Ref节点变量，很实用哦！
+</blockquote>  
+
 
 ```js
 import React from 'react';
@@ -793,12 +881,11 @@ export default function setRef(ref, value) {
       ref.current = value;
     } 
 }
-  
 
 ```
 
-## 2.重点解析
+## 2.reflow函数
 
-1. 自定义setTranslateValue函数通过getBoundingClientRect和方向来计算并设置节点的translateX/translateY。
-
-2. 记得在in为false的情况下，需要设置translate效果，否则无法过渡。
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+浏览器触发了<a href="https://blog.csdn.net/mxydl2009/article/details/94625340">重排和重绘</a>
+</blockquote>  
