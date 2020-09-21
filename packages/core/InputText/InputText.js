@@ -7,8 +7,8 @@ import {
 } from '@packages/core/ConfigProvider'; 
 import useControlled from '@packages/hooks/useControlled';
 import capitalize from '@packages/utils/capitalize';
-import Icon from '@packages/icon';
 import { Fade } from '@packages/core/Transition';
+import { CloseSquare } from '@packages/core/Icon';
 import "./index.scss"; 
 
 const InputText=React.forwardRef(function(props,ref){
@@ -65,6 +65,11 @@ const InputText=React.forwardRef(function(props,ref){
         }
     }
 
+    const handleClearValue=(e)=>{
+        onChange?.("",e);
+        setValue("");
+    }
+
     return (
         <div ref={ref} className={classNames(
             `${prefixCls}`,
@@ -104,7 +109,10 @@ const InputText=React.forwardRef(function(props,ref){
                 {
                     (suffix || allowClear) && <span className={classNames(`${prefixCls}-InputWrapper-Suffix`)}>
                         {allowClear && <Fade in={value?true:false} mountOnEnter unmountOnExit>
-                            <Icon name={"CloseSquare"} style={{fontSize:16,color: "rgba(0,0,0,.4)"}} />
+                            <CloseSquare  
+                                style={{fontSize:16,color: "rgba(0,0,0,.4)",margin:"0 8px"}} 
+                                onClick={handleClearValue}
+                            />
                         </Fade>}
                         {suffix}
                     </span>
