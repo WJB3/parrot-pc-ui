@@ -46,6 +46,10 @@ const InputTextarea=React.forwardRef(function(props,ref){
         onResize?.();
     } 
 
+    useEffect(()=>{
+        resizeTextarea();
+    },[autoSize])
+
     const handleRef=useForkRef(ref,textAreaRef);
 
     return (

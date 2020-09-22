@@ -107,6 +107,7 @@ export default function calculateNodeHeight(
     height -= paddingSize;
   }
 
+  hiddenTextarea.value = ' ';
   const singleRowHeight = hiddenTextarea.scrollHeight - paddingSize;
 
   console.log(singleRowHeight)
