@@ -8,7 +8,7 @@ import {Input} from 'antd';
 const Page=(props)=>{
     return (
         <div> 
-            <InputTextarea autoSize style={{width:256}}  placeholder="Basic usage"  />   
+            <InputTextarea size={"large"} autoSize style={{width:256}}  placeholder="Basic usage"  />   
            
         </div>
     )

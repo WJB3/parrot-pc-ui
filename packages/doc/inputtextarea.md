@@ -384,3 +384,8 @@ export default InputTextarea;
                     style={textareaStyles}
                 />
 ```
+
+## 3.新textarea的scrollHeight与原元素并没有直接关系
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
+    因为我们这个组件是基于InputText这个基础组件来编写的，默认的话input框高32px，但是我在编写的时候发现获取到的scrollHeight在各个浏览器上都获取的不一致，由于我的脑海里面一直默认的高度是以32px作为标准衡量的，其实他的高度和我们的InputText组件的input框的高度没有任何关系。
+</blockquote> 

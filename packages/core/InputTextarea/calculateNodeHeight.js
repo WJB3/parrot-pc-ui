@@ -87,33 +87,25 @@ export default function calculateNodeHeight(
     'style',
     `${sizingStyle};${HIDDEN_TEXTAREA_STYLE}`,
   );
-  hiddenTextarea.value = uiTextNode.value || uiTextNode.placeholder || '';
-
-  console.log(window.getComputedStyle(hiddenTextarea).height)
+  hiddenTextarea.value = uiTextNode.value || uiTextNode.placeholder || ''; 
 
   let minHeight = Number.MIN_SAFE_INTEGER;
   let maxHeight = Number.MAX_SAFE_INTEGER;
   let height = hiddenTextarea.scrollHeight;
-
-  console.log(height);  
-
+ 
   let overflowY;
 
   if (boxSizing === 'border-box') {
-   
+    // border-box: add border, since height = content + padding + border
     height += borderSize;
   } else if (boxSizing === 'content-box') {
- 
+    // remove padding, since height = content
     height -= paddingSize;
-  }
-
-  hiddenTextarea.value = ' ';
-  const singleRowHeight = hiddenTextarea.scrollHeight - paddingSize;
-
-  console.log(singleRowHeight)
+  } 
+ 
 
   if (minRows !== null || maxRows !== null) {
-   
+    // measure height of a textarea with a single row
     hiddenTextarea.value = ' ';
     const singleRowHeight = hiddenTextarea.scrollHeight - paddingSize;
     if (minRows !== null) {
