@@ -100,10 +100,10 @@ export default function calculateNodeHeight(
   let overflowY;
 
   if (boxSizing === 'border-box') {
-    // border-box: add border, since height = content + padding + border
+   
     height += borderSize;
   } else if (boxSizing === 'content-box') {
-    // remove padding, since height = content
+ 
     height -= paddingSize;
   }
 
@@ -111,25 +111,25 @@ export default function calculateNodeHeight(
 
   console.log(singleRowHeight)
 
-//   if (minRows !== null || maxRows !== null) {
-//     // measure height of a textarea with a single row
-//     hiddenTextarea.value = ' ';
-//     const singleRowHeight = hiddenTextarea.scrollHeight - paddingSize;
-//     if (minRows !== null) {
-//       minHeight = singleRowHeight * minRows;
-//       if (boxSizing === 'border-box') {
-//         minHeight = minHeight + paddingSize + borderSize;
-//       }
-//       height = Math.max(minHeight, height);
-//     }
-//     if (maxRows !== null) {
-//       maxHeight = singleRowHeight * maxRows;
-//       if (boxSizing === 'border-box') {
-//         maxHeight = maxHeight + paddingSize + borderSize;
-//       }
-//       overflowY = height > maxHeight ? '' : 'hidden';
-//       height = Math.min(maxHeight, height);
-//     }
-//   }
+  if (minRows !== null || maxRows !== null) {
+   
+    hiddenTextarea.value = ' ';
+    const singleRowHeight = hiddenTextarea.scrollHeight - paddingSize;
+    if (minRows !== null) {
+      minHeight = singleRowHeight * minRows;
+      if (boxSizing === 'border-box') {
+        minHeight = minHeight + paddingSize + borderSize;
+      }
+      height = Math.max(minHeight, height);
+    }
+    if (maxRows !== null) {
+      maxHeight = singleRowHeight * maxRows;
+      if (boxSizing === 'border-box') {
+        maxHeight = maxHeight + paddingSize + borderSize;
+      }
+      overflowY = height > maxHeight ? '' : 'hidden';
+      height = Math.min(maxHeight, height);
+    }
+  }
   return { height, minHeight, maxHeight, overflowY };
 }

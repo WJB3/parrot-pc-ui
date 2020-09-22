@@ -26,26 +26,21 @@ const InputTextarea=React.forwardRef(function(props,ref){
 
     const [textareaStyles,setTextareaStyles]=useState({});
 
-    const resizeTextarea=()=>{  
-        console.log(textAreaRef.current)
+    const resizeTextarea=()=>{   
+    
         if(!autoSize||!textAreaRef.current){
             return ;
         } 
         const {minRows,maxRows}=autoSize;
         const textareaStyles = calculateNodeHeight(textAreaRef.current, minRows, maxRows);
- 
-        // setTextareaStyles(textareaStyles);
+
+         setTextareaStyles(textareaStyles);
     }
 
-    const handleChange=(value,e)=>{ 
-        resizeTextarea(); 
-
+    const handleChange=(value,e)=>{  
+        resizeTextarea();
         onChange?.(value,e); 
     }
-
-    useEffect(()=>{
-        resizeTextarea()
-    },[autoSize])
 
     const handleResize=()=>{
         onResize?.();

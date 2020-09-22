@@ -8,15 +8,10 @@ import {Input} from 'antd';
 const Page=(props)=>{
     return (
         <div> 
-            <InputTextarea autoSize style={{width:256}}  placeholder="Basic usage"  /> 
-            <InputTextarea style={{width:256}} autoSize placeholder="Basic usage"  /> 
-            {/* <Input.TextArea
-                placeholder="nes"
-                autoSize
-            />
-              */}
+            <InputTextarea autoSize style={{width:256}}  placeholder="Basic usage"  />   
+           
         </div>
     )
 }
 
-export default Page;    
+export default Page;        
