@@ -1,0 +1,28 @@
+
+@import "../styles/variable.scss";
+
+$prefixCls:"#{$global-prefix}-InputTextarea"; 
+$prefixClsInput:"#{$prefixCls}-Input";
+
+.#{$prefixCls}{ 
+
+    padding:0 ;
+    border:none;
+    
+    .#{$prefixClsInput}{
+        min-height: 32px;
+
+
+    }
+
+   
+     
+    
+  
+}
+ textarea{
+        overflow: hidden;
+        resize: vertical;
+        margin:0;
+        padding:2px;
+}

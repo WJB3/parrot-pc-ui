@@ -10,21 +10,13 @@ const ResizeObserverComponent=forwardRef((props,ref)=>{
         onResize
     }=props;
 
-    const childNode=useRef(null);
-
-    const currentELement=useRef(null);
+    const childNode=useRef(null); 
 
     const resizeObserver=useRef(null);
 
     const onComponentUpdated=()=>{
-        const element=childNode.current;
-        const elementChanged=element!==currentELement.current;
-
-        if(elementChanged){
-            destroyObserver();
-            currentELement.current=element;
-        }
-
+        const element=childNode.current; 
+ 
         if(!resizeObserver.current && element){
             resizeObserver.current=new ResizeObserver(handleResize);
             resizeObserver.current.observe(element);

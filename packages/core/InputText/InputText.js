@@ -29,7 +29,12 @@ const InputText=React.forwardRef(function(props,ref){
         suffix,
         type="text",
         onPressEnter,
-        allowClear 
+        allowClear,
+        component:Component="input",
+        style,
+        //textarea的样式
+        textareaStyles={},
+
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("InputText",customizePrefixCls); 
@@ -71,7 +76,7 @@ const InputText=React.forwardRef(function(props,ref){
     }
 
     return (
-        <div ref={ref} className={classNames(
+        <div style={style} className={classNames(
             `${prefixCls}`,
             className,
             {
@@ -89,7 +94,7 @@ const InputText=React.forwardRef(function(props,ref){
                     </span>
                 }
 
-                <input 
+                <Component 
                     placeholder={placeholder}
                     value={value?value:""}
                     className={
@@ -97,6 +102,7 @@ const InputText=React.forwardRef(function(props,ref){
                             `${prefixCls}-Input`
                         )
                     }
+                    ref={ref} 
                     id={id}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
@@ -104,6 +110,7 @@ const InputText=React.forwardRef(function(props,ref){
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
                     type={type}
+                    style={textareaStyles}
                 />
 
                 {

@@ -25,6 +25,7 @@ $prefixClsInput:"#{$prefixCls}-Input";
             border-bottom:1px solid rgba(0,0,0,.45);
             pointer-events:none;
             transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+            box-sizing: border-box;
         }
 
         &:hover{
@@ -45,13 +46,14 @@ $prefixClsInput:"#{$prefixCls}-Input";
             border-bottom:2px solid $primary-color;
             pointer-events: none;
             transition:transform 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+            box-sizing: border-box;
         }
 
         .#{$prefixClsInput}{
             font:inherit;
             color:currentColor;
             outline: none;
-            border:0; 
+            border:none; 
             background: none;
             flex:1;
             box-sizing: border-box;
