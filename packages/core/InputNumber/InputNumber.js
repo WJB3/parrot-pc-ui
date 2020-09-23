@@ -100,14 +100,17 @@ const InputNumber = React.forwardRef(function (props, ref) {
         //按键向上
         if (keyCode === KeyCode.UP) {
             val = val + step;
+
+            
         } else if (keyCode === KeyCode.DOWN) {
             val = val - step;
+ 
         } else {
 
         }
-
-        // console.log(val)
-        setValue(String(val))
+        // setValue(String(val))
+        
+       
     }
 
 
@@ -138,7 +141,8 @@ const InputNumber = React.forwardRef(function (props, ref) {
     }
 
     const handleChange=(value)=>{
-        console.log(value)
+        console.log("handleChange");    
+        console.log(value);    
     }
 
     useEffect(() => {
@@ -156,10 +160,10 @@ const InputNumber = React.forwardRef(function (props, ref) {
             renderNumber={renderNumber}
             onKeyDown={editable ? handleKeyDown : noop}
             onPressEnter={editable ? onPressEnter : noop}
-            {...restProps}
             size={size}
             value={getTransformValue(value)}
-            onChange={handleChange}
+            onChange={handleChange} 
+            {...restProps}
         />
     )
 });

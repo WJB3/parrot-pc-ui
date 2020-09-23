@@ -59,6 +59,7 @@ const InputText=React.forwardRef(function(props,ref){
     }
 
     const handleChange=(e)=>{ 
+        console.log("handleChange")
         onChange?.(e.target.value,e);
         setValue(e.target.value);
     } 
@@ -76,6 +77,8 @@ const InputText=React.forwardRef(function(props,ref){
         onChange?.("",e);
         setValue("");
     }
+
+    console.log(value)
 
     return (
         <div style={style} className={classNames(
@@ -111,6 +114,7 @@ const InputText=React.forwardRef(function(props,ref){
                     maxLength={maxLength}
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
+                    onInput={()=>console.log("onInput")}
                     type={type}
                     style={textareaStyles}
                 />
