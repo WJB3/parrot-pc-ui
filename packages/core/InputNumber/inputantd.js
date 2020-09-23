@@ -320,10 +320,7 @@ class InputNumber extends React.Component {
     // optimize for chinese input expierence
     // https://github.com/ant-design/ant-design/issues/8196
     let value = e.target.value.trim().replace(/。/g, '.');
-
-    if (isValidProps(this.props.decimalSeparator)) {
-      value = value.replace(this.props.decimalSeparator, '.');
-    }
+ 
 
     return value;
   }
@@ -444,13 +441,9 @@ class InputNumber extends React.Component {
       inputDisplayValue = '';
     }
  
-    if (isValidProps(this.props.decimalSeparator)) {
-      inputDisplayValueFormat = inputDisplayValueFormat
-        .toString()
-        .replace('.', this.props.decimalSeparator);
-    }
+  
 
-    return inputDisplayValueFormat;
+    return inputDisplayValue;
   };
 
   recordCursorPosition = () => {

@@ -58,7 +58,7 @@ const InputText=React.forwardRef(function(props,ref){
         onBlur?.(e);
     }
 
-    const handleChange=(e)=>{
+    const handleChange=(e)=>{ 
         onChange?.(e.target.value,e);
         setValue(e.target.value);
     } 
@@ -98,7 +98,7 @@ const InputText=React.forwardRef(function(props,ref){
 
                 <Component 
                     placeholder={placeholder}
-                    value={value?value:""}
+                    value={(value||value==0)?value:""}
                     className={
                         classNames(
                             `${prefixCls}-Input`

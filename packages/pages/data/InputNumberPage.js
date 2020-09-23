@@ -8,8 +8,8 @@ import 'antd/dist/antd.css';
 const Page=(props)=>{
     return (
         <div> 
-            <InputNumber  defaultValue={"wo"}  style={{width:256}}  placeholder="Basic usage"  />    
-            <InputNumberA  precision={3}  style={{width:256}}  placeholder="Basic usage"  />    
+            <InputNumber  defaultValue={"卧槽"}   step={2} style={{width:256}}  placeholder="Basic usage"  />    
+            <InputNumberA   defaultValue={"卧槽"}   style={{width:256}}  placeholder="Basic usage"  />    
         </div>
     )
 }
