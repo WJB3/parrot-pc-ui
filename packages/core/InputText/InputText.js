@@ -34,7 +34,7 @@ const InputText=React.forwardRef(function(props,ref){
         style,
         //textarea的样式
         textareaStyles={},
-
+        renderNumber
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("InputText",customizePrefixCls); 
@@ -64,10 +64,12 @@ const InputText=React.forwardRef(function(props,ref){
     } 
 
     const handleKeyDown=(e)=>{
-        onKeyDown?.(e.keyCode,e);
+        onKeyDown?.(e.keyCode,e); 
+
         if(e.keyCode===13){
             onPressEnter?.(e);
-        }
+        } 
+        
     }
 
     const handleClearValue=(e)=>{
@@ -113,6 +115,8 @@ const InputText=React.forwardRef(function(props,ref){
                     style={textareaStyles}
                 />
 
+              
+
                 {
                     (suffix || allowClear) && <span className={classNames(`${prefixCls}-InputWrapper-Suffix`)}>
                         {allowClear && <Fade in={value?true:false} mountOnEnter unmountOnExit>
@@ -125,6 +129,8 @@ const InputText=React.forwardRef(function(props,ref){
                     </span>
                 }
             </div>
+
+            {renderNumber}
         </div>
     )
 });
@@ -141,7 +147,7 @@ InputText.propTypes={
     //占位符
     placeholder:PropTypes.any,
     //输入框内容
-    value:PropTypes.string,
+    value:PropTypes.any,
     //输入框默认内容
     defaultValue:PropTypes.string,
     //焦点事件
@@ -155,7 +161,13 @@ InputText.propTypes={
     //input前缀
     prefix:PropTypes.any,
     //input后缀
-    suffix:PropTypes.any
+    suffix:PropTypes.any,
+    //number
+    renderNumber:PropTypes.any,
+    //style
+    style:PropTypes.any,
+    //textareaStyles
+    textareaStyles:PropTypes.any
 
 };
 

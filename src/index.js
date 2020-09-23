@@ -16,6 +16,7 @@ import ConfigProviderPage from '@packages/pages/else/ConfigProviderPage';
 import InputTextPage from '@packages/pages/data/InputPage';
 import IconPage from '@packages/pages/common/IconPage';
 import InputTextareaPage from '@packages/pages/data/InputTextareaPage';
+import InputNumberPage from '@packages/pages/data/InputNumberPage';
 import "./index.scss";
 
 
@@ -32,6 +33,7 @@ ReactDOM.render((<HashRouter>
     <Route path="/configprovider"  exact component={(props)=><ConfigProviderPage {...props}/>} />
     <Route path="/inputtext"  exact component={(props)=><InputTextPage {...props}/>} />
     <Route path="/icon"  exact component={(props)=><IconPage {...props}/>} />
-    <Route path="/"  exact component={(props)=><InputTextareaPage {...props}/>} />
+    <Route path="/inputtextarea"  exact component={(props)=><InputTextareaPage {...props}/>} />
+    <Route path="/"  exact component={(props)=><InputNumberPage {...props}/>} />
     <Route path="/ripple"  exact component={(props)=><RipplePage {...props}/>} />
 </HashRouter>), document.getElementById("root"));

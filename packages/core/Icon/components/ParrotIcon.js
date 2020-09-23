@@ -16,8 +16,7 @@ const ParrotIcon=React.forwardRef((props,ref)=>{
         spin,
         style
     }=props;
-
-
+ 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("Icon",customizePrefixCls); 
 
     const svgStyle=rotate?{msTransform:`rotate(${rotate}deg)`,transform:`rotate(${rotate}deg)`}:undefined;

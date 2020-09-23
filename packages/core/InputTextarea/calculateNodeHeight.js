@@ -87,12 +87,8 @@ export default function calculateNodeHeight(
     'style',
     `${sizingStyle};${HIDDEN_TEXTAREA_STYLE}`,
   );
-<<<<<<< Updated upstream
-  hiddenTextarea.value = uiTextNode.value || uiTextNode.placeholder || ''; 
-=======
   hiddenTextarea.value = uiTextNode.value || uiTextNode.placeholder || '';
  
->>>>>>> Stashed changes
 
   let minHeight = Number.MIN_SAFE_INTEGER;
   let maxHeight = Number.MAX_SAFE_INTEGER;
