@@ -161,9 +161,13 @@ const InputNumber = React.forwardRef(function (props, ref) {
             onKeyDown={editable ? handleKeyDown : noop}
             onPressEnter={editable ? onPressEnter : noop}
             size={size}
+<<<<<<< Updated upstream
             value={getTransformValue(value)}
             onChange={handleChange} 
             {...restProps}
+=======
+            value={value}
+>>>>>>> Stashed changes
         />
     )
 });
