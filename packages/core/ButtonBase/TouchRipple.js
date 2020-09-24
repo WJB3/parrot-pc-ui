@@ -10,7 +10,7 @@ const TouchRipple=React.forwardRef((props,ref)=>{
 
     const {
         prefixCls:customizePrefixCls,
-        center: centerProp = false, 
+        center: centerProp = false,  
         ...restProps
     }=props;
 
@@ -143,7 +143,7 @@ const TouchRipple=React.forwardRef((props,ref)=>{
   
 
     return (
-        <span className={classNames(prefixCls)} ref={container}>
+        <span className={classNames(prefixCls)} ref={container} {...restProps}>
             <TransitionGroup component={null} exit {...restProps}>
                 {ripples}
             </TransitionGroup>

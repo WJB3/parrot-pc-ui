@@ -13,6 +13,8 @@ import InputText from '@packages/core/InputText';
 import useControlled from '@packages/hooks/useControlled';
 import useInit from '@packages/hooks/useInit';
 import KeyCode from '@packages/utils/KeyCode';
+import themeColor from '@packages/core/styles/styles';
+import useForkRef from '@packages/hooks/useForkRef';
 import "./index.scss";
 
 const sizeObj = {
@@ -21,8 +23,9 @@ const sizeObj = {
     "large": "20px"
 }
 
+const isValidProps = value => value !== undefined && value !== null;
 
-function noop() { }
+function noop() { } 
 
 const InputNumber = React.forwardRef(function (props, ref) {
     const {
@@ -51,20 +54,26 @@ const InputNumber = React.forwardRef(function (props, ref) {
 
     const isInit = useInit();
 
+    const inputRef=useRef(null);
+
     const prefixCls = useContext(ConfigContext)?.getPrefixCls("InputNumber", customizePrefixCls);
 
     //首先确立我们的value始终是string
-    const [value, setValue] = useControlled({ controlled: valueProp ? String(valueProp) : valueProp, default: defaultValue ? String(defaultValue) : defaultValue });
+    const [value, setValue] = useControlled({controlled: valueProp, default: defaultValue});
 
     const [focused, setFocused] = useState(autoFocus);
 
     const renderNumber = (<div className={classNames(`${prefixCls}-HandlerWrap`)} >
-        <ButtonBase className={classNames(`${prefixCls}-Handler`)}> <KeyboardArrowUp style={{ fontSize: sizeObj[size] }} /></ButtonBase>
-        <ButtonBase className={classNames(`${prefixCls}-Handler`)}> <KeyboardArrowDown style={{ fontSize: sizeObj[size] }} /></ButtonBase>
+        <ButtonBase className={classNames(`${prefixCls}-Handler`)} TouchRippleProps={{style:{color:themeColor.PRIMARY}}} onClick={()=>setValue(computedLastValueOutOfRange("up"))}> <KeyboardArrowUp style={{ fontSize: sizeObj[size] }} /></ButtonBase>
+        <ButtonBase className={classNames(`${prefixCls}-Handler`)} TouchRippleProps={{style:{color:themeColor.PRIMARY}}} onClick={()=>setValue(computedLastValueOutOfRange("down"))}> <KeyboardArrowDown style={{ fontSize: sizeObj[size] }} /></ButtonBase>
     </div>)
 
   
     const getStep = (e) => {
+        
+        if(!e){
+            return stepProp||1;
+        }
         //获取步数
         if (e.metaKey || e.ctrlKey) {
             return 0.1;
@@ -77,97 +86,180 @@ const InputNumber = React.forwardRef(function (props, ref) {
     const getCanCalcValue = () => {
         //这里返回的值永远是number类型
         //获取可以计算的值
+
+        let val=value;
+
         if (!value) {
-            return 0;
+            val=0;
         }
-        if (isNaN(parseFloat(value))) {
-            return 0;
+
+        if (isChinese(value)) {
+            //是汉字
+            val=0;
         }
-        return Number(value);
+        if(precision && isNumber(value)){
+            val=Number(val).toFixed(precision);
+        } 
+
+        return Number(val);
     }
 
-    const handleKeyDown = (keyCode, e) => {
- 
-        if (e) {
-            //阻止每次按下按键光标跳到前面
-            e.persist();
-            e.preventDefault();
-        }
+    const handleKeyDown = (keyCode, e) => {       
 
-        let val=getCanCalcValue();
-        const step=getStep(e);
+        //阻止默认事件会不触发onchange 
+        // if (e) {
+        //     //阻止每次按下按键光标跳到前面
+        //     e.persist();
+        //     e.preventDefault();
+        // } 
 
         //按键向上
         if (keyCode === KeyCode.UP) {
-            val = val + step;
-
-            
+            if(e){
+                e.preventDefault();
+            }
+            let val=computedLastValueOutOfRange("up",e);
+            setValue(val);
         } else if (keyCode === KeyCode.DOWN) {
-            val = val - step;
- 
-        } else {
+            let val=computedLastValueOutOfRange("down",e);
+            setValue(val);
+        }  
+    }  
 
+    const computedLastValueOutOfRange=(type,e,value)=>{
+        //根据边界判断最终的值
+        let val=getCanCalcValue();
+         
+        if(type==="up"){
+            const step=getStep(e);
+            let cVal=val+step;
+
+            if(cVal>=maxProp){
+                return maxProp;
+            }
+
+            return String(cVal);
+
+        }else if(type==="down"){
+            const step=getStep(e);
+            let cVal=val-step; 
+            if(cVal<=minProp){
+                return minProp;
+            }
+
+            return String(cVal);
+        }else if(type==="change" && e===null){//change变化的值
+            if(Number(value)>=maxProp){//如果超出max值
+                return String(maxProp);
+            }
+
+            if(Number(value)<=minProp){//如果低于min值
+                return String(minProp);
+            }
+
+            return String(value);
         }
-        // setValue(String(val))
-        
-       
+    }
+    
+    const isNumber=(val)=>{
+        let reg=/^[0-9]+.?[0-9]*$/;
+        //判断转后是否是数字
+        if(reg.test(val)){
+            return true;
+        }
+        return false;
     }
 
+    const isChinese=(val)=>{
+        //判断是否是汉字
+        if(isNaN(parseFloat(val))){
+            return true;
+        }
+        return false;
+
+    }
+
+    const handleChange=(val)=>{   
+        //新打的字符
+        let newWord=val.substring(val.length-1);
+        //全字符
+        let competeWord=val; 
+
+        if(value.length-1===val.length){//判断是否是空格
+            setValue(computedLastValueOutOfRange('change',null,competeWord));
+            return ;
+        }
+
+        if(isNumber(newWord) && isChinese(competeWord)){
+            //如果新打的字符是数字并且之前是汉字 设置新打的单词为value
+            setValue(computedLastValueOutOfRange('change',null,newWord))
+        }else if(isNumber(newWord) && isNumber(competeWord)){
+            //如果新打的字符是数字并且总的是数字，设置value为change变化的值 
+            setValue(computedLastValueOutOfRange('change',null,competeWord))
+        }
+
+         
+    }   
+
+    useEffect(() => {
+        if (isInit) {
+            onChange?.(getCanCalcValue(value));
+        }
+    }, [value, isInit]); 
+ 
 
     const getTransformValue = (value) => {
+        //转化formatter、decimalSeparator的函数
  
         let val = value;
 
-        if (!value) {
+        if (!isValidProps(value)) {
             //不存在value值
-            val = "0";
-        } else if (isNaN(value)) {
+            val = "";
+        } else if (isChinese(value)) {
             //汉字等
             val = value;
         } else {
             //普通数值
             val = String(val);
         }
+        
+        if(precision && isNumber(val)){//判断是数字
+            val=Number(val).toFixed(precision);
+        }
 
         if (formatter) {
             val = formatter(val);
-        }
+        } 
 
-        if (decimalSeparator) {
+        if (decimalSeparator) { 
             val = val.replace(".", decimalSeparator)
         }
 
         return val;
+    } 
+
+    const handleRef=useForkRef(inputRef,ref);
+
+    const setCursorPosition=()=>{
+        if(inputRef.current.setSelectionRange){
+            inputRef.current.setSelectionRange(inputRef.current.value.length,inputRef.current.value.length);
+            inputRef.current.focus();
+        } 
     }
-
-    const handleChange=(value)=>{
-        console.log("handleChange");    
-        console.log(value);    
-    }
-
-    useEffect(() => {
-        if (isInit) {
-            onChange?.(value);
-        }
-    }, [value, isInit]); 
-
-    console.log(getTransformValue(value))
 
     return (
         <InputText
             component={"input"}
             className={classNames(prefixCls)}
             renderNumber={renderNumber}
-            onKeyDown={editable ? handleKeyDown : noop}
+            onKeyDown={editable ? handleKeyDown : noop} 
             onPressEnter={editable ? onPressEnter : noop}
             size={size}
-<<<<<<< Updated upstream
+            ref={handleRef}
             value={getTransformValue(value)}
             onChange={handleChange} 
             {...restProps}
-=======
-            value={value}
->>>>>>> Stashed changes
         />
     )
 });

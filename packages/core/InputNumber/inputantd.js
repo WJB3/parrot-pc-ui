@@ -209,9 +209,7 @@ class InputNumber extends React.Component {
       }
     }
   }
-
-  componentWillUnmount() { 
-  }
+ 
 
   onKeyDown = (e, ...args) => {
     const { onKeyDown, onPressEnter } = this.props;

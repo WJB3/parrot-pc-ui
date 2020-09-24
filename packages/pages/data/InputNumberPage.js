@@ -9,9 +9,19 @@ import 'antd/dist/antd.css';
 const Page=(props)=>{
     return (
         <div> 
-            <InputNumber  defaultValue={"卧槽"}   step={2} style={{width:256}}  placeholder="Basic usage"  />    
-            <InputNumberA   defaultValue={"卧槽"}   style={{width:256}}  placeholder="Basic usage"  />    
-            <InputText   value={"卧槽"}   style={{width:256}}  placeholder="Basic usage"  />    
+            <InputNumber 
+                decimalSeparator={","} 
+                min={0}    
+                max={100}  
+                precision={4}    
+                step={20} 
+                style={{width:256}}  
+                placeholder="Basic usage" 
+                onChange={(value)=>console.log(value)} 
+            />    
+
+           
+        
         </div>
     )
 }

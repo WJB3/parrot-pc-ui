@@ -34,7 +34,8 @@ const InputText=React.forwardRef(function(props,ref){
         style,
         //textarea的样式
         textareaStyles={},
-        renderNumber
+        renderNumber,
+        onKeyUp
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("InputText",customizePrefixCls); 
@@ -58,8 +59,7 @@ const InputText=React.forwardRef(function(props,ref){
         onBlur?.(e);
     }
 
-    const handleChange=(e)=>{ 
-        console.log("handleChange")
+    const handleChange=(e)=>{   
         onChange?.(e.target.value,e);
         setValue(e.target.value);
     } 
@@ -76,9 +76,7 @@ const InputText=React.forwardRef(function(props,ref){
     const handleClearValue=(e)=>{
         onChange?.("",e);
         setValue("");
-    }
-
-    console.log(value)
+    } 
 
     return (
         <div style={style} className={classNames(
@@ -113,8 +111,8 @@ const InputText=React.forwardRef(function(props,ref){
                     onBlur={handleBlur}
                     maxLength={maxLength}
                     onChange={handleChange}
-                    onKeyDown={handleKeyDown}
-                    onInput={()=>console.log("onInput")}
+                    onKeyDown={handleKeyDown} 
+                    onKeyUp={onKeyUp}
                     type={type}
                     style={textareaStyles}
                 />
