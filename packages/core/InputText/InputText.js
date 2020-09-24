@@ -35,7 +35,8 @@ const InputText=React.forwardRef(function(props,ref){
         //textarea的样式
         textareaStyles={},
         renderNumber,
-        onKeyUp
+        onKeyUp,
+        renderPassword
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("InputText",customizePrefixCls); 
@@ -116,8 +117,7 @@ const InputText=React.forwardRef(function(props,ref){
                     type={type}
                     style={textareaStyles}
                 />
-
-              
+ 
 
                 {
                     (suffix || allowClear) && <span className={classNames(`${prefixCls}-InputWrapper-Suffix`)}>

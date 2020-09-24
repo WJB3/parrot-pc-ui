@@ -104,7 +104,7 @@ const InputNumber = React.forwardRef(function (props, ref) {
         return Number(val);
     }
 
-    const handleKeyDown = (keyCode, e) => {       
+    const handleKeyDown = (keyCode, e) => {    
 
         //阻止默认事件会不触发onchange 
         // if (e) {
@@ -114,19 +114,27 @@ const InputNumber = React.forwardRef(function (props, ref) {
         // } 
 
         //按键向上
-        if (keyCode === KeyCode.UP) {
+        if (keyCode === KeyCode.UP) {//上键
             if(e){
                 e.preventDefault();
             }
             let val=computedLastValueOutOfRange("up",e);
             setValue(val);
-        } else if (keyCode === KeyCode.DOWN) {
+        } else if (keyCode === KeyCode.DOWN) {//下键
             let val=computedLastValueOutOfRange("down",e);
             setValue(val);
-        }  
+        } else if(keyCode===KeyCode.BACKSPACE){//回车
+             
+            if(precision){
+                setValue("");
+            }
+            
+            
+        }
     }  
 
     const computedLastValueOutOfRange=(type,e,value)=>{
+       
         //根据边界判断最终的值
         let val=getCanCalcValue();
          
@@ -149,6 +157,7 @@ const InputNumber = React.forwardRef(function (props, ref) {
 
             return String(cVal);
         }else if(type==="change" && e===null){//change变化的值
+             
             if(Number(value)>=maxProp){//如果超出max值
                 return String(maxProp);
             }
@@ -184,11 +193,6 @@ const InputNumber = React.forwardRef(function (props, ref) {
         let newWord=val.substring(val.length-1);
         //全字符
         let competeWord=val; 
-
-        if(value.length-1===val.length){//判断是否是空格
-            setValue(computedLastValueOutOfRange('change',null,competeWord));
-            return ;
-        }
 
         if(isNumber(newWord) && isChinese(competeWord)){
             //如果新打的字符是数字并且之前是汉字 设置新打的单词为value

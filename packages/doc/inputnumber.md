@@ -225,14 +225,14 @@ const getTransformValue = (value) => {
 ## 2.formatter不需要对应的parser
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
-    由于我们这里的fomatter只是起到了美化了value值的作用，所以并没有对传出的值产生影响，也就不需要parser进行转化,跟人感觉更简洁。
+    由于我们这里的fomatter只是起到了美化了value值的作用，所以并没有对传出的值产生影响，也就不需要parser进行转化,给人感觉更简洁。
 </blockquote>
 
 
 ## 3.keydown事件按上键时光标会移动到前面
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(247, 31, 85,1); background: rgb(239, 235, 233);line-height:1.5;'>
-   只需要阻止默认事件就可以，有一点需要注意的是如果写在上面，那么onChange事件是不会出发的，这点也是坑了我很久的。
+   只需要阻止默认事件就可以，有一点需要注意的是如果写在上面，那么onChange事件是不会触发的，这点也是坑了我很久的。
 </blockquote>
 
 ```js
