@@ -18,6 +18,7 @@ import IconPage from '@packages/pages/common/IconPage';
 import InputTextareaPage from '@packages/pages/data/InputTextareaPage';
 import InputNumberPage from '@packages/pages/data/InputNumberPage';
 import InputPasswordPage from '@packages/pages/data/InputPasswordPage';
+import PopperPage from '@packages/pages/display/PopperPage';
 import "./index.scss";
 
 
@@ -26,7 +27,7 @@ ReactDOM.render((<HashRouter>
     <Route path="/button" exact component={(props)=><ButtonPage {...props}/>} />
     <Route path="/tabs" exact component={(props)=><TabsPage {...props}/>} />
     <Route path="/transitions" exact component={(props)=><TransitionPage {...props}/>} />
-    <Route path="/portal" exact component={(props)=><PortalPage {...props}/>} />
+
     <Route path="/resizeobserver" exact component={(props)=><ResizeObserverPage {...props}/>} />
     <Route path="/affix" exact component={(props)=><AffixPage {...props}/>} /> 
     <Route path="/grid" exact component={(props)=><GridPage {...props}/>} />
@@ -37,5 +38,7 @@ ReactDOM.render((<HashRouter>
     <Route path="/inputtextarea"  exact component={(props)=><InputTextareaPage {...props}/>} />
     <Route path="/inputnumber"  exact component={(props)=><InputNumberPage {...props}/>} />
     <Route path="/ripple"  exact component={(props)=><RipplePage {...props}/>} />
-    <Route path="/"  exact component={(props)=><InputPasswordPage {...props}/>} />
+    <Route path="/inputpassword"  exact component={(props)=><InputPasswordPage {...props}/>} />
+    <Route path="/protal" exact component={(props)=><PortalPage {...props}/>} />
+    <Route path="/" exact component={(props)=><PopperPage {...props}/>} />
 </HashRouter>), document.getElementById("root"));

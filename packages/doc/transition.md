@@ -76,7 +76,7 @@
 ### 6.appear（不准确）
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(247, 31, 85,1); background: rgb(239, 235, 233);line-height:1.5;'>
-   默认情况下，子组件在初次安装时不执行回车转换。意思是如果这个节点刚被挂在到节点上时，是默认没有过渡转换的，也就是设置成mountOnEnter时。（事实上我测试并无作用）
+   默认情况下，子组件在初次安装时不执行回车转换。当组件in从undefined属性到true时，没有效果。需要添加此属性。
 </blockquote>
  
 

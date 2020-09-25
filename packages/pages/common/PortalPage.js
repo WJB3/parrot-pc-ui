@@ -14,7 +14,7 @@ const Page= React.forwardRef((props,ref)=>{
 
         <div ref={container}></div>
          
-        <Portal container={container.current}>
+        <Portal target={container.current}>
             {mount?"render":null}
         </Portal>
         

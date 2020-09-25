@@ -1,8 +1,9 @@
 import React from 'react';
 import classNames from '@packages/utils/classNames'; 
 import PropTypes from 'prop-types'; 
-import usePrefixCls from '@packages/hooks/usePrefixCls';
-import capitalize from '@packages/utils/capitalize';
+import {
+    ConfigContext 
+} from '@packages/core/ConfigProvider'; 
 import "./index.scss";
 
 const Paper=React.forwardRef((props,ref)=>{
@@ -16,7 +17,7 @@ const Paper=React.forwardRef((props,ref)=>{
         style
     }=props;
 
-    const prefixCls=usePrefixCls('Paper',customizePrefixCls);
+    const prefixCls=useContext(ConfigContext)?.getPrefixCls("Paper",customizePrefixCls); 
 
     return (
         <Component

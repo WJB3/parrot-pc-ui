@@ -139,6 +139,7 @@ const Slide = React.forwardRef(function (props, ref) {
 
     return (
         <TransitionComponent 
+            appear
             in={visibleProp}
             onEnter={handleEnter} 
             onEntering={handleEntering}

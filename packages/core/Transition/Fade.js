@@ -56,7 +56,8 @@ const Fade = React.forwardRef(function (props, ref) {
  
 
     return (
-        <TransitionComponent   
+        <TransitionComponent
+            appear
             in={visibleProp}
             onEnter={handleEnter}
             onEntered={(node, isAppearing) => onEntered?.(node, isAppearing)}
@@ -74,8 +75,8 @@ const Fade = React.forwardRef(function (props, ref) {
                             opacity: 0,
                             visibility: state === 'exited' && !visibleProp ? 'hidden' : undefined,
                             ...style,
-                            ...styles[state],
-                            ...children.props?.style
+                            ...styles[state], 
+                            ...children?.props?.style
                         },
                         ref:ref,
                         ...childProps

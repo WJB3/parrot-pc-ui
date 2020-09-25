@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
+    "@popperjs/core": "^2.5.2",
     "antd": "^4.5.4",
     "async-validator": "^3.4.0",
     "fetch": "^1.1.0",

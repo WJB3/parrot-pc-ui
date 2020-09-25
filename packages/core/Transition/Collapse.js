@@ -75,6 +75,7 @@ const Collapse = React.forwardRef(function(props, ref) {
 
     return (
         <TransitionComponent
+            appear
             in={visibleProp}
             onEnter={handleEnter}
             onEntered={handleEntered}

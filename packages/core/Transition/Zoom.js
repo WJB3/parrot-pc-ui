@@ -57,6 +57,7 @@ const Zoom = React.forwardRef(function (props, ref) {
 
     return (
         <TransitionComponent 
+        appear
             in={visibleProp}
             onEnter={handleEnter}
             onEntered={(node, isAppearing) => onEntered?.(node, isAppearing)}
