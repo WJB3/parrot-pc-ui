@@ -90,7 +90,7 @@ const ButtonBase=React.forwardRef((props,ref)=>{
     const handleTouchStart = useRippleHandler('start', onTouchStart);
     const handleTouchEnd = useRippleHandler('stop', onTouchEnd);
     const handleTouchMove = useRippleHandler('stop', onTouchMove);
- 
+     
 
     return (
         <ComponentProp
@@ -111,7 +111,7 @@ const ButtonBase=React.forwardRef((props,ref)=>{
             onKeyUp={handleKeyUp}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
-            onTouchMove={handleTouchMove}
+            onTouchMove={handleTouchMove} 
             ref={ref}
             {...restProps}
         >

@@ -1,154 +1,203 @@
-import React,{useCallback,useRef,useContext, useEffect } from 'react';
-import classNames from '@packages/utils/classNames'; 
+import React, { useCallback, useRef, useContext, useEffect, useState } from 'react';
+import classNames from '@packages/utils/classNames';
 import {
     ConfigContext,
-} from '@packages/core/ConfigProvider'; 
-import { createPopper } from '@popperjs/core'
-import useForkRef from '@packages/hooks/useForkRef';
-import Portal from '@packages/core/Portal';
-import setRef from '@packages/utils/setRef';
+} from '@packages/core/ConfigProvider';
 import PropTypes from 'prop-types';
+import Popper from '@packages/core/Popper';
+import useForkRef from '@packages/hooks/useForkRef';
+import useControlled from '@packages/hooks/useControlled';
+import useId from '@packages/hooks/useId';
+import useWillUnmount from '@packages/hooks/useWillUnmount';
+import capitalize from '@packages/utils/capitalize'; 
+import { Grow } from '@packages/core/Transition';
 import "./index.scss";
 
-
-function getTarget(target){
-    if(target && target.current){
-        return target.current;
+function flipPlacement(placement){
+    let subplacement=placement.substring(0,6);
+    let PLACEMENT=['top','bottom','right','left'];
+    let index=PLACEMENT.findIndex(item=>subplacement.indexOf(item)>-1);
+    if(index>-1){
+        return PLACEMENT[index]
     }
-    return typeof anchorEl==="function"?anchorEl():anchorEl;
+    return "top";
 }
 
-const Popper = React.forwardRef(function(props,ref){
- 
+const ARROW_LENGTH=7;
+
+const Tooltip = React.forwardRef(function (props, ref) {
+
     const {
-        prefixCls:customizePrefixCls,  
-        visible,
+        prefixCls: customizePrefixCls, 
         children,
-        target,
-        disablePortal=false,
-        placement="right",
-        mountNode,//需要挂载的节点
+        title,
+        arrow,
+        placement = "top", 
         className,
-        transition=true,
+        transition = true,
+        visible: visibleProp,
+        defaultVisible,
+        trigger = "hover",
+        enterDelay = 0,
+        leaveDelay=0,
+        TransitionComponent=Grow,
+        id: idProp
     } = props;
 
-    const [exited, setExited] = React.useState(true);//定义动画是否退出
-    
-    const prefixCls = useContext(ConfigContext)?.getPrefixCls("Popper", customizePrefixCls); 
+    const prefixCls = useContext(ConfigContext)?.getPrefixCls("Tooltip", customizePrefixCls);
+   
+    const id = useId(idProp);
 
-    const popperRef=useRef(null);//div为popper的节点
+    const [arrowRef, setArrowRef] = React.useState(null);
 
-    const locationRef=useRef(null);//popjs节点用于存储popperjs
+    const enterTimer = React.useRef();
+    const leaveTimer = React.useRef();
 
-    const ownRef=useForkRef(popperRef,ref);
+    useWillUnmount(() => {
+        clearTimeout(enterTimer.current);
+        clearTimeout(leaveTimer.current);
+    });
 
-    const handleOpen=useCallback(()=>{
-        if(!popperRef.current || !mountNode ||!visible){
-            return ;
+    const [visible, setVisible] = useControlled({
+        controlled: visibleProp,
+        default: defaultVisible
+    });
+
+    const [childNode, setChildNode] = useState();
+
+    const handleRef = useForkRef(children.ref, setChildNode, ref);
+
+    const childrenProps = {
+        ref: handleRef,
+        id: id,
+        className:classNames(className)
+    }
+
+    const handleOpen = (event) => {
+        setVisible(true);
+    }
+
+    const handleClose=(event)=>{
+        setVisible(false); 
+    }
+
+    const handleEnter = (forward = true) => (event) => {
+        const childrenProps = children.props;
+
+        if (event.type === 'mouseover' && childrenProps.onMouseOver && forward) {
+            childrenProps.onMouseOver(event);
         }
 
-        if(locationRef.current){
-            locationRef.current.destroy();
+        clearTimeout(enterTimer.current);
+
+        if (enterDelay) {
+            enterTimer.current = setTimeout(
+                () => {
+                    handleOpen(event);
+                },
+                enterDelay
+            )
+        } else {
+            handleOpen(event);
         }
 
-        const popper=createPopper(getTarget(mountNode),popperRef.current,{
-            placement
-        });
+    }
 
-        locationRef.current=popper;
+    const handleLeave = (forward = true) => (event) => {
+        const childrenProps = children.props;
+
+        if (
+            event.type === 'mouseleave' &&
+            childrenProps.onMouseLeave &&
+            event.currentTarget === childNode
+        ) {
+            childrenProps.onMouseLeave(event);
+        }
+         
+        clearTimeout(leaveTimer.current);
+
+        leaveTimer.current=setTimeout(()=>{
+            handleClose(event);
+        },leaveDelay);
+    }
+
+    if (trigger === "hover") {
+        childrenProps.onMouseOver = handleEnter();
+        childrenProps.onMouseLeave = handleLeave(); 
+    } 
+
+    const mergedPopperProps=React.useMemo(() => {
+        return { 
+              modifiers: [
+                {
+                  name: 'arrow',
+                  options: {
+                    element: arrowRef,
+                  },
+                },
+              ],
+          } 
+    }, [arrowRef]);
  
-    },[mountNode, disablePortal, visible, placement]);
 
-    const handleClose = () => {
-        if (!locationRef.current) {
-          return;
-        }
-    
-        locationRef.current.destroy(); 
-    };
-  
-    const handleRef=React.useCallback(
-        (node)=>{
-            setRef(ownRef,node);//将div id=popper节点赋值给tooltipRef
-            handleOpen();
-        },
-        [ownRef,handleOpen]
-    );
-
-    
-    const handleEnter=()=>{
-        setExited(false);
-    };
-
-    const handleExited=()=>{
-        setExited(true); 
-        handleClose();
-    }
-
-    React.useEffect(() => {
-        if (!visible && !transition) {
-          // Otherwise handleExited will call this.
-          handleClose();
-        }
-    }, [visible, transition]);
-
-    const childProps = { placement }
-
-    if (transition) {
-        childProps.TransitionProps = {
-            visible: visible,
-            onEnter:handleEnter,
-            onExited:handleExited
-        };
-    }
-
-    useEffect(()=>()=>handleClose(),[]);
-
-    if (!visible && (!transition || exited) ) {
-        return null;
-    }  
-  
     return (
-        <Portal target={target}  disablePortal={disablePortal}>
-            <div
-                ref={handleRef}
-                id="popper"
-                className={classNames(
-                    prefixCls,
-                    className
-                )}
-                style={{
-                    willChange:'transform'
-                }}
-                 
+        <React.Fragment>
+            {React.cloneElement(children, childrenProps)}
+            <Popper
+                transition={transition}
+                placement={placement}
+                visible={childNode ? visible : false}
+                id={id}
+                mountNode={childNode} 
+                {...mergedPopperProps}
             >
-                {typeof children === 'function' ? children(childProps) : children}
-            </div>
-        </Portal>
+                {({placement:placementInner,TransitionProps})=>(
+                    <TransitionComponent
+                        {...TransitionProps}
+                    >
+                        <div
+                            className={
+                                classNames(
+                                    prefixCls,
+                                    {
+                                        [`${prefixCls}-Placement-${capitalize(flipPlacement(placementInner),false)}`]:placementInner
+                                    }
+                                )
+                            }    
+                        >
+                            {title}
+                            {arrow?<span className={classNames(
+                                `${prefixCls}-Arrow`
+                            )}  ref={setArrowRef} />:null}
+                        </div>
+                    </TransitionComponent>
+                )}
+            </Popper>
+        </React.Fragment>
     )
 })
 
-Popper.propTypes={
+Tooltip.propTypes = {
     //是否禁用传送门
-    disablePortal:PropTypes.bool,
+    disablePortal: PropTypes.bool,
     //指定容器
-    target:PropTypes.oneOfType([
+    target: PropTypes.oneOfType([
         PropTypes.func,
         PropTypes.instanceOf(React.Component)
     ]),
     //孩子节点
-    children:PropTypes.oneOfType([
+    children: PropTypes.oneOfType([
         PropTypes.func,
         PropTypes.node
     ]),
     //自定义类名前缀
-    prefixCls:PropTypes.string,
+    prefixCls: PropTypes.string,
     //添加类名
-    className:PropTypes.string,
+    className: PropTypes.string,
     //弹框是否显示
-    visible:PropTypes.bool,
+    visible: PropTypes.bool,
     //弹框完全消失的回调
-    onExited:PropTypes.func
+    onExited: PropTypes.func
 };
 
-export default Popper;
+export default Tooltip;

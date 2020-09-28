@@ -15,7 +15,33 @@ function getTarget(target){
     if(target && target.current){
         return target.current;
     }
-    return typeof anchorEl==="function"?anchorEl():anchorEl;
+    return typeof target==="function"?target():target;
+}
+
+function transformPlacement(placement){
+    if(["top","right",'bottom','left'].indexOf(placement)>-1){
+        return placement;
+    }
+    switch(placement){
+        case "topLeft":
+            return "top-start";
+        case "topRight":
+            return "top-end";
+        case "bottomLeft":
+            return "bottom-start";
+        case "bottomRight":
+            return "bottom-end";
+        case "leftTop":
+            return "left-start";
+        case "leftBottom":
+            return "left-end";
+        case "rightTop":
+            return "right-start";
+        case "rightBottom":
+            return "right-end";
+        default :
+            return "top";
+    }
 }
 
 const Popper = React.forwardRef(function(props,ref){
@@ -26,10 +52,11 @@ const Popper = React.forwardRef(function(props,ref){
         children,
         target,
         disablePortal=false,
-        placement="right",
+        placement="top",
         mountNode,//需要挂载的节点
         className,
         transition=true,
+        modifiers={}
     } = props;
 
     const [exited, setExited] = React.useState(true);//定义动画是否退出
@@ -43,6 +70,7 @@ const Popper = React.forwardRef(function(props,ref){
     const ownRef=useForkRef(popperRef,ref);
 
     const handleOpen=useCallback(()=>{
+ 
         if(!popperRef.current || !mountNode ||!visible){
             return ;
         }
@@ -52,12 +80,13 @@ const Popper = React.forwardRef(function(props,ref){
         }
 
         const popper=createPopper(getTarget(mountNode),popperRef.current,{
-            placement
+            placement:transformPlacement(placement), 
+            modifiers: modifiers
         });
 
         locationRef.current=popper;
  
-    },[mountNode, disablePortal, visible, placement]);
+    },[mountNode, disablePortal, visible, placement,modifiers]);
 
     const handleClose = () => {
         if (!locationRef.current) {
@@ -100,6 +129,10 @@ const Popper = React.forwardRef(function(props,ref){
             onEnter:handleEnter,
             onExited:handleExited
         };
+    }
+
+    if(placement){
+        childProps.placement=placement;
     }
 
     useEffect(()=>()=>handleClose(),[]);

@@ -5,6 +5,75 @@ $prefixCls:"#{$global-prefix}-Tooltip";
 
 .#{$prefixCls}{ 
  
-    
+    color: #fff;
+    padding: 4px 8px; 
+    max-width: 300px;   
+    border-radius: 4px;
+    background-color: rgba(48, 48, 48, 0.9);
+    line-height:1;
+    position: relative;
   
+    &.#{$prefixCls}-Placement-Bottom{
+        margin:24px 0;
+
+      
+    }
+
+    &.#{$prefixCls}-Placement-Top{
+        margin:24px 0;
+
+        .#{$prefixCls}-Arrow{
+            bottom:0; 
+
+            &:before{
+                width: 12px;
+                height: 12px;
+                margin: auto;
+                content: "";
+                display: block; 
+                background-color: currentColor;
+                position: absolute;
+                bottom:0;
+                transform: rotate(45deg);
+                transform-origin: center center;
+            }
+        }
+
+    }
+
+    &.#{$prefixCls}-Placement-Left{
+        margin:0 24px;
+    }
+
+    &.#{$prefixCls}-Placement-Right{
+        margin:0 24px;
+    }
+
+    @media (min-width: 600px){
+        &.#{$prefixCls}-Placement-Bottom{
+            margin:16px 0;
+        }
+        &.#{$prefixCls}-Placement-Top{
+            margin:16px 0;
+        }
+        &.#{$prefixCls}-Placement-Right{
+            margin:0 16px;
+        }
+    
+        &.#{$prefixCls}-Placement-Left{
+            margin:0 16px;
+        }
+    }
+
+    &-Arrow{
+        overflow: hidden;
+        position: absolute; 
+        box-sizing: border-box;
+        color: rgba(48, 48, 48, 0.9);
+        width:17px;
+        height:6px;
+        margin-bottom:-6px;
+
+    }
+
 } 
