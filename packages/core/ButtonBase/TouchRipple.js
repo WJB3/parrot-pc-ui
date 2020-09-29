@@ -11,6 +11,7 @@ const TouchRipple=React.forwardRef((props,ref)=>{
     const {
         prefixCls:customizePrefixCls,
         center: centerProp = false,  
+        square,
         ...restProps
     }=props;
 
@@ -91,6 +92,10 @@ const TouchRipple=React.forwardRef((props,ref)=>{
         if (center) { 
             let radius=Math.sqrt(Math.pow(rippleX,2)+Math.pow(rippleY,2));
             rippleSize = radius*2; 
+
+            if(square){
+              rippleSize=rippleX*2;
+            }
         }else { 
 
             const sizeX =

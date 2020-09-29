@@ -11,6 +11,10 @@ $primary-color-hover:rgb(4, 153, 138);
     background-color:rgba(0,189,170,$opacity);
 }
 
+@mixin OpacityDangerColor($opacity) {
+    background-color:rgba(247, 31, 85,$opacity);
+}
+
 $warning-color:rgba(248,180,0,1);
 $warning-color-hover:rgba(209, 154, 2,1);
  

@@ -29,6 +29,7 @@ const ButtonBase=React.forwardRef((props,ref)=>{
         onTouchMove,
         centerRipple=false,
         TouchRippleProps,
+        square,
         ...restProps
     }=props;
  
@@ -98,7 +99,9 @@ const ButtonBase=React.forwardRef((props,ref)=>{
             className={classNames(
                 prefixCls,className,
                 {
-                    [`${prefixCls}-disabled`]:disabled
+                    [`${prefixCls}-disabled`]:disabled,
+                    [`${prefixCls}-centerRipple`]:centerRipple,
+
                 }
             )}
             onClick={onClick} 
@@ -116,7 +119,7 @@ const ButtonBase=React.forwardRef((props,ref)=>{
             {...restProps}
         >
             {children}
-            {!disableRipple && !disabled && <TouchRipple  center={centerRipple} prefixCls={prefixCls} ref={rippleRef} {...TouchRippleProps} /> }
+            {!disableRipple && !disabled && <TouchRipple  square={square} center={centerRipple} prefixCls={prefixCls} ref={rippleRef} {...TouchRippleProps} /> }
         </ComponentProp>
     )
 
@@ -161,6 +164,8 @@ ButtonBase.propTypes={
     onTouchMove:PropTypes.func,
     //中心涟漪
     centerRipple:PropTypes.bool,
+    //正方形的涟漪
+    square:PropTypes.bool,
     //touchripple属性
     TouchRippleProps: PropTypes.object,
 }

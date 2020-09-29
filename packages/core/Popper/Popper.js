@@ -56,7 +56,8 @@ const Popper = React.forwardRef(function(props,ref){
         mountNode,//需要挂载的节点
         className,
         transition=true,
-        modifiers={}
+        modifiers={},
+        keepMounted=false,//是否一直挂载
     } = props;
 
     const [exited, setExited] = React.useState(true);//定义动画是否退出
@@ -109,7 +110,7 @@ const Popper = React.forwardRef(function(props,ref){
         setExited(false);
     };
 
-    const handleExited=()=>{
+    const handleExited=()=>{ 
         setExited(true); 
         handleClose();
     }
@@ -137,7 +138,7 @@ const Popper = React.forwardRef(function(props,ref){
 
     useEffect(()=>()=>handleClose(),[]);
 
-    if (!visible && (!transition || exited) ) {
+    if (!visible && exited && !keepMounted)  { 
         return null;
     }  
   

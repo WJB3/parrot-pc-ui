@@ -10,6 +10,8 @@ import useControlled from '@packages/hooks/useControlled';
 import useId from '@packages/hooks/useId';
 import useWillUnmount from '@packages/hooks/useWillUnmount';
 import capitalize from '@packages/utils/capitalize'; 
+import Paper from '@packages/core/Paper';
+import useInit from '@packages/hooks/useInit';
 import { Grow } from '@packages/core/Transition';
 import "./index.scss";
 
@@ -22,8 +24,8 @@ function flipPlacement(placement){
     }
     return "top";
 }
-
-const ARROW_LENGTH=7;
+ 
+const defaultColor="rgba(48, 48, 48, 0.9)";
 
 const Tooltip = React.forwardRef(function (props, ref) {
 
@@ -41,12 +43,18 @@ const Tooltip = React.forwardRef(function (props, ref) {
         enterDelay = 0,
         leaveDelay=0,
         TransitionComponent=Grow,
-        id: idProp
+        id: idProp,
+        destroyTooltipOnHide=false,
+        onVisibleChange,
+        getPopupContainer,
+        color
     } = props;
 
     const prefixCls = useContext(ConfigContext)?.getPrefixCls("Tooltip", customizePrefixCls);
    
     const id = useId(idProp);
+
+    const init=useInit();
 
     const [arrowRef, setArrowRef] = React.useState(null);
 
@@ -88,6 +96,10 @@ const Tooltip = React.forwardRef(function (props, ref) {
             childrenProps.onMouseOver(event);
         }
 
+        if (event.type === 'focus' && childrenProps.onFocus && forward) {
+            childrenProps.onFocus(event);
+        }
+
         clearTimeout(enterTimer.current);
 
         if (enterDelay) {
@@ -113,6 +125,14 @@ const Tooltip = React.forwardRef(function (props, ref) {
         ) {
             childrenProps.onMouseLeave(event);
         }
+
+        if (
+            event.type === 'blur' &&
+            childrenProps.onBlur &&
+            event.currentTarget === childNode
+        ) {
+            childrenProps.onBlur(event);
+        }
          
         clearTimeout(leaveTimer.current);
 
@@ -126,6 +146,23 @@ const Tooltip = React.forwardRef(function (props, ref) {
         childrenProps.onMouseLeave = handleLeave(); 
     } 
 
+    if(trigger === "focus"){
+        childrenProps.onFocus=handleEnter();
+        childrenProps.onBlur= handleLeave();
+    }
+
+    const handleClick=(event)=>{ 
+        if(visible){
+            handleLeave()(event);
+        }else{
+            handleEnter()(event);
+        }
+    }
+
+    if(trigger === "click"){
+        childrenProps.onClick=handleClick;
+    }
+
     const mergedPopperProps=React.useMemo(() => {
         return { 
               modifiers: [
@@ -138,6 +175,12 @@ const Tooltip = React.forwardRef(function (props, ref) {
               ],
           } 
     }, [arrowRef]);
+
+    useEffect(()=>{
+        if(init){ 
+            onVisibleChange(visible);
+        }
+    },[visible])
  
 
     return (
@@ -149,13 +192,15 @@ const Tooltip = React.forwardRef(function (props, ref) {
                 visible={childNode ? visible : false}
                 id={id}
                 mountNode={childNode} 
+                keepMounted={!destroyTooltipOnHide}
+                target={getPopupContainer}
                 {...mergedPopperProps}
             >
                 {({placement:placementInner,TransitionProps})=>(
                     <TransitionComponent
                         {...TransitionProps}
                     >
-                        <div
+                        <Paper
                             className={
                                 classNames(
                                     prefixCls,
@@ -163,13 +208,14 @@ const Tooltip = React.forwardRef(function (props, ref) {
                                         [`${prefixCls}-Placement-${capitalize(flipPlacement(placementInner),false)}`]:placementInner
                                     }
                                 )
-                            }    
+                            }   
+                            style={{backgroundColor:color}} 
                         >
                             {title}
                             {arrow?<span className={classNames(
                                 `${prefixCls}-Arrow`
-                            )}  ref={setArrowRef} />:null}
-                        </div>
+                            )}  ref={setArrowRef} style={{color:color||defaultColor}} />:null}
+                        </Paper>
                     </TransitionComponent>
                 )}
             </Popper>
@@ -197,7 +243,13 @@ Tooltip.propTypes = {
     //弹框是否显示
     visible: PropTypes.bool,
     //弹框完全消失的回调
-    onExited: PropTypes.func
+    onExited: PropTypes.func,
+    //tooltip隐藏时是否销毁tooltip
+    destroyTooltipOnHide:PropTypes.bool,
+    //显示隐藏的回调
+    onVisibleChange:PropTypes.func,
+    //浮层渲染父节点
+    getPopupContainer:PropTypes.func
 };
 
 export default Tooltip;

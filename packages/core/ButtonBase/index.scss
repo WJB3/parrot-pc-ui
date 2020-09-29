@@ -20,6 +20,10 @@ $ripple-animation-duration:500ms;
     justify-content: center;
     background-color: transparent;
 
+    &-centerRipple{
+        border-radius: 50%;
+    }
+
     &-TouchRipple{
         top:0;
         left:0;

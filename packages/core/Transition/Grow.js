@@ -26,12 +26,8 @@ const Grow = React.forwardRef(function (props, ref) {
         TransitionComponent = Transition,
         children,
         visible: visibleProp,
-        onEnter,
-        onEntered,
-        onEntering,
-        onExit,
-        onExited,
-        onExiting,
+        onEnter,  
+        onExit,  
         timeout = {
             enter: duration.enteringScreen,
             exit: duration.leavingScreen
@@ -99,12 +95,8 @@ Grow.propTypes = {
     TransitionComponent: PropTypes.any,
     children: PropTypes.any,
     visibleProp: PropTypes.bool,
-    onEnter: PropTypes.func,
-    onEntered: PropTypes.func,
-    onEntering: PropTypes.func,
-    onExit: PropTypes.func,
-    onExited: PropTypes.func,
-    onExiting: PropTypes.func,
+    onEnter: PropTypes.func,  
+    onExit: PropTypes.func, 
     timeout: PropTypes.any,
     style: PropTypes.object
 };

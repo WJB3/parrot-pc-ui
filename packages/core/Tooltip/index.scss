@@ -3,50 +3,69 @@
 
 $prefixCls:"#{$global-prefix}-Tooltip";  
 
+$arrow-color:rgba(48, 48, 48, 0.9);
+
 .#{$prefixCls}{ 
  
     color: #fff;
     padding: 4px 8px; 
     max-width: 300px;   
     border-radius: 4px;
-    background-color: rgba(48, 48, 48, 0.9);
+    background-color: $arrow-color;
     line-height:1;
     position: relative;
   
     &.#{$prefixCls}-Placement-Bottom{
         margin:24px 0;
 
-      
+        .#{$prefixCls}-Arrow{
+            top: 0;
+            margin-top: -18px;
+            border-top: 10px solid transparent;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom:  8px solid currentColor;
+        }
     }
 
     &.#{$prefixCls}-Placement-Top{
         margin:24px 0;
 
         .#{$prefixCls}-Arrow{
-            bottom:0; 
-
-            &:before{
-                width: 12px;
-                height: 12px;
-                margin: auto;
-                content: "";
-                display: block; 
-                background-color: currentColor;
-                position: absolute;
-                bottom:0;
-                transform: rotate(45deg);
-                transform-origin: center center;
-            }
+            bottom: 0;
+            margin-bottom: -18px;
+            border-top: 8px solid currentColor;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 10px solid transparent;
         }
 
     }
 
     &.#{$prefixCls}-Placement-Left{
         margin:0 24px;
+
+        .#{$prefixCls}-Arrow{
+            right: 0;
+            margin-right: -18px;
+            border-top: 6px solid transparent;
+            border-left: 8px solid currentColor;
+            border-right: 10px solid transparent;
+            border-bottom:  6px solid transparent;
+        }
     }
 
     &.#{$prefixCls}-Placement-Right{
         margin:0 24px;
+
+        .#{$prefixCls}-Arrow{
+            left: 0;
+            margin-left: -18px;
+            border-right: 8px solid currentColor;
+            border-left: 10px solid transparent;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+        }
     }
 
     @media (min-width: 600px){
@@ -66,13 +85,7 @@ $prefixCls:"#{$global-prefix}-Tooltip";
     }
 
     &-Arrow{
-        overflow: hidden;
-        position: absolute; 
-        box-sizing: border-box;
-        color: rgba(48, 48, 48, 0.9);
-        width:17px;
-        height:6px;
-        margin-bottom:-6px;
+         
 
     }
 
