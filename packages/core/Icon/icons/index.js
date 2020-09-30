@@ -10,3 +10,6 @@ export { default as CheckboxUnSelected} from './CheckboxUnSelected';
 export { default as CheckboxSelected} from './CheckboxSelected';
 export { default as FavoriteOutline} from './FavoriteOutline';
 export { default as Favorite} from './Favorite';
+export { default as Copy} from './Copy';
+export { default as Edit} from './Edit';
+export { default as Check} from './Check';

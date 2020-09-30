@@ -189,7 +189,7 @@ const Tooltip = React.forwardRef(function (props, ref) {
             <Popper
                 transition={transition}
                 placement={placement}
-                visible={childNode ? visible : false}
+                visible={childNode ? title?visible:false: false}
                 id={id}
                 mountNode={childNode} 
                 keepMounted={!destroyTooltipOnHide}
