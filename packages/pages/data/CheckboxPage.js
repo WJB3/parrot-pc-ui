@@ -15,6 +15,13 @@ const Page=(props)=>{
             <Checkbox checked  /> 
             <Checkbox indeterminate  /> 
             <Checkbox selectIcon={<Favorite />} unselectIcon={<FavoriteOutline />} /> 
+            <Checkbox >{"我爱中国"}</Checkbox>
+            <Checkbox.Group defaultValue={["a","b"]}>
+                <Checkbox value={"a"}>A</Checkbox>
+                <Checkbox value={"b"}>B</Checkbox>
+                <Checkbox value={"c"}>C</Checkbox>
+                <Checkbox value={"d"}>D</Checkbox>
+            </Checkbox.Group>
         </div>
     )
 }

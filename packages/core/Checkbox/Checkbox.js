@@ -6,7 +6,9 @@ import {
 import ButtonBase from '@packages/core/ButtonBase';
 import { CheckboxSelected, CheckboxUnSelected } from '@packages/core/Icon';
 import useControlled from '@packages/hooks/useControlled';
-import capitalize from '@packages/utils/capitalize';
+import capitalize from '@packages/utils/capitalize'; 
+import CheckGroupContext from './CheckboxGroupContext';
+import createChainedFunction from '@packages/utils/createChainedFunction';
 import "./index.scss";
 
 const Checkbox = React.forwardRef((props, ref) => {
@@ -16,43 +18,58 @@ const Checkbox = React.forwardRef((props, ref) => {
         className,
         checked: checkedProp,
         defaultChecked,
-        onChange,
+        onChange:onChangeProp,
         color = "primary",
         selectIcon = <CheckboxSelected />,
         unselectIcon = <CheckboxUnSelected />,
-        indeterminate
+        indeterminate,
+        children,
+        value
     } = props;
 
     const prefixCls = useContext(ConfigContext)?.getPrefixCls("Checkbox", customizePrefixCls);
 
+    const checkboxGroup=useContext(CheckGroupContext);
+
+    let ischecked=checkedProp;
+
+    if(checkboxGroup){
+        if(typeof ischecked==='undefined'){
+            ischecked=checkboxGroup.value?checkboxGroup.value.indexOf(value)>-1?true:false:false;
+        }
+    }
+
     const [checked, setChecked] = useControlled({
-        controlled: checkedProp,
+        controlled: ischecked,
         default: Boolean(defaultChecked)
     });
 
+    const onChange=createChainedFunction(onChangeProp,checkboxGroup && checkboxGroup.onChange);
+
     const handleChange = (e) => {
         setChecked(e.target.checked);
-        onChange?.(e.target.checked, e);
-    }
+        //onChange?.(e.target.checked, e,value);
+        onChangeProp?.(e.target.checked, e,value);
+        checkboxGroup?.onChange?.(e.target.checked, e,value);
+    } 
 
     return (
         <label
             className={
                 classNames(
                     prefixCls,
-                    className,
-                    {
-                        [`${prefixCls}-${capitalize(color)}`]: color
-                    }
+                    className, 
                 )
             }
         >
             <ButtonBase
+                component="span"
                 className={
                     classNames(
                         `${prefixCls}-CheckboxBaseRipple`,
                         {
-                            [`${prefixCls}-Checked`]: checked, 
+                            [`${prefixCls}-Checked`]: checked,
+                            [`${prefixCls}-${capitalize(color)}`]: color
                         }
                     )
                 }
@@ -63,7 +80,7 @@ const Checkbox = React.forwardRef((props, ref) => {
                     className={
                         classNames(
                             `${prefixCls}-InputWrapper`,
-                            
+
                         )
                     }
                 >
@@ -77,6 +94,7 @@ const Checkbox = React.forwardRef((props, ref) => {
                         onChange={(e) => handleChange(e)}
                         checked={checked}
                         ref={ref}
+                        value={value}
                     />
 
                     {checked ? selectIcon : unselectIcon}
@@ -84,7 +102,17 @@ const Checkbox = React.forwardRef((props, ref) => {
                     {indeterminate && !checked && <span className={classNames(`${prefixCls}-Indeterminate`)}></span>}
 
                 </Component>
+
             </ButtonBase>
+            {children && <Component
+                className={
+                    classNames(
+                        `${prefixCls}-labelWrapper`
+                    )
+                }
+            >
+                {children}
+            </Component>}
         </label>
     )
 });

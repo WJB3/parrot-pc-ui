@@ -21,6 +21,7 @@ import InputPasswordPage from '@packages/pages/data/InputPasswordPage';
 import PopperPage from '@packages/pages/display/PopperPage';
 import TooltipPage from '@packages/pages/display/TooltipPage';
 import CheckboxPage from '@packages/pages/data/CheckboxPage';
+import TypographyPage from '@packages/pages/common/TypographyPage';
 import "./index.scss";
 
 
@@ -44,6 +45,7 @@ ReactDOM.render((<HashRouter>
     <Route path="/protal" exact component={(props)=><PortalPage {...props}/>} />
     <Route path="/popper" exact component={(props)=><PopperPage {...props}/>} />
     <Route path="/tooltip" exact component={(props)=><TooltipPage {...props}/>} />
-    <Route path="/" exact component={(props)=><CheckboxPage {...props}/>} />
+    <Route path="/checkbox" exact component={(props)=><CheckboxPage {...props}/>} />
+    <Route path="/" exact component={(props)=><TypographyPage {...props}/>} />
    
 </HashRouter>), document.getElementById("root"));

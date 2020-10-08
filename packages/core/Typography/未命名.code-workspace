@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../../.."
+		},
+		{
+			"path": "../../../../wonderful-ui/src"
+		},
+		{
+			"path": "../../../../wonderful-ui"
+		}
+	],
+	"settings": {}
+}

@@ -6,36 +6,36 @@ $prefixCls:"#{$global-prefix}-Checkbox";
 
 .#{$prefixCls}{
 
-    &.#{$prefixCls}-Primary{ 
+    .#{$prefixCls}-Primary{ 
         &:hover{
-            .#{$prefixCls}-CheckboxBaseRipple{
+            &.#{$prefixCls}-CheckboxBaseRipple{
                 @include OpacityPrimaryColor(.1);
             } 
         }
 
-        .#{$prefixCls}-Checked{
+        &.#{$prefixCls}-Checked{
             color:$primary-color;
         }
  
-            .#{$prefixCls}-Indeterminate{
+        &.#{$prefixCls}-Indeterminate{
                 background-color: $primary-color;
-            } 
+        } 
     }
 
-    &.#{$prefixCls}-Danger{
+    .#{$prefixCls}-Danger{
 
         &:hover{
-            .#{$prefixCls}-CheckboxBaseRipple{
+            &.#{$prefixCls}-CheckboxBaseRipple{
                 @include OpacityDangerColor(.1);
             } 
         }
 
 
-        .#{$prefixCls}-Checked{
+        &.#{$prefixCls}-Checked{
             color:$danger-color;
         }
 
-        .#{$prefixCls}-Indeterminate{
+        &.#{$prefixCls}-Indeterminate{
             background-color: $danger-color;
         } 
     }
@@ -50,6 +50,8 @@ $prefixCls:"#{$global-prefix}-Checkbox";
         width:100%;
         /**不清楚什么原理**/
         display: flex;
+        align-items: center;
+    
         
     }
 
@@ -74,4 +76,10 @@ $prefixCls:"#{$global-prefix}-Checkbox";
             width:10px;
             height:10px;
     } 
+
+    &-labelWrapper{
+        cursor: pointer;   
+        user-select: none;  
+    }
+
 }

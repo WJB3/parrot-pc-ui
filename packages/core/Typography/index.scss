@@ -2,9 +2,93 @@
 @import "../styles/variable.scss";
 
 $prefixCls:"#{$global-prefix}-Typography";  
+
+h1.#{$prefixCls}{
+    font-size: 100px;
+}
   
 .#{$prefixCls}{ 
  
-   
+    color:$default-font-color;
+    overflow-wrap: break-word;
+
+    & h1{
+        font-size:100px;
+    }
+
+    &-Primary{
+        color:$primary-color;
+    }
+
+    &-Danger{
+        color:$danger-color;
+    }
+
+    &-Success{
+        color:$success-color;
+    }
+
+    &-Warning{
+        color:$warning-color;
+    }
+
+    &-Second{
+        color:$second-color;
+    }
+
+    &-Info{
+        color:$info-color;
+    }
+
+    &-Default{
+        color:$default-font-color;
+    }
+
+    mark{
+        padding: 0;
+        background-color: #ffe58f;
+    }
+
+    code{
+        margin: 0 .2em;
+        padding: .2em .4em .1em;
+        font-size: 85%;
+        background: hsla(0,0%,58.8%,0.1);
+        border: 1px solid hsla(0,0%,39.2%,.2);
+        border-radius: 3px;
+    }
+
+    kbd{
+        margin: 0 .2em;
+        padding: .15em .4em .1em;
+        font-size: 90%;
+        background: hsla(0,0%,58.8%,.06);
+        border: solid hsla(0,0%,39.2%,.2);
+        border-width: 1px 1px 2px;
+        border-radius: 3px;
+    }
+
+    u{
+        text-decoration: underline;
+        text-decoration-skip-ink: auto;
+    }
+
+    del{
+        text-decoration: line-through;
+    }
+
+    strong{
+        font-weight:600;
+    }
+
+    &.#{$prefixCls}-Link{
+        color: $primary-color;
+        outline: none;
+        cursor: pointer; 
+        transition: color .3s;
+        text-decoration: none;
+    }
+
+  
 
 } 
