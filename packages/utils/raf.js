@@ -1,4 +1,4 @@
-var now = require('performance-now')
+var now = require('@packages/utils/performance-now')
     , root = typeof window === 'undefined' ? global : window
     , vendors = ['moz', 'webkit']
     , suffix = 'AnimationFrame'
@@ -57,7 +57,7 @@ if (!raf || !caf) {
     }
 }
 
-export default function raf(fn){
+export default function rafA(fn){
     return raf.call(root, fn)
 }
 

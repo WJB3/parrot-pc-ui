@@ -3,18 +3,41 @@
 
 $prefixCls:"#{$global-prefix}-Typography";  
 
-h1.#{$prefixCls}{
-    font-size: 100px;
+h1.#{$prefixCls}{ 
+    color: rgba(0,0,0,.85);
+    font-weight: 600;
+    font-size: 38px;
+}
+
+h2.#{$prefixCls}{ 
+    color: rgba(0,0,0,.85);
+    font-weight: 600;
+    font-size: 30px;
+}
+
+h3.#{$prefixCls}{ 
+    color: rgba(0,0,0,.85);
+    font-weight: 600;
+    font-size: 24px;
 }
   
+h4.#{$prefixCls}{ 
+    color: rgba(0,0,0,.85);
+    font-weight: 600;
+    font-size: 20px;
+}
+
+h5.#{$prefixCls}{ 
+    color: rgba(0,0,0,.85);
+    font-weight: 600;
+    font-size: 16px;
+}
+
 .#{$prefixCls}{ 
  
     color:$default-font-color;
     overflow-wrap: break-word;
-
-    & h1{
-        font-size:100px;
-    }
+ 
 
     &-Primary{
         color:$primary-color;

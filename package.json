@@ -34,6 +34,7 @@
     "friendly-errors-webpack-plugin": "^1.7.0",
     "html-webpack-plugin": "^4.3.0",
     "mini-css-extract-plugin": "^0.10.0",
+    "performance-now": "^2.1.0",
     "postcss-loader": "^3.0.0",
     "react-is": "^16.13.1",
     "redux": "^4.0.5",

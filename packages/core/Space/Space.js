@@ -1,12 +1,12 @@
-import React from 'react';
+import React,{useContext } from 'react';
 import classNames from '@packages/utils/classNames'; 
-import PropTypes from 'prop-types'; 
-import usePrefixCls from '@packages/hooks/usePrefixCls';
+import PropTypes from 'prop-types';  
 import childrenToArray from '@packages/utils/childrenToArray';
 import capitalize from '@packages/utils/capitalize';
-
-import "./index.scss";
-
+import {
+    ConfigContext,
+} from '@packages/core/ConfigProvider';  
+import "./index.scss"; 
 
 const spaceSize = {
     small: 8,
@@ -25,7 +25,7 @@ const Space=React.forwardRef((props,ref)=>{
         size="default"
     }=props;
 
-    const prefixCls=usePrefixCls('Space',customizePrefixCls);
+    const prefixCls = useContext(ConfigContext)?.getPrefixCls("Space", customizePrefixCls);
 
     const items=childrenToArray(children);
 

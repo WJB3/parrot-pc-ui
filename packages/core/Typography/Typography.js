@@ -1,4 +1,4 @@
-import React,{useState,useContext} from 'react';
+import React,{useState,useContext,useEffect,useRef} from 'react';
 import classNames from '@packages/utils/classNames';
 import {
     ConfigContext,
@@ -10,6 +10,7 @@ import { Edit,Check,Copy } from '@packages/core/Icon';
 import toArray from '@packages/utils/toArray';
 import capitalize from '@packages/utils/capitalize';
 import "./index.scss";
+import raf,{cancel} from '@packages/utils/raf';
 
 const isLineClampSupport=isStyleSupport("webkitLineClamp");
 const isTextOverflowSupport=isStyleSupport("textOverflow");
@@ -32,6 +33,9 @@ const Typography=React.forwardRef((props,ref)=>{
         color="default",
         ...restProps
     }=props;
+
+    const rafId=useRef(null);
+    const contentRef=useRef(null);
 
     const [edit,setEdit]=useState(false);
     const [ellipsisContent,setEllipsisContent]=useState(null);
@@ -81,7 +85,7 @@ const Typography=React.forwardRef((props,ref)=>{
     }
 
     const canUseCSSEllipsis=()=>{
-        const {rows,expandable,suffix,onEllipsis}=getEllipsis();
+        const {rows,expandable,suffix}=getEllipsis();
 
         if(suffix) return false;
         //当我们需要地方来放置操作按钮时，无法使用ellipsis。
@@ -95,6 +99,8 @@ const Typography=React.forwardRef((props,ref)=>{
 
         return isLineClampSupport;
     }
+
+    const handleRef=useForkRef(ref,contentRef);
 
     const renderContent=()=>{
         const { rows,suffix }=getEllipsis();
@@ -137,7 +143,7 @@ const Typography=React.forwardRef((props,ref)=>{
                             }
                         )
                     }
-                    ref={ref}
+                    ref={handleRef}
                     {...restProps}
                 >
                     {textNode}
@@ -240,6 +246,23 @@ const Typography=React.forwardRef((props,ref)=>{
     if(editing){
 
     }
+
+    const resizeOnNextFrame=()=>{
+        cancel(rafId.current); 
+        rafId.current=raf(()=>{
+            syncEllipsis();
+        });
+    }
+
+    const syncEllipsis=()=>{
+        const {rows,suffix,onEllipsis}=getEllipsis();
+         
+        if(canUseCSSEllipsis()) return ;
+    }
+
+    useEffect(()=>{
+        resizeOnNextFrame()
+    },[]);
 
 
     return renderContent();
