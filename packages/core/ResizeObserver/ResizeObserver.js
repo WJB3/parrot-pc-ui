@@ -31,6 +31,7 @@ const ResizeObserverComponent=forwardRef((props,ref)=>{
     }
 
     const handleResize=()=>{ 
+        console.log("handleResize")
         onResize?.(childNode.current);
     }
 

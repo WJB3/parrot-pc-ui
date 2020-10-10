@@ -1,5 +1,6 @@
 import React,{useState,useContext,useEffect,useRef} from 'react';
 import classNames from '@packages/utils/classNames';
+import { findDOMNode } from 'react-dom';
 import {
     ConfigContext,
 } from '@packages/core/ConfigProvider';
@@ -9,17 +10,23 @@ import Tooltip from '@packages/core/Tooltip';
 import { Edit,Check,Copy } from '@packages/core/Icon';
 import toArray from '@packages/utils/toArray';
 import capitalize from '@packages/utils/capitalize';
-import "./index.scss";
-import raf,{cancel} from '@packages/utils/raf';
+import measure from './measure';
 
+import "./index.scss";
+
+import raf from '@packages/utils/raf';
+import useForkRef from '@packages/hooks/useForkRef';
 const isLineClampSupport=isStyleSupport("webkitLineClamp");
 const isTextOverflowSupport=isStyleSupport("textOverflow");
 
+
 const ELLIPSIS_STR="...";
 const EXPAND_STR="展开";
+const SHRINK_STR="收起";
 const EDIT_STR="编辑";
 const COPY_STR="复制";
 const COPIED_STR="复制成功";
+ 
 
 const Typography=React.forwardRef((props,ref)=>{
  
@@ -31,6 +38,7 @@ const Typography=React.forwardRef((props,ref)=>{
         copyable,
         component:Component,
         color="default",
+        style,
         ...restProps
     }=props;
 
@@ -38,10 +46,17 @@ const Typography=React.forwardRef((props,ref)=>{
     const contentRef=useRef(null);
 
     const [edit,setEdit]=useState(false);
-    const [ellipsisContent,setEllipsisContent]=useState(null);
+    
     const [copied,setCopied]=useState(false);
-    const [isEllipsis,setIsEllipsis]=useState(false);
+    
     const [expanded ,setExpanded ]=useState(false);
+
+    const [ellipsisText,setEllipsisText]=useState("");
+    const [ellipsisContent,setEllipsisContent]=useState(null);
+    const [isEllipsis,setIsEllipsis]=useState(false);
+
+    const [clientRendered,setClientRendered]=useState(false);
+    
 
     const prefixCls = useContext(ConfigContext)?.getPrefixCls("Typography", customizePrefixCls);
 
@@ -74,7 +89,7 @@ const Typography=React.forwardRef((props,ref)=>{
         }
     };
 
-    const getEllipsis=()=>{
+    const getEllipsis=()=>{ 
         if(!ellipsis) return {};
 
         return{
@@ -85,11 +100,11 @@ const Typography=React.forwardRef((props,ref)=>{
     }
 
     const canUseCSSEllipsis=()=>{
-        const {rows,expandable,suffix}=getEllipsis();
-
+        const {rows,expandable,suffix,onEllipsis}=getEllipsis();
+        //如果有后缀 不使用css ellipsis
         if(suffix) return false;
-        //当我们需要地方来放置操作按钮时，无法使用ellipsis。
-        if(editable || copyable || expandable){
+        //当我们需要地方来放置操作按钮时，无法使用css ellipsis。
+        if(editable || copyable || expandable || onEllipsis || !clientRendered){
             return false;
         }
 
@@ -107,7 +122,7 @@ const Typography=React.forwardRef((props,ref)=>{
 
         const cssEllipsis=canUseCSSEllipsis();
         const cssTextOverflow=rows===1 && cssEllipsis;
-        const cssLineClamp=rows&&rows>1&&cssEllipsis;
+        const cssLineClamp=rows && rows>1 && cssEllipsis;
 
         let textNode=children;
         //当css ellipsis不支持时 使用js ellipsis
@@ -118,31 +133,38 @@ const Typography=React.forwardRef((props,ref)=>{
                     {ellipsisContent}
                     {ELLIPSIS_STR}
                     {suffix}
-                </span>
+                </span>     
             )
         }else{
             textNode=(
                 <>
-                    {children}
+                    {children} 
                     {suffix}
                 </>
             )
-        }
+        }  
 
         textNode=wrapperDecorations(props,textNode);
 
         return (
-            <ResizeObserver >
+            <ResizeObserver onResize={resizeOnNextFrame}>
                 <Component 
                     className={
                         classNames(
                             prefixCls,
                             {
                                 [`${prefixCls}-${capitalize(color)}`]:color,
-                                [`${prefixCls}-Link`]:Component==="a"
+                                [`${prefixCls}-Link`]:Component==="a",
+                                [`${prefixCls}-Ellipsis`]:rows,
+                                [`${prefixCls}-Ellipsis-Single-Line`]:cssTextOverflow,
+                                [`${prefixCls}-Ellipsis-Multiple-Line`]:cssLineClamp,
                             }
                         )
                     }
+                    style={{
+                        ...style,
+                        WebkitLineClamp:cssLineClamp?rows:null
+                    }}
                     ref={handleRef}
                     {...restProps}
                 >
@@ -154,18 +176,26 @@ const Typography=React.forwardRef((props,ref)=>{
     }
 
     const onExpandClick=(e)=>{
-        const { onExpand }=getEllipsis();
+        const { onExpand,onShrink }=getEllipsis();
 
-        setExpanded(true);
+        if(expanded){
+            onShrink?.(e);
+        }else{
+            onExpand?.(e);
+        }
 
-        onExpand?.(e);
+        setExpanded(!expanded);
+
+        
     }
 
-    const renderExpand=()=>{
+    const renderExpand=(forceRender)=>{
 
         const {expandable,symbol}=getEllipsis();
 
         if(!expandable) return null;
+
+        if (!forceRender && !isEllipsis) return null;
 
         return (
             <a
@@ -173,7 +203,7 @@ const Typography=React.forwardRef((props,ref)=>{
                 className={classNames(`${prefixCls}-Expand`)}
                 onClick={onExpandClick}
             >
-                {symbol||EXPAND_STR}
+                {expanded?(symbol?.[1]||SHRINK_STR):(symbol?.[0]||EXPAND_STR)} 
             </a>
         )
 
@@ -235,8 +265,8 @@ const Typography=React.forwardRef((props,ref)=>{
         )
     }
 
-    const renderOperations=()=>{
-        return [renderExpand(),renderEdit(),renderCopy()].filter(
+    const renderOperations=(forceRenderExpanded)=>{
+        return [renderExpand(forceRenderExpanded),renderEdit(),renderCopy()].filter(
             node=>node,
         );
     }
@@ -248,19 +278,40 @@ const Typography=React.forwardRef((props,ref)=>{
     }
 
     const resizeOnNextFrame=()=>{
-        cancel(rafId.current); 
+        raf.cancel(rafId.current); 
         rafId.current=raf(()=>{
             syncEllipsis();
-        });
+        }); 
     }
 
-    const syncEllipsis=()=>{
+    const syncEllipsis=()=>{ 
+
         const {rows,suffix,onEllipsis}=getEllipsis();
+
+        if(!rows || rows<0 || !contentRef.current || expanded) return ;
          
-        if(canUseCSSEllipsis()) return ;
+        if(canUseCSSEllipsis()) return ;  
+ 
+        const {content,text,ellipsis}=measure(
+            findDOMNode(contentRef.current),
+            {rows,suffix},
+            children,
+            renderOperations(true),
+            ELLIPSIS_STR
+        );   
+        if(ellipsisText!==text || isEllipsis !==ellipsis){
+            setIsEllipsis(ellipsis);
+            setEllipsisContent(content);
+            setEllipsisText(text);
+
+            if(isEllipsis!==ellipsis && onEllipsis){ 
+                onEllipsis(ellipsis);
+            }
+        }
     }
 
     useEffect(()=>{
+        setClientRendered(true);
         resizeOnNextFrame()
     },[]);
 

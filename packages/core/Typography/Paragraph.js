@@ -1,7 +1,7 @@
 import React from 'react';
 import Typography from './Typography';
 
-const Paragraph=({ellipsis,...restProps})=>{
+const Paragraph=({...restProps})=>{
 
     return <Typography {...restProps}  component={"div"}/>
 }

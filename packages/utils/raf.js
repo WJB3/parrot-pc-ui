@@ -1,67 +1,33 @@
-var now = require('@packages/utils/performance-now')
-    , root = typeof window === 'undefined' ? global : window
-    , vendors = ['moz', 'webkit']
-    , suffix = 'AnimationFrame'
-    , raf = root['request' + suffix]
-    , caf = root['cancel' + suffix] || root['cancelRequest' + suffix]
+import raf  from '@packages/utils/rafcore'; 
+let id = 0;
+const ids = {};
 
-for (var i = 0; !raf && i < vendors.length; i++) {
-    raf = root[vendors[i] + 'Request' + suffix]
-    caf = root[vendors[i] + 'Cancel' + suffix]
-        || root[vendors[i] + 'CancelRequest' + suffix]
-}
+// Support call raf with delay specified frame
+export default function wrapperRaf(callback, delayFrames = 1) {
+  const myId = id++;
+  let restFrames = delayFrames;
 
-// Some versions of FF have rAF but not cAF
-if (!raf || !caf) {
-    var last = 0
-        , id = 0
-        , queue = []
-        , frameDuration = 1000 / 60
+  function internalCallback() {
+    restFrames -= 1;
 
-    raf = function (callback) {
-        if (queue.length === 0) {
-            var _now = now()
-                , next = Math.max(0, frameDuration - (_now - last))
-            last = next + _now
-            setTimeout(function () {
-                var cp = queue.slice(0)
-                // Clear queue here to prevent
-                // callbacks from appending listeners
-                // to the current frame's queue
-                queue.length = 0
-                for (var i = 0; i < cp.length; i++) {
-                    if (!cp[i].cancelled) {
-                        try {
-                            cp[i].callback(last)
-                        } catch (e) {
-                            setTimeout(function () { throw e }, 0)
-                        }
-                    }
-                }
-            }, Math.round(next))
-        }
-        queue.push({
-            handle: ++id,
-            callback: callback,
-            cancelled: false
-        })
-        return id
+    if (restFrames <= 0) {
+      callback();
+      delete ids[myId];
+    } else {
+      ids[myId] = raf(internalCallback);
     }
+  }
 
-    caf = function (handle) {
-        for (var i = 0; i < queue.length; i++) {
-            if (queue[i].handle === handle) {
-                queue[i].cancelled = true
-            }
-        }
-    }
+  ids[myId] = raf(internalCallback);
+
+  return myId;
 }
 
-export default function rafA(fn){
-    return raf.call(root, fn)
-}
+wrapperRaf.cancel = function cancel(pid) {
+  if (pid === undefined) return;
 
-export function cancel(){
-    caf.apply(root,arguments)
-}
+  raf.cancel(ids[pid]);
+  delete ids[pid];
+};
 
+wrapperRaf.ids = ids; // export this for test usage

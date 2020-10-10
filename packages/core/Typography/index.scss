@@ -112,6 +112,23 @@ h5.#{$prefixCls}{
         text-decoration: none;
     }
 
+    &-Ellipsis{
+
+    }
+
+    &-Ellipsis-Single-Line{
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    &-Ellipsis-Multiple-Line{
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
   
 
 } 
