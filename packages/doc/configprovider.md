@@ -1,7 +1,7 @@
 ![哈哈](./assets/configprovider/ironman.jpg)
 
 
-<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1;'>
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
     <div>
         <div><i>I am Iron Man.</i></div>
         <div style="text-align:right;"><b>——Marvel·Iron Man</b></div>
@@ -37,7 +37,9 @@
 ## 2.原理解析
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    就是在ConfigProvider这个组件中提供Provider生产者将全局属性传递给消费组件。在每个需要全局配置的组件也就是消费组件通过是否有通过ConfigProvider中传递的context属性值和自身组件的props属性值来得出合并的值（ConfigProvider优先级高）即如果Context对象中存在size属性值，组件本身也有size属性值，则取Context中的属性值，再继续进行后续操作。
+    1.在ConfigProvider组件（生产组件）中提供Provider（生产者）将context属性传递给消费组件。<br />
+    2.在每个需要全局配置的组件（消费组件）中获取ConfigProvider组件（生产组件）中传递的context属性值，如果不是underfined说明传递。<br />
+    3.传递的context属性值和自身组件的props属性值来得出合并的值（ConfigProvider优先级高）即如果Context对象中存在size属性值，组件本身也有size属性值，则取context中的属性值。
 </blockquote>
 
 ![哈哈](./assets/configprovider/thoery.jpg)
@@ -45,14 +47,13 @@
 # 三、ConfigProvider组件实战
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    这里我们只设计 componentSize、prefixCls这2个后续会使用到的API。
+    这里我们只设计 componentSize（组件大小）、prefixCls（配置全文类名）这2个后续会使用到的API。
 </blockquote> 
 
 ## 1、SizeContext设计
 
-
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    SizeContext这个Context专门用来传递size。
+    SizeContext这个context专门用来传递componentSize。
 </blockquote> 
 
 ```js
@@ -66,7 +67,7 @@ export default SizeContext;
 ## 2、ConfigContext设计
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    ConfigContext这个Context用来传递一些全局配置如全局类名前缀prefixCls。
+    ConfigContext这个context用来传递一些全局配置如全局类名前缀prefixCls。
 </blockquote> 
 
 ```js
@@ -86,13 +87,12 @@ export default ConfigContext;
 ```
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    这个Context提供了一个默认的获取类名前缀的方法，因为后面每个组件都需要使用这个方法来获取类名。
+    这个context提供了一个默认的获取类名前缀的方法，后面每个组件都需要使用这个方法来获取类名。
 </blockquote> 
 
-## 3、ConfigContext组件的设计
+## 3、ConfigProvider组件的设计
 
 ```js
-
 
 import React,{useContext} from 'react';
 import SizeContext from './SizeContext';
@@ -138,15 +138,19 @@ export default ConfigProvider;
 ```
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    这个组件就是全文的核心文件，通过引入SizeContext和ConfigContext对象使用Context.Provider属性包裹children。这个组件运用在顶层容器上，所有被包裹的所有组件都可以使用useContext(Context)获取出对应的Provider中传入的值。如果顶层没有ConfigContext包裹的话会默认使用初始化时传入的getPrefixCls，即前缀为parrot-pc。如果有被包裹，将会通过ConfigProvider传入的属性prefixCls来得到类名。
+    1.通过引入SizeContext和ConfigContext对象使用context，Provider属性包裹children。<br />
+    2.这个组件运用在顶层容器上，被包裹的所有组件都可以使用useContext(context)获取出对应的Provider中传入的值。<br />
+    3.对于getPrefixCls方法来说，如果顶层没有ConfigContext包裹的话会默认使用初始化时传入的getPrefixCls，即前缀为parrot-pc。如果有被包裹，将会通过ConfigProvider传入的属性prefixCls来得到类名。
 </blockquote> 
 
 ## 4、ConfigProvider组件的目录结构
 
-|-ConfigContext
-|-ConfigProvider
-|-index.js
+```js
+|-ConfigContext.js
+|-ConfigProvider.js
 |-SizeContext.js
+|-index.js
+```
 
 # 四、ConfigProvider组件设计核心要素
 
@@ -155,7 +159,7 @@ export default ConfigProvider;
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
     <div>1.createContext可以创建Context对象，并且可以设置初始化的值</div>
     <div>2.Context.Provider是生产者，可以提供需要传递的属性值</div>
-    <div>3.useContext(Context)可以获取传递的属性值，仅可在HOOKS中使用</div>
+    <div>3.useContext(context)可以获取传递的属性值，但是useContext仅可在HOOKS中使用</div>
     <div>4.在class组件中可以使用Context.Consumer来或者传递的属性值</div>
 </blockquote>
 
@@ -163,7 +167,7 @@ export default ConfigProvider;
 ## 2.在组件中也要相对应的设计
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    这个组件仅仅是单纯的传递一个context属性值而已，当然仅仅是一个值不能够这么神奇的改变全文类名前缀、组件大小等，还是需要自己在组件库的其他组件中对应写出相关的代码的：
+    这个组件仅仅是单纯的传递一个context属性值而已，当然一个值不能够这么神奇的改变全文类名前缀、组件大小等，还是需要自己在组件库的其他组件中对应写出相关的代码的：
 </blockquote>
 
 ```js

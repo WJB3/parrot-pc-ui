@@ -77,8 +77,7 @@ const Tooltip = React.forwardRef(function (props, ref) {
 
     const childrenProps = {
         ref: handleRef,
-        id: id,
-        className:classNames(className)
+        id: id, 
     }
 
     const handleOpen = (event) => {
@@ -178,9 +177,10 @@ const Tooltip = React.forwardRef(function (props, ref) {
 
     useEffect(()=>{
         if(init){ 
-            onVisibleChange(visible);
+            onVisibleChange?.(visible);
         }
     },[visible])
+ 
  
 
     return (
@@ -204,6 +204,7 @@ const Tooltip = React.forwardRef(function (props, ref) {
                             className={
                                 classNames(
                                     prefixCls,
+                                    className,
                                     {
                                         [`${prefixCls}-Placement-${capitalize(flipPlacement(placementInner),false)}`]:placementInner
                                     }

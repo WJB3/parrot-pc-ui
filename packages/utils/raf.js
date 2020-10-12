@@ -1,11 +1,13 @@
-import raf  from '@packages/utils/rafcore'; 
+import raf from 'raf';
+
+ 
 let id = 0;
 const ids = {};
 
 // Support call raf with delay specified frame
 export default function wrapperRaf(callback, delayFrames = 1) {
   const myId = id++;
-  let restFrames = delayFrames;
+  let restFrames= delayFrames;
 
   function internalCallback() {
     restFrames -= 1;

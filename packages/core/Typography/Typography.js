@@ -11,7 +11,9 @@ import { Edit,Check,Copy } from '@packages/core/Icon';
 import toArray from '@packages/utils/toArray';
 import capitalize from '@packages/utils/capitalize';
 import measure from './measure';
-
+import copy from '@packages/utils/copy-to-clipboard';
+import useStateCallback from '@packages/hooks/useStateCallback';
+import InputTextarea from '@packages/core/InputTextarea';
 import "./index.scss";
 
 import raf from '@packages/utils/raf';
@@ -44,18 +46,19 @@ const Typography=React.forwardRef((props,ref)=>{
 
     const rafId=useRef(null);
     const contentRef=useRef(null);
+    const copyId=useRef(null);
+    const editIcon=useRef(null);
 
     const [edit,setEdit]=useState(false);
     
-    const [copied,setCopied]=useState(false);
+    const [copied,setCopied]=useStateCallback(false);
     
     const [expanded ,setExpanded ]=useState(false);
 
     const [ellipsisText,setEllipsisText]=useState("");
     const [ellipsisContent,setEllipsisContent]=useState(null);
     const [isEllipsis,setIsEllipsis]=useState(false);
-
-    const [clientRendered,setClientRendered]=useState(false);
+ 
     
 
     const prefixCls = useContext(ConfigContext)?.getPrefixCls("Typography", customizePrefixCls);
@@ -104,7 +107,7 @@ const Typography=React.forwardRef((props,ref)=>{
         //如果有后缀 不使用css ellipsis
         if(suffix) return false;
         //当我们需要地方来放置操作按钮时，无法使用css ellipsis。
-        if(editable || copyable || expandable || onEllipsis || !clientRendered){
+        if(editable || copyable || expandable || onEllipsis){
             return false;
         }
 
@@ -117,63 +120,7 @@ const Typography=React.forwardRef((props,ref)=>{
 
     const handleRef=useForkRef(ref,contentRef);
 
-    const renderContent=()=>{
-        const { rows,suffix }=getEllipsis();
-
-        const cssEllipsis=canUseCSSEllipsis();
-        const cssTextOverflow=rows===1 && cssEllipsis;
-        const cssLineClamp=rows && rows>1 && cssEllipsis;
-
-        let textNode=children;
-        //当css ellipsis不支持时 使用js ellipsis
-
-        if(rows && isEllipsis && !expanded && !cssEllipsis){
-            textNode=(
-                <span>
-                    {ellipsisContent}
-                    {ELLIPSIS_STR}
-                    {suffix}
-                </span>     
-            )
-        }else{
-            textNode=(
-                <>
-                    {children} 
-                    {suffix}
-                </>
-            )
-        }  
-
-        textNode=wrapperDecorations(props,textNode);
-
-        return (
-            <ResizeObserver onResize={resizeOnNextFrame}>
-                <Component 
-                    className={
-                        classNames(
-                            prefixCls,
-                            {
-                                [`${prefixCls}-${capitalize(color)}`]:color,
-                                [`${prefixCls}-Link`]:Component==="a",
-                                [`${prefixCls}-Ellipsis`]:rows,
-                                [`${prefixCls}-Ellipsis-Single-Line`]:cssTextOverflow,
-                                [`${prefixCls}-Ellipsis-Multiple-Line`]:cssLineClamp,
-                            }
-                        )
-                    }
-                    style={{
-                        ...style,
-                        WebkitLineClamp:cssLineClamp?rows:null
-                    }}
-                    ref={handleRef}
-                    {...restProps}
-                >
-                    {textNode}
-                    {renderOperations()}
-                </Component>
-            </ResizeObserver>
-        )
-    }
+    
 
     const onExpandClick=(e)=>{
         const { onExpand,onShrink }=getEllipsis();
@@ -210,10 +157,12 @@ const Typography=React.forwardRef((props,ref)=>{
     }
 
     const triggerEdit=(edit)=>{
-        const {onStart}=this.getEditable();
+        const {onStart}= getEditable();
         if(edit && onStart){
             onStart();
         }
+
+        setEdit(edit);
         
     }
 
@@ -221,20 +170,45 @@ const Typography=React.forwardRef((props,ref)=>{
         triggerEdit(true);
     }
 
+    //====copy====
+    const handleCopyClick=()=>{
+            const copyConfig={
+                ...(typeof copyable==='object'?copyable:null)
+            }
+
+            if(copyConfig.text===undefined){
+                copyConfig.text=String(children);
+            } 
+
+            copy(copyConfig.text || "");
+
+            setCopied(true,()=>{
+                copyConfig?.onCopy?.();
+
+                copyId.current=window.setTimeout(()=>{
+                    setCopied(false);
+                },3000)
+            })
+
+            
+    }
+
     const renderEdit=()=>{
         if(!editable) return ;
 
         const {icon,tooltip}=getEditable();
 
-        const title=tooltip || EDIT_STR;
+        const title=toArray(tooltip)[0] || EDIT_STR;
 
         return (
             <Tooltip key="edit" title={tooltip===false?'':title}>
                 <div 
                     className={classNames(`${prefixCls}-Edit`)}
                     onClick={onEditClick} 
+                    ref={editIcon}
+                    tabIndex={0}
                 >
-                    {icon || <Edit />}
+                    {icon || <Edit size={"small"} className={`${prefixCls}-Edit-Icon`}/>}
                 </div>
             </Tooltip>
         )
@@ -257,9 +231,9 @@ const Typography=React.forwardRef((props,ref)=>{
         const icons=toArray(copyable?.icon);
 
         return (
-            <Tooltip key="copy" title={tooltips===false?'':title}>
-                <div className={classNames(`${prefixCls}-Copy`)}>
-                    {copied ? icons[1] || <Check />:icons[0] || <Copy />}
+            <Tooltip key="copy" title={tooltips===false?'':title} placement={"top"}>
+                <div className={classNames(`${prefixCls}-Copy`)} onClick={handleCopyClick}>
+                    {copied ? icons[1] || <Check size={"small"} className={`${prefixCls}-Copy-copiedIcon`}/>:icons[0] || <Copy size={"small"} className={`${prefixCls}-Copy-copyIcon`}/>}
                 </div>
             </Tooltip>
         )
@@ -271,11 +245,7 @@ const Typography=React.forwardRef((props,ref)=>{
         );
     }
 
-    const { editing }=getEditable();
-
-    if(editing){
-
-    }
+   
 
     const resizeOnNextFrame=()=>{
         raf.cancel(rafId.current); 
@@ -298,11 +268,10 @@ const Typography=React.forwardRef((props,ref)=>{
             children,
             renderOperations(true),
             ELLIPSIS_STR
-        );   
+        );    
         if(ellipsisText!==text || isEllipsis !==ellipsis){
             setIsEllipsis(ellipsis);
             setEllipsisContent(content);
-            setEllipsisText(text);
 
             if(isEllipsis!==ellipsis && onEllipsis){ 
                 onEllipsis(ellipsis);
@@ -310,11 +279,84 @@ const Typography=React.forwardRef((props,ref)=>{
         }
     }
 
-    useEffect(()=>{
-        setClientRendered(true);
+    useEffect(()=>{ 
         resizeOnNextFrame()
+
+        return ()=>{
+            window.clearTimeout(copyId.current)
+        }
     },[]);
 
+   
+    
+    const renderContent=()=>{
+
+        const { editing }=getEditable();
+
+        console.log(editing)
+
+        if(editing){
+            return <a>a</a>
+        }
+
+        const { rows,suffix }=getEllipsis();
+
+        const cssEllipsis=canUseCSSEllipsis();
+        const cssTextOverflow=rows===1 && cssEllipsis;
+        const cssLineClamp=rows && rows>1 && cssEllipsis;
+
+        let textNode=children;
+        //当css ellipsis不支持时 使用js ellipsis
+
+        if(rows && isEllipsis && !expanded && !cssEllipsis){
+            textNode=(
+                <span>
+                    {ellipsisContent}
+                    {ELLIPSIS_STR}
+                    {suffix}
+                </span>     
+            )
+        }else{
+            textNode=(
+                <>
+                    {children} 
+                    {suffix}
+                </>
+            )
+        }  
+
+        textNode=wrapperDecorations(props,textNode);
+
+        return (
+            <ResizeObserver >
+                <Component 
+                    className={
+                        classNames(
+                            prefixCls,
+                            {
+                                [`${prefixCls}-${capitalize(color)}`]:color,
+                                [`${prefixCls}-Link`]:Component==="a",
+                                [`${prefixCls}-Ellipsis`]:rows,
+                                [`${prefixCls}-Ellipsis-Single-Line`]:cssTextOverflow,
+                                [`${prefixCls}-Ellipsis-Multiple-Line`]:cssLineClamp,
+                            }
+                        )
+                    }
+                    style={{
+                        ...style,
+                        WebkitLineClamp:cssLineClamp?rows:null
+                    }}
+                    ref={handleRef}
+                    {...restProps}
+                >
+                    {textNode}
+                    {renderOperations()}
+                </Component>
+            </ResizeObserver>
+        )
+    } 
+
+    console.log("renderContent")
 
     return renderContent();
 

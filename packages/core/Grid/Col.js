@@ -1,8 +1,10 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React from 'react';
 import classNames from '@packages/utils/classNames';
 import RowContext from './RowContext';
 import PropTypes from 'prop-types';
-import usePrefixCls from '@packages/hooks/usePrefixCls';
+import {
+    ConfigContext
+} from '@packages/core/ConfigProvider';
 import capitalize from '@packages/utils/capitalize';
 import "./index.scss";
 
@@ -34,7 +36,7 @@ const Col = React.forwardRef(function (props, ref) {
         ...others
     } = props;
 
-    const prefixCls = usePrefixCls('Col', customizePrefixCls);
+    const prefixCls = useContext(ConfigContext)?.getPrefixCls("Col", customizePrefixCls);
 
     let sizeClassObj = {};
 

@@ -1,5 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Typography,{Text,Title,Paragraph} from '@packages/core/Typography';
+import {
+    Favorite,
+    FavoriteOutline
+} from '@packages/core/Icon';
+import useBreakpoint from '@packages/hooks/useBreakpoint';
  
 // import { Typography as TypographyA } from 'antd';
 
@@ -8,20 +13,17 @@ import Typography,{Text,Title,Paragraph} from '@packages/core/Typography';
 
 
 const Page= React.forwardRef((props,ref)=>{
+
+    const size=useBreakpoint(); 
+
     return <React.Fragment>
-      
-        <Paragraph ellipsis={{
-            expandable:true,
-            rows:1, 
-            suffix:"--wjb" 
-        }} >
-            Ant Design, a design language for background applications, is refined by Ant UED Team. Ant
-            Design, a design language for background applications, is refined by Ant UED Team. Ant Design,
-            a design language for background applications, is refined by Ant UED Team. Ant Design, a
-            design language for background applications, is refined by Ant UED Team. Ant Design, a design
-            language for background applications, is refined by Ant UED Team. Ant Design, a design
-            language for background applications, is refined by Ant UED Team.
-        </Paragraph>
+       
+       <Paragraph editable={{ onChange: (value)=>console.log(value) }}>This is an editable text.</Paragraph>
+        <Paragraph copyable={{
+            icon:[<FavoriteOutline />,<Favorite />],
+            tooltips:["爱心","biu、biu、biu~"],
+            onCopy:()=>{console.log("copy成功")}
+        }} style={{marginTop:"200px"}}>asdasdasd.</Paragraph>
 
     </React.Fragment>
 });

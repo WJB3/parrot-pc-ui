@@ -1,8 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import classNames from '@packages/utils/classNames';
 import RowContext from './RowContext';
-import PropTypes from 'prop-types';
-import usePrefixCls from '@packages/hooks/usePrefixCls';
+import {
+    ConfigContext
+} from '@packages/core/ConfigProvider';
+import PropTypes from 'prop-types'; 
 import capitalize from '@packages/utils/capitalize';
 import ResponsiveObserve, {
     responsiveArray
@@ -20,6 +22,8 @@ const Row = React.forwardRef(function (props, ref) {
         align="top",
         justify="start"
     } = props;
+
+    const prefixCls = useContext(ConfigContext)?.getPrefixCls("Row", customizePrefixCls);
 
     const [screens, setScreens] = useState({
         xs: true,
@@ -46,9 +50,7 @@ const Row = React.forwardRef(function (props, ref) {
         return () => {
             ResponsiveObserve.unsubscribe(token);
         };
-    }, []);
-
-    const prefixCls = usePrefixCls('Row', customizePrefixCls);
+    }, []); 
 
     const getGutter = () => {
         const results = [0, 0];

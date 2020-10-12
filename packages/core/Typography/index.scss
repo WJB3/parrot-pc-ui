@@ -104,6 +104,14 @@ h5.#{$prefixCls}{
         font-weight:600;
     }
 
+    @mixin webkit($attr, $value) {
+        -webkit-#{ $attr }: $value;
+        -moz-#{ $attr }: $value;
+        -ms-#{$attr }: $value;
+        -o-#{ $attr }: $value;
+        #{ $attr }: $value;
+    }
+
     &.#{$prefixCls}-Link{
         color: $primary-color;
         outline: none;
@@ -113,13 +121,15 @@ h5.#{$prefixCls}{
     }
 
     &-Ellipsis{
-
+        // @include webkit("flex","a")
     }
 
     &-Ellipsis-Single-Line{
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+
+      
     }
 
     &-Ellipsis-Multiple-Line{
@@ -129,6 +139,33 @@ h5.#{$prefixCls}{
         overflow: hidden;
     }
 
+
+    &-Copy{
+        display:inline-block;
+        line-height: 0;
+        margin-left:4px;
+        vertical-align: middle;
+
+        &-copyIcon{
+            color:$primary-color;
+        }
+
+        &-copiedIcon{
+            color:$success-color;
+        }
+
+    }
+
+    &-Edit{
+        display: inline-block;
+        line-height: 0;
+        margin-left: 4px;
+        vertical-align: middle;
+
+        &-Icon{
+            color:$primary-color;
+        }
+    }
   
 
 } 
