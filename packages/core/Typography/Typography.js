@@ -296,67 +296,69 @@ const Typography=React.forwardRef((props,ref)=>{
         console.log(editing)
 
         if(editing){
-            return <a>a</a>
+            return (<div>{"aaa"}</div>);
+        }else{
+            const { rows,suffix }=getEllipsis();
+
+            const cssEllipsis=canUseCSSEllipsis();
+            const cssTextOverflow=rows===1 && cssEllipsis;
+            const cssLineClamp=rows && rows>1 && cssEllipsis;
+    
+            let textNode=children;
+            //当css ellipsis不支持时 使用js ellipsis
+    
+            if(rows && isEllipsis && !expanded && !cssEllipsis){
+                textNode=(
+                    <span>
+                        {ellipsisContent}
+                        {ELLIPSIS_STR}
+                        {suffix}
+                    </span>     
+                )
+            }else{
+                textNode=(
+                    <>
+                        {children} 
+                        {suffix}
+                    </>
+                )
+            }  
+    
+            textNode=wrapperDecorations(props,textNode);
+    
+            return (
+               
+                    <Component 
+                        className={
+                            classNames(
+                                prefixCls,
+                                {
+                                    [`${prefixCls}-${capitalize(color,false)}`]:color,
+                                    [`${prefixCls}-Link`]:Component==="a",
+                                    [`${prefixCls}-Ellipsis`]:rows,
+                                    [`${prefixCls}-Ellipsis-Single-Line`]:cssTextOverflow,
+                                    [`${prefixCls}-Ellipsis-Multiple-Line`]:cssLineClamp,
+                                }
+                            )
+                        }
+                        style={{
+                            ...style,
+                            WebkitLineClamp:cssLineClamp?rows:null
+                        }}
+                        ref={handleRef}
+                        {...restProps}
+                    >
+                        {textNode}
+                        {renderOperations()}
+                    </Component> 
+            )
         }
 
-        const { rows,suffix }=getEllipsis();
-
-        const cssEllipsis=canUseCSSEllipsis();
-        const cssTextOverflow=rows===1 && cssEllipsis;
-        const cssLineClamp=rows && rows>1 && cssEllipsis;
-
-        let textNode=children;
-        //当css ellipsis不支持时 使用js ellipsis
-
-        if(rows && isEllipsis && !expanded && !cssEllipsis){
-            textNode=(
-                <span>
-                    {ellipsisContent}
-                    {ELLIPSIS_STR}
-                    {suffix}
-                </span>     
-            )
-        }else{
-            textNode=(
-                <>
-                    {children} 
-                    {suffix}
-                </>
-            )
-        }  
-
-        textNode=wrapperDecorations(props,textNode);
-
-        return (
-            <ResizeObserver >
-                <Component 
-                    className={
-                        classNames(
-                            prefixCls,
-                            {
-                                [`${prefixCls}-${capitalize(color)}`]:color,
-                                [`${prefixCls}-Link`]:Component==="a",
-                                [`${prefixCls}-Ellipsis`]:rows,
-                                [`${prefixCls}-Ellipsis-Single-Line`]:cssTextOverflow,
-                                [`${prefixCls}-Ellipsis-Multiple-Line`]:cssLineClamp,
-                            }
-                        )
-                    }
-                    style={{
-                        ...style,
-                        WebkitLineClamp:cssLineClamp?rows:null
-                    }}
-                    ref={handleRef}
-                    {...restProps}
-                >
-                    {textNode}
-                    {renderOperations()}
-                </Component>
-            </ResizeObserver>
-        )
+       
     } 
 
     console.log("renderContent")
+ 
 
     return renderContent();
 

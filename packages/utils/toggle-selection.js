@@ -7,7 +7,7 @@ export default function toggleSelection() {
     var ranges = [];
     for (var i = 0; i < selection.rangeCount; i++) {
       ranges.push(selection.getRangeAt(i));
-    }
+    } 
   
     switch (active.tagName.toUpperCase()) { // .toUpperCase handles XHTML
       case 'INPUT':
