@@ -1,7 +1,7 @@
 ![哈哈](./assets/popper/star.jpeg)
 
 
-<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1;'>
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
     <div>
         <div><i>You're going to dump me on that stinking fox.</i></div>
         <div style="text-align:right;"><b>——Marvel·Nebula</b></div>

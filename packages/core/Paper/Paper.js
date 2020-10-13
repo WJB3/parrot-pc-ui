@@ -14,7 +14,8 @@ const Paper=React.forwardRef((props,ref)=>{
         square=false,
         shadow=1,
         children,
-        style
+        style,
+        ...restProps
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("Paper",customizePrefixCls); 
@@ -32,6 +33,7 @@ const Paper=React.forwardRef((props,ref)=>{
             ref={ref}
             children={children}
             style={style}
+            {...restProps}
         />
              
     )

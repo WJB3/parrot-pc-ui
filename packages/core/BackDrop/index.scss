@@ -1,0 +1,25 @@
+
+@import "../styles/variable.scss";
+
+
+$prefixCls:"#{$global-prefix}-BackDrop";
+
+$backdrop-background:rgba(0, 0, 0, 0.7);
+$backdrop-zindex:2000;
+
+.#{$prefixCls}{
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    background-color: $backdrop-background;
+    -webkit-tap-highlight-color: transparent;
+    z-index:$backdrop-zindex;
+
+    &-Centered{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

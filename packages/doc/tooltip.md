@@ -462,5 +462,56 @@ function flipPlacement(placement){
     2.currentColor是对应的color的颜色，这样就避免写固定值时造成的不方便。
 </blockquote>
 
- 
+## 7.实现鼠标移到提示信息时信息不消失
 
+```js
+childrenProps.onMouseLeave = (event)=>{
+           
+            event.persist();
+            keepMountedTimer.current=setTimeout(()=>{ 
+                handleLeave()(event);
+            },300) 
+}; 
+const handleLeave = (forward = true) => (event) => { 
+
+        if(!keepMountedTimer.current){
+            return ;
+        }
+        ....
+}
+const handleTooltipMouseOver=()=>{
+        if(keepMountedTimer.current){
+            clearTimeout(keepMountedTimer.current)
+        }
+}
+<Paper
+    ...
+    onMouseOver={handleTooltipMouseOver}
+    onMouseLeave={handleLeave()}
+>
+    {title}
+    {arrow?<span className={classNames(
+                                `${prefixCls}-Arrow`
+    )}  ref={setArrowRef} style={{color:color||defaultColor}} />:null}
+</Paper>
+
+```
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(247, 31, 85,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    1.如果你想异步比如定时器中访问事件属性，你需在事件上调用 event.persist()，此方法会从池中移除合成事件，允许用户代码保留对事件的引用。<br />
+    2.使用定时器来实现效果。当鼠标离开当前元素时，触发mouseleave事件，给予定时器，在鼠标进入提示框时清除定时器，就可以在leave事件里面判断是否有定时器给与相应逻辑。
+</blockquote>
+ 
+## 8.在trigger为focus时，触发焦点
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(247, 31, 85,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    如果默认卡片框visible或者defaultVisible为true时，应该默认是处于触发焦点的状态，便于失去焦点事件的触发
+</blockquote>
+
+```js
+useEffect(()=>{
+        if(visible && trigger==="focus"){ 
+            childNode && childNode.focus();
+        }
+    },[visible,childNode,trigger])
+```

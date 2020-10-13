@@ -1,8 +1,6 @@
 import React,{useRef} from 'react';
 import Tooltip from '@packages/core/Tooltip';
-import Button from '@packages/core/Button';
-import TooltipM from '@material-ui/core/Tooltip';
-import { Tooltip as TooltipA } from 'antd';
+import Button from '@packages/core/Button';  
 
 
 
@@ -11,7 +9,7 @@ const Page = React.forwardRef((props, ref) => {
   const buttonRef=useRef(null);
 
   return <div style={{padding:100}}>
-    <Tooltip  trigger={"click"} title="Add" getPopupContainer={()=>buttonRef.current} arrow placement={"left"} destroyTooltipOnHide onVisibleChange={(visible)=>console.log(visible)}>
+    <Tooltip  title="Add" getPopupContainer={()=>buttonRef.current} arrow placement={"left"} destroyTooltipOnHide onVisibleChange={(visible)=>console.log(visible)}>
       <Button ref={buttonRef}>Grow</Button>
     </Tooltip>
     {/* <TooltipM title="Add" arrow   placement={"top"}>

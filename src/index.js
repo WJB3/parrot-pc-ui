@@ -22,6 +22,8 @@ import PopperPage from '@packages/pages/display/PopperPage';
 import TooltipPage from '@packages/pages/display/TooltipPage';
 import CheckboxPage from '@packages/pages/data/CheckboxPage';
 import TypographyPage from '@packages/pages/common/TypographyPage';
+import BackDropPage from '@packages/pages/display/BackDropPage';
+import PopoverPage from '@packages/pages/display/PopoverPage';
 import "./index.scss";
 
 
@@ -46,6 +48,8 @@ ReactDOM.render((<HashRouter>
     <Route path="/popper" exact component={(props)=><PopperPage {...props}/>} />
     <Route path="/tooltip" exact component={(props)=><TooltipPage {...props}/>} />
     <Route path="/checkbox" exact component={(props)=><CheckboxPage {...props}/>} />
-    <Route path="/" exact component={(props)=><TypographyPage {...props}/>} />
+    <Route path="/typography" exact component={(props)=><TypographyPage {...props}/>} />
+    <Route path="/backdrop" exact component={(props)=><BackDropPage {...props}/>} />
+    <Route path="/" exact component={(props)=><PopoverPage {...props}/>} />
    
 </HashRouter>), document.getElementById("root"));

@@ -47,7 +47,8 @@ const Tooltip = React.forwardRef(function (props, ref) {
         destroyTooltipOnHide=false,
         onVisibleChange,
         getPopupContainer,
-        color
+        color,
+        shadow
     } = props;
 
     const prefixCls = useContext(ConfigContext)?.getPrefixCls("Tooltip", customizePrefixCls);
@@ -55,6 +56,9 @@ const Tooltip = React.forwardRef(function (props, ref) {
     const id = useId(idProp);
 
     const init=useInit();
+
+    //保持悬浮继续挂载的定时器
+    const keepMountedTimer=useRef(null);
 
     const [arrowRef, setArrowRef] = React.useState(null);
 
@@ -64,6 +68,7 @@ const Tooltip = React.forwardRef(function (props, ref) {
     useWillUnmount(() => {
         clearTimeout(enterTimer.current);
         clearTimeout(leaveTimer.current);
+        clearTimeout(keepMountedTimer.current);
     });
 
     const [visible, setVisible] = useControlled({
@@ -114,7 +119,12 @@ const Tooltip = React.forwardRef(function (props, ref) {
 
     }
 
-    const handleLeave = (forward = true) => (event) => {
+    const handleLeave = (forward = true) => (event) => {  
+
+        if(!keepMountedTimer.current && trigger==="hover"){
+            return ;
+        }
+
         const childrenProps = children.props;
 
         if (
@@ -137,20 +147,29 @@ const Tooltip = React.forwardRef(function (props, ref) {
 
         leaveTimer.current=setTimeout(()=>{
             handleClose(event);
+
+            clearTimeout(keepMountedTimer);
         },leaveDelay);
     }
 
     if (trigger === "hover") {
         childrenProps.onMouseOver = handleEnter();
-        childrenProps.onMouseLeave = handleLeave(); 
+        childrenProps.onMouseLeave = (event)=>{
+            //如果你想异步访问事件属性，你需在事件上调用 event.persist()，此方法会从池中移除合成事件，允许用户代码保留对事件的引用。
+            event.persist();
+            keepMountedTimer.current=setTimeout(()=>{ 
+                handleLeave()(event);
+            },100) 
+        }; 
     } 
 
     if(trigger === "focus"){
         childrenProps.onFocus=handleEnter();
-        childrenProps.onBlur= handleLeave();
+        childrenProps.onBlur=handleLeave();
+     
     }
 
-    const handleClick=(event)=>{ 
+    const handleClick=(event)=>{  
         if(visible){
             handleLeave()(event);
         }else{
@@ -158,9 +177,16 @@ const Tooltip = React.forwardRef(function (props, ref) {
         }
     }
 
+    useEffect(()=>{
+        if(visible && trigger==="focus"){ 
+            childNode && childNode.focus();
+        }
+    },[visible,childNode,trigger])
+
     if(trigger === "click"){
         childrenProps.onClick=handleClick;
     }
+ 
 
     const mergedPopperProps=React.useMemo(() => {
         return { 
@@ -180,9 +206,19 @@ const Tooltip = React.forwardRef(function (props, ref) {
             onVisibleChange?.(visible);
         }
     },[visible])
- 
- 
 
+    const handleTooltipMouseOver=()=>{ 
+        if(keepMountedTimer.current){
+            clearTimeout(keepMountedTimer.current)
+        }
+    }
+
+    const handleTooltipMouseLeave=(event)=>{
+        if(trigger==="hover"){
+            handleLeave()(event)
+        }
+    }
+  
     return (
         <React.Fragment>
             {React.cloneElement(children, childrenProps)}
@@ -210,7 +246,10 @@ const Tooltip = React.forwardRef(function (props, ref) {
                                     }
                                 )
                             }   
+                            shadow={shadow}
                             style={{backgroundColor:color}} 
+                            onMouseOver={handleTooltipMouseOver}
+                            onMouseLeave={handleTooltipMouseLeave} 
                         >
                             {title}
                             {arrow?<span className={classNames(
