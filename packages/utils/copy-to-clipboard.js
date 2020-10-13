@@ -10,7 +10,7 @@ export default function copy(text) {
         reselectPrevious;
 
     try {
-        //reselectPrevious = toggleSelection();
+        reselectPrevious = toggleSelection();
         // //dom中的范围，可以对DOm进行操作
         range = document.createRange();
         //用户选择的文本范围或光标的当前位置。

@@ -19,11 +19,25 @@ const Page= React.forwardRef((props,ref)=>{
     return <React.Fragment>
        
        <Paragraph editable={{ onChange: (value)=>console.log(value) }}>This is an editable text.</Paragraph>
-        <Paragraph copyable={{
+
+       <Paragraph copyable={{
             icon:[<FavoriteOutline />,<Favorite />],
             tooltips:["爱心","biu、biu、biu~"],
             onCopy:()=>{console.log("copy成功")}
         }} style={{marginTop:"200px"}}>asdasdasd.</Paragraph>
+
+<Paragraph ellipsis={{
+            expandable:true,
+            rows:1, 
+            suffix:"--wjb" 
+        }} >
+            Ant Design, a design language for background applications, is refined by Ant UED Team. Ant
+            Design, a design language for background applications, is refined by Ant UED Team. Ant Design,
+            a design language for background applications, is refined by Ant UED Team. Ant Design, a
+            design language for background applications, is refined by Ant UED Team. Ant Design, a design
+            language for background applications, is refined by Ant UED Team. Ant Design, a design
+            language for background applications, is refined by Ant UED Team.
+        </Paragraph>
 
     </React.Fragment>
 });
