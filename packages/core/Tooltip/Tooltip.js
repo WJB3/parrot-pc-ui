@@ -12,6 +12,7 @@ import useWillUnmount from '@packages/hooks/useWillUnmount';
 import capitalize from '@packages/utils/capitalize'; 
 import Paper from '@packages/core/Paper';
 import useInit from '@packages/hooks/useInit';
+import ClickAwayListener from '@packages/core/ClickAwayListener';
 import { Grow } from '@packages/core/Transition';
 import "./index.scss";
 
@@ -86,6 +87,7 @@ const Tooltip = React.forwardRef(function (props, ref) {
     }
 
     const handleOpen = (event) => {
+        console.log("HANDLEOPEN")
         setVisible(true);
     }
 
@@ -169,7 +171,7 @@ const Tooltip = React.forwardRef(function (props, ref) {
      
     }
 
-    const handleClick=(event)=>{  
+    const handleClick=(event)=>{   
         if(visible){
             handleLeave()(event);
         }else{
@@ -187,6 +189,11 @@ const Tooltip = React.forwardRef(function (props, ref) {
         childrenProps.onClick=handleClick;
     }
  
+    const handleClickAway=(event)=>{ 
+        if(visible && trigger==="click"){
+            handleLeave()(event);
+        }
+    }
 
     const mergedPopperProps=React.useMemo(() => {
         return { 
@@ -233,9 +240,11 @@ const Tooltip = React.forwardRef(function (props, ref) {
                 {...mergedPopperProps}
             >
                 {({placement:placementInner,TransitionProps})=>(
+                    <ClickAwayListener onClickAway={handleClickAway}>  
                     <TransitionComponent
                         {...TransitionProps}
                     >
+                        
                         <Paper
                             className={
                                 classNames(
@@ -256,7 +265,9 @@ const Tooltip = React.forwardRef(function (props, ref) {
                                 `${prefixCls}-Arrow`
                             )}  ref={setArrowRef} style={{color:color||defaultColor}} />:null}
                         </Paper>
+                        
                     </TransitionComponent>
+                    </ClickAwayListener>
                 )}
             </Popper>
         </React.Fragment>

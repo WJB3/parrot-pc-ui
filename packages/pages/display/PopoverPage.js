@@ -14,19 +14,12 @@ const Page = React.forwardRef((props, ref) => {
       );
 
   return <div style={{padding:300}}>
-    <Popover trigger="hover"  title="Titke" content={content} defaultVisible={true}>
-      <Button  >hover</Button>
-    </Popover>
+    
     <Popover trigger="click"  title="Titke" content={content} defaultVisible={true}>
       <Button  >click</Button>
     </Popover>
-    <Popover trigger="focus"  title="Titke" content={content} defaultVisible={true}>
-      <Button  >focus</Button>
-    </Popover>
-
-    <PopoverA   title="Titlasdasdasdasaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaae" content={content}>
-        <Button color="primary" >Hover me</Button>
-    </PopoverA>
+ 
+ 
  
   </div>
 });
