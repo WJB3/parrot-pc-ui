@@ -515,3 +515,68 @@ useEffect(()=>{
         }
     },[visible,childNode,trigger])
 ```
+
+## 9.根据触发的不同状态，书写不同的逻辑
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(247, 31, 85,1); background: rgb(239, 235, 233);line-height:1.5;'>
+   1.当trigger为hover时，onMouseEnter改为true，onMouseLeave改为false。采用定时器保持在鼠标进入提示框时也可以显示，不会消失。（onmouseenter是鼠标刚进入时，只会触发一次，onmouseover是鼠标在元素上移动就会触发）
+</blockquote>
+
+```js
+ if (trigger === "hover") {
+        childrenProps.onMouseEnter = handleEnter();
+        childrenProps.onMouseLeave = (event)=>{
+            //如果你想异步访问事件属性，你需在事件上调用 event.persist()，此方法会从池中移除合成事件，允许用户代码保留对事件的引用。
+            event.persist();
+            keepMountedTimer.current=setTimeout(()=>{ 
+                handleLeave()(event);
+            },100) 
+        }; 
+} 
+const handleTooltipMouseLeave=(event)=>{
+        if(trigger==="hover"){
+            handleLeave()(event)
+        }
+}
+```
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(247, 31, 85,1); background: rgb(239, 235, 233);line-height:1.5;'>
+   2.当trigger为focus时触发焦点事件显示，触发焦点离开事件消失。
+</blockquote>
+
+```js
+
+    if(trigger === "focus"){
+        childrenProps.onFocus=handleEnter();
+        childrenProps.onBlur=handleLeave(); 
+    }
+```
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(247, 31, 85,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    3.当trigger为click时通过click事件来判断显示隐藏，有一点比较重要的是如何在提示框其他地方点击的时候也隐藏提示框，这里用到了我们的ClickAwayListener组件，可以很好的解决这个问题。
+</blockquote>
+
+```js
+if(trigger === "click"){
+        childrenProps.onClick=handleClick;
+}
+const handleClick=(event)=>{   
+        if(visible){
+            handleLeave()(event);
+        }else{
+            handleEnter()(event);
+        }
+}
+const handleClickAway=(event)=>{ 
+        if(visible && trigger==="click"){
+            handleLeave()(event);
+        }
+}
+<ClickAwayListener onClickAway={handleClickAway}>  
+        <TransitionComponent
+                        {...TransitionProps}
+        >
+                  ...
+        </TransitionComponent>
+</ClickAwayListener>
+```

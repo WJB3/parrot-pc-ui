@@ -49,7 +49,8 @@ const Tooltip = React.forwardRef(function (props, ref) {
         onVisibleChange,
         getPopupContainer,
         color,
-        shadow
+        shadow,
+        externalNode
     } = props;
 
     const prefixCls = useContext(ConfigContext)?.getPrefixCls("Tooltip", customizePrefixCls);
@@ -86,8 +87,7 @@ const Tooltip = React.forwardRef(function (props, ref) {
         id: id, 
     }
 
-    const handleOpen = (event) => {
-        console.log("HANDLEOPEN")
+    const handleOpen = (event) => { 
         setVisible(true);
     }
 
@@ -155,7 +155,7 @@ const Tooltip = React.forwardRef(function (props, ref) {
     }
 
     if (trigger === "hover") {
-        childrenProps.onMouseOver = handleEnter();
+        childrenProps.onMouseEnter = handleEnter();
         childrenProps.onMouseLeave = (event)=>{
             //如果你想异步访问事件属性，你需在事件上调用 event.persist()，此方法会从池中移除合成事件，允许用户代码保留对事件的引用。
             event.persist();
@@ -224,7 +224,7 @@ const Tooltip = React.forwardRef(function (props, ref) {
         if(trigger==="hover"){
             handleLeave()(event)
         }
-    }
+    } 
   
     return (
         <React.Fragment>
@@ -240,7 +240,7 @@ const Tooltip = React.forwardRef(function (props, ref) {
                 {...mergedPopperProps}
             >
                 {({placement:placementInner,TransitionProps})=>(
-                    <ClickAwayListener onClickAway={handleClickAway}>  
+                    <ClickAwayListener onClickAway={handleClickAway} externalNode={trigger==="click"?externalNode:null}>  
                     <TransitionComponent
                         {...TransitionProps}
                     >
@@ -257,7 +257,7 @@ const Tooltip = React.forwardRef(function (props, ref) {
                             }   
                             shadow={shadow}
                             style={{backgroundColor:color}} 
-                            onMouseOver={handleTooltipMouseOver}
+                            onMouseEnter={handleTooltipMouseOver}
                             onMouseLeave={handleTooltipMouseLeave} 
                         >
                             {title}

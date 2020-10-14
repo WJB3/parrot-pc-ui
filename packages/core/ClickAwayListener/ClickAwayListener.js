@@ -12,7 +12,9 @@ const ClickAwayListener = React.forwardRef((props, ref) => {
     const {
         children,
         mouseEvent = "onClick",
-        onClickAway
+        onClickAway,
+        //虽然在内部 但是需要作为为元素外部的元素
+        externalNode=[]
     } = props;
 
     const nodeRef=useRef(null);
@@ -32,24 +34,22 @@ const ClickAwayListener = React.forwardRef((props, ref) => {
         childrenProps[mouseEvent]=createHandleSynthetic(mouseEvent);
     }
 
-    const handleClickAway=(event)=>{
+    const handleClickAway=(event)=>{ 
+ 
         if(!nodeRef.current){
             return ;
         }
 
         //是否点击在元素内部
-        let insideDOM;
+        let insideDOM; 
 
-        if(event.composedPath){
+        if(event.composedPath){ 
             insideDOM=event.composedPath().indexOf(nodeRef.current)>-1;
-        }else{
-            const doc=ownerDocument(nodeRef.current);
-
+        }else{ 
             insideDOM=nodeRef.current.contains(event.target);
         }
 
-        if(!insideDOM){
-
+        if(!insideDOM || externalNode.indexOf(event.target)>-1){
             onClickAway(event)
         } 
     }

@@ -24,7 +24,8 @@ import CheckboxPage from '@packages/pages/data/CheckboxPage';
 import TypographyPage from '@packages/pages/common/TypographyPage';
 import BackDropPage from '@packages/pages/display/BackDropPage';
 import PopoverPage from '@packages/pages/display/PopoverPage';
-import "./index.scss";
+import PopconfirmPage from '@packages/pages/display/PopconfirmPage';
+import "./index.scss"; 
 
 
 ReactDOM.render((<HashRouter>
@@ -50,6 +51,7 @@ ReactDOM.render((<HashRouter>
     <Route path="/checkbox" exact component={(props)=><CheckboxPage {...props}/>} />
     <Route path="/typography" exact component={(props)=><TypographyPage {...props}/>} />
     <Route path="/backdrop" exact component={(props)=><BackDropPage {...props}/>} />
-    <Route path="/" exact component={(props)=><PopoverPage {...props}/>} />
+    <Route path="/popover" exact component={(props)=><PopoverPage {...props}/>} />
+    <Route path="/" exact component={(props)=><PopconfirmPage {...props}/>} />
    
 </HashRouter>), document.getElementById("root"));

@@ -46,6 +46,7 @@
     "scss-loader": "^0.0.1",
     "style-loader": "^1.2.1",
     "svg-sprite-loader": "^5.0.0",
+    "taro-ui": "^2.3.4",
     "url-loader": "^4.1.0",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",

@@ -149,7 +149,10 @@ const Popper = React.forwardRef(function(props,ref){
                 id="popper"
                 className={classNames(
                     prefixCls,
-                    className
+                    className,
+                    {
+                        [`${prefixCls}-Display`]:!visible && exited
+                    }
                 )}
                 style={{
                     willChange:'transform'

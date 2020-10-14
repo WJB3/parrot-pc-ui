@@ -1,0 +1,26 @@
+
+@import "../styles/variable.scss";
+  
+ 
+$prefixCls:"#{$global-prefix}-Popconfirm";
+
+.#{$prefixCls}{
+     
+    &-Message{
+        &-Icon{
+            color:$warning-color;
+            font-size:16px;
+            position: absolute;
+        }
+
+        &-Title{
+            padding-left:22px;
+        }
+    }
+
+    &-Button{
+        text-align: right;
+        margin-top:20px;
+    }
+
+}

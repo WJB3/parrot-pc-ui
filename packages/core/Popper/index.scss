@@ -6,5 +6,9 @@ $prefixCls:"#{$global-prefix}-Popper";
 .#{$prefixCls}{ 
  
     position:absolute;
+    
+    &-Display{
+        display: none;
+    }
   
 } 

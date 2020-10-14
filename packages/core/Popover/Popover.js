@@ -25,7 +25,8 @@ const Popover=React.forwardRef((props,ref)=>{
         <Tooltip 
             {...restProps}
             className={
-                prefixCls
+                prefixCls,
+                className
             }
             title={
                 <div className={classNames(`${prefixCls}-Content`)}>
