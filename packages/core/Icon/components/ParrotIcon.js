@@ -12,7 +12,7 @@ const ParrotIcon=React.forwardRef((props,ref)=>{
         icon:target,
         rotate,
         prefixCls:customizePrefixCls,
-        size:sizeProp="default",
+        size:sizeProp="inherit",
         spin,
         style
     }=props;

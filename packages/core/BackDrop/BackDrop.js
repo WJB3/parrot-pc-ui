@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {
     ConfigContext
 } from '@packages/core/ConfigProvider';
-import capitalize from '@packages/utils/capitalize';
 import Portal from '@packages/core/Portal';
 import { Fade } from '@packages/core/Transition'
 import "./index.scss";

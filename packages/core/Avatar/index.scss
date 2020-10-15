@@ -3,11 +3,24 @@
 
 
 $prefixCls:"#{$global-prefix}-Avatar";
+$prefixClsGroup:"#{$global-prefix}-AvatarGroup";
+
+.#{$prefixClsGroup}{
+    display: inline-flex;
+    
+    .#{$prefixCls}{
+        &:not(:first-child){
+            margin-left: -8px;
+        }
+    }
+}
 
 .#{$prefixCls}{
-     width:40px;
-     height:40px;
-     display:flex;
+     width:32px;
+     height:32px;
+     line-height: 32px;
+     font-size: 18px;
+     display:inline-flex;
      overflow:hidden;
      position:relative;
      align-items: center;
@@ -29,6 +42,28 @@ $prefixCls:"#{$global-prefix}-Avatar";
     &-ColorDefault{
         background: $default-color-hover;
         color:#fff;
+    }
+
+    &-Large{
+        width:40px;
+        height:40px;
+        line-height: 40px;
+        font-size: 24px;
+    }
+
+    &-Default{
+        width:32px;
+        height:32px;
+        line-height: 32px;
+        font-size: 18px;
+    }
+
+    &-Small{
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        border-radius: 50%;
+        font-size: 14px;
     }
     
 }
