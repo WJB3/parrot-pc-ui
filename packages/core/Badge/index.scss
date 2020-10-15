@@ -1,0 +1,9 @@
+
+@import "../styles/variable.scss";
+
+
+$prefixCls:"#{$global-prefix}-Badge";
+
+.#{$prefixCls}{
+    display: inline-block;
+}

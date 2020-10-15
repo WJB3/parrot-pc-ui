@@ -25,6 +25,7 @@ import TypographyPage from '@packages/pages/common/TypographyPage';
 import BackDropPage from '@packages/pages/display/BackDropPage';
 import PopoverPage from '@packages/pages/display/PopoverPage';
 import PopconfirmPage from '@packages/pages/display/PopconfirmPage';
+import BadgePage from '@packages/pages/display/BadgePage';
 import "./index.scss"; 
 
 
@@ -52,6 +53,7 @@ ReactDOM.render((<HashRouter>
     <Route path="/typography" exact component={(props)=><TypographyPage {...props}/>} />
     <Route path="/backdrop" exact component={(props)=><BackDropPage {...props}/>} />
     <Route path="/popover" exact component={(props)=><PopoverPage {...props}/>} />
-    <Route path="/" exact component={(props)=><PopconfirmPage {...props}/>} />
+    <Route path="/popconfirm" exact component={(props)=><PopconfirmPage {...props}/>} />
+    <Route path="/" exact component={(props)=><BadgePage {...props}/>} />
    
 </HashRouter>), document.getElementById("root"));
