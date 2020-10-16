@@ -11,12 +11,11 @@ const Page = React.forwardRef((props, ref) => {
   return <div style={{padding:200}}>
     <Space size="large">
       
-          <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-         
+          <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /> 
    
     </Space>
     <Space size="large">
-      
+        
     </Space>
   </div>
 });

@@ -1,4 +1,4 @@
-import React,{useRef,useState} from 'react';
+import React,{useEffect, useRef,useState} from 'react';
 import Button from '@packages/core/Button';
 import Badge from '@packages/core/Badge';
 
@@ -7,8 +7,22 @@ const Demo=(props,ref)=>{
 
     const [count,setCount]=useState(props.count);
 
-    console.log(count);
-    console.log(props.count);
+    if(count!==props.count){
+        console.log("count!==props.count")
+    }
+   
+    useEffect(()=>{
+        console.log(count)
+        console.log("useEffect")
+        // let timeout=setTimeout(()=>{
+            console.log("settimout")
+            setCount(props.count);
+        // });
+
+    },[props.count])
+
+  
+ 
 
     return <div>
         {count}
