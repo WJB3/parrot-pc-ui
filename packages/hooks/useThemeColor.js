@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default function useThemeColor(color,opacity=1){
  
     let typeArr={

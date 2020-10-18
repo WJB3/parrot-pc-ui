@@ -1,12 +1,12 @@
 import React,{useEffect, useState} from 'react';
+import classNames from '@packages/utils/classNames';
 
 //38->[8,3]
 const getNumberArray=(num)=>{
     return num
         ?num
         .toString()
-        .split("")
-        .reverse()
+        .split("") 
         .map(i=>{
             const current=Number(i);
             return isNaN(current)?i:current;
@@ -30,6 +30,7 @@ const renderNumberList=(position,className)=>{
             </p>
         )
     }
+    return childrenToReturn;
 }
 
 const ScrollNumber=(props,ref)=>{
@@ -85,14 +86,15 @@ const ScrollNumber=(props,ref)=>{
         const lstCount=Math.abs(Number(lastCount));//3
         const currentDigit=Math.abs(getNumberArray(count)[i]);//2
         const lastDigit=Math.abs(getNumberArray(lstCount)[i])//3
+ 
 
-        //
-        if(currentCount>lastCount){
+        if(currentCount>lastCount){ 
             if(currentDigit>=lastDigit){
                 return 10+num;
             }
+            return 20 + num;
         }
-        if(currentDigit>=lastDigit){
+        if(currentDigit<=lastDigit){
             return 10+num;
         }
         return num;
@@ -107,7 +109,10 @@ const ScrollNumber=(props,ref)=>{
                 {
                     className:`${prefixCls}-Only`,
                     style:{
-
+                        transition:undefined,
+                        msTransform:`translateY(${-position*100}%)`,
+                        WebkitTransform:`translateY(${-position*100}%)`,
+                        transform:`translateY(${-position*100}%)`
                     },
                     key:i
                 },
@@ -122,13 +127,10 @@ const ScrollNumber=(props,ref)=>{
         )
     }
 
-    
-
     const renderNumberElement=()=>{
         if(count && Number(count) % 1===0){
             return getNumberArray(count)
-            .map((num,i)=>renderCurrentNumber(num,i))
-            .reverse();
+            .map((num,i)=>renderCurrentNumber(num,i)) 
         }
         return count;
     }
