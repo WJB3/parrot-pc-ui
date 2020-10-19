@@ -5,14 +5,7 @@ import { duration } from '@packages/core/styles/transitions';
 import { reflow } from './utils';
 import "./index.scss";
 
-const styles = {
-    entering: {
-      transform: 'none',
-    },
-    entered: {
-      transform: 'none',
-    },
-};
+
 
 const Zoom = React.forwardRef(function (props, ref) {
     const {
@@ -32,6 +25,7 @@ const Zoom = React.forwardRef(function (props, ref) {
             exit: duration.leavingScreen
         },
         style,
+        extraStyle="",
         ...other
     } = props; 
 
@@ -55,9 +49,18 @@ const Zoom = React.forwardRef(function (props, ref) {
 
     };
 
+    const styles = {
+        entering: {
+          transform:`scale(1) ${extraStyle}`,
+        },
+        entered: {
+          transform:`scale(1) ${extraStyle}`,
+        },
+    };
+
     return (
         <TransitionComponent 
-        appear
+            appear
             in={visibleProp}
             onEnter={handleEnter}
             onEntered={(node, isAppearing) => onEntered?.(node, isAppearing)}
@@ -72,7 +75,7 @@ const Zoom = React.forwardRef(function (props, ref) {
                 (state, childProps) => {
                     return React.cloneElement(children, {
                         style: {
-                            transform: 'scale(0)',
+                            transform: `scale(0) ${extraStyle}`,
                             visibility: state === 'exited' && !visibleProp ? 'hidden' : undefined,
                             ...style,
                             ...styles[state],

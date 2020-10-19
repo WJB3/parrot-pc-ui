@@ -1,5 +1,6 @@
-import React,{useEffect, useState} from 'react';
+import React,{cloneElement, useEffect, useState} from 'react';
 import classNames from '@packages/utils/classNames';
+import usePrevState from '@packages/hooks/usePrevState';
 
 //38->[8,3]
 const getNumberArray=(num)=>{
@@ -33,41 +34,32 @@ const renderNumberList=(position,className)=>{
     return childrenToReturn;
 }
 
-const ScrollNumber=(props,ref)=>{
+const ScrollNumber=React.forwardRef((props,ref)=>{
     const {
         prefixCls:customizePrefixCls,
-        className,
-        displayComponent,
+        className, 
         component="sup",
         style,
         title,
         count:customizeCount,
+        displayComponent,
         onAnimated,
         ...restProps
     }=props;
-
-    const [animateStarted,setAnimateStarted]=useState(true);
-    const [count,setCount]=useState(customizeCount);
-    const [prevCount,setPrevCount]=useState(customizeCount);
-    const [lastCount,setLastCount]=useState(customizeCount);//记录之前的count
-
-    if(prevCount!==customizeCount){ 
-        setPrevCount(customizeCount);
-    }
-
+ 
+    const [count,setCount]=useState(customizeCount);  
+    const lastCount=usePrevState(count); 
     const prefixCls=`${customizePrefixCls}-ScrollNumber`;
-
+  
     const newProps={
         ...restProps,
         style,
+        ref:ref,
         className:classNames(prefixCls,className),
         title:title
     }
 
-    React.useEffect(()=>{
-     
-        //当count变为9时，lastCount可以获取到8
-        setLastCount(count);
+    React.useEffect(()=>{ 
 
         let timeout=setTimeout(()=>{
             setCount(customizeCount);
@@ -81,22 +73,16 @@ const ScrollNumber=(props,ref)=>{
     },[customizeCount]);
  
 
-    const getPositionByNum=(num,i)=>{//2,0
-        const currentCount=Math.abs(Number(count));//2
-        const lstCount=Math.abs(Number(lastCount));//3
-        const currentDigit=Math.abs(getNumberArray(count)[i]);//2
-        const lastDigit=Math.abs(getNumberArray(lstCount)[i])//3
- 
+    const getPositionByNum=(num,i)=>{
+        const currentCount=Math.abs(Number(count));
+        const lstCount=Math.abs(Number(lastCount));
+        const currentDigit=Math.abs(getNumberArray(count)[i]||0);
+        const lastDigit=Math.abs(getNumberArray(lstCount)[i]||0); 
 
-        if(currentCount>lastCount){ 
-            if(currentDigit>=lastDigit){
-                return 10+num;
-            }
-            return 20 + num;
+        if(currentCount>lastCount||currentDigit<=lastDigit){ 
+            return 10 + num;
         }
-        if(currentDigit<=lastDigit){
-            return 10+num;
-        }
+        
         return num;
     }
 
@@ -135,8 +121,17 @@ const ScrollNumber=(props,ref)=>{
         return count;
     }
 
+    if(displayComponent){
+        return cloneElement(displayComponent,{
+            style:style,
+            className:classNames(
+                `${prefixCls}-Custom-Component`
+            )
+        })
+    }
+
     return React.createElement(component,newProps,renderNumberElement());
 
-}
+})
 
 export default ScrollNumber;

@@ -3,10 +3,38 @@
 
 
 $prefixCls:"#{$global-prefix}-Badge";
+$prefixClsRibbon:"#{$global-prefix}-BadgeRibbon";
 
 .#{$prefixCls}{
     display: inline-block;
     position: relative;
+    line-height: 1;
+
+    &:not(.#{$prefixCls}-NotWrapper){
+        margin-right: 20px;
+    }
+
+    &.#{$prefixCls}-NotWrapper{
+        margin-right: 8px;
+
+        .#{$prefixCls}-ScrollNumber{
+
+            &:not(.#{$prefixCls}-Color){
+                position: relative;
+                display: block;
+            }
+            
+            
+        }
+    }
+
+    &-Count,&-Dot{
+        position: absolute;
+        top:0;
+        right:0;
+        transform: translate(50%,-50%);
+        transform-origin:100% 0%;
+    }
 
     &-Count{
         min-width: 20px;
@@ -22,11 +50,27 @@ $prefixCls:"#{$global-prefix}-Badge";
         box-shadow: 0 0 0 1px #fff;
     }
 
-    &-Count{
-        position: absolute;
-        top:0;
-        right:0;
-        transform: translate(50%,-50%);
+    &-Dot{ 
+        width: 6px;
+        height: 6px;
+        background: $danger-color;
+        border-radius: 100%; 
+        box-shadow: 0 0 0 1px #fff;
+        display: inline-block;
+    }
+
+    &-Small{
+        min-width: 14px;
+        height: 14px;
+        padding: 0;
+        font-size: 12px;
+        line-height: 14px;
+        border-radius: 7px;
+ 
+    }
+    
+    &-Text{
+        margin-left: 8px;  
     }
 
     &-ScrollNumber{
@@ -43,5 +87,102 @@ $prefixCls:"#{$global-prefix}-Badge";
                 margin: 0;
             }
         }
+
+        &-Custom-Component{
+            position: absolute;
+            top:0;
+            right:0;
+            transform: translate(50%,-50%);
+            transform-origin:100% 0%;
+            color:$danger-color;
+        }
     }
+
+    @keyframes ripple {
+        0% {
+            transform: scale(.8);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(2.4);
+            opacity: 0;
+        }
+    }
+ 
+
+    &-Color{
+        position: relative;
+        top: -1px;
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        vertical-align: middle;
+        border-radius: 50%;
+
+        &:after{
+            top: 0;
+            left: 0;
+            width: 100%;
+            border: 1px solid currentColor;
+            height: 100%;
+            content: "";
+            position: absolute;
+            animation: ripple 1.2s infinite ease-in-out;
+            border-radius: 50%;
+        }
+    }
+}
+
+.#{$prefixClsRibbon}-Wrapper{
+    position: relative; 
+    display: inline-block;
+
+    .#{$prefixClsRibbon}{
+        position: absolute;
+        top: 8px;
+        height: 22px;
+        padding: 0 8px;
+        color: #fff;
+        line-height: 22px;
+        white-space: nowrap;
+        background-color: $primary-color;
+        border-radius: 2px;
+
+        &-Corner{
+            position: absolute;
+            top: 100%;
+            width: 8px;
+            height: 8px;
+            color: $primary-color;
+            border: 4px solid;
+            transform: scaleY(.75);
+            transform-origin: top;
+
+            &:after{
+                
+                position: absolute;
+                top: -4px;
+                left: -4px;
+                width: inherit;
+                height: inherit;
+                color: rgba(0,0,0,.25);
+                border: inherit;
+                content: "";
+            }
+            
+        }
+
+    }
+    .#{$prefixClsRibbon}-Placement-End{
+        right: -8px;
+        border-bottom-right-radius: 0;
+
+        .#{$prefixClsRibbon}-Corner{
+            right:0;
+            border-color: currentColor transparent transparent currentColor;
+            
+        }
+
+    }
+    
 }
