@@ -17,7 +17,7 @@ const getNumberArray=(num)=>{
 
 const renderNumberList=(position,className)=>{
     const childrenToReturn=[];
-    for(let i=0;i<30;i++){
+    for(let i=0;i<20;i++){
         childrenToReturn.push(
             <p
                 key={i.toString()}

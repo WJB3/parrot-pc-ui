@@ -16,21 +16,12 @@ const Page = React.forwardRef((props, ref) => {
 
         <div style={{padding:200}}>
 
-            {/* <Badge count={count}>
-                <Button onClick={()=>setCount(count+1)}>默认</Button>
+            <Badge count={count}>
+                <Button >默认</Button>
             </Badge> 
-            <Badge count={0} showZero size={"small"}>
-                <Button onClick={()=>setCount(count+1)}>默认</Button>
-            </Badge> 
-            <Badge count={<Favorite />} >
-                <Button onClick={()=>setCount(count+1)}>默认</Button>
-            </Badge>
-            <Badge count={<Favorite />} offset={[10, 10]}>
-                <Button onClick={()=>setCount(count+1)}>默认</Button>
-            </Badge>
-            <Badge count={25} /> 
-            <Badge count={4}   style={{ backgroundColor: '#52c41a' }} /> */}
 
+            <Button onClick={()=>setCount(count+1)}>+1</Button>
+        
             <Badge.Ribbon text="Pushes open the window">
                 <Button>And raises the spyglass.</Button>
             </Badge.Ribbon>
