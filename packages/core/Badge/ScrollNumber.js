@@ -109,10 +109,10 @@ const ScrollNumber=(props,ref)=>{
                 {
                     className:`${prefixCls}-Only`,
                     style:{
-                        transition:undefined,
-                        msTransform:`translateY(${-position*100}%)`,
-                        WebkitTransform:`translateY(${-position*100}%)`,
-                        transform:`translateY(${-position*100}%)`
+                        transition: undefined,
+                        msTransform: `translateY(${-position * 100}%)`,
+                        WebkitTransform: `translateY(${-position * 100}%)`,
+                        transform: `translateY(${-position * 100}%)`,
                     },
                     key:i
                 },
