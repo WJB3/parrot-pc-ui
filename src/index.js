@@ -26,6 +26,7 @@ import BackDropPage from '@packages/pages/display/BackDropPage';
 import PopoverPage from '@packages/pages/display/PopoverPage';
 import PopconfirmPage from '@packages/pages/display/PopconfirmPage';
 import BadgePage from '@packages/pages/display/BadgePage';
+import SkeletonPage from '@packages/pages/display/SkeletonPage';
 import "./index.scss"; 
 
 
@@ -54,6 +55,7 @@ ReactDOM.render((<HashRouter>
     <Route path="/backdrop" exact component={(props)=><BackDropPage {...props}/>} />
     <Route path="/popover" exact component={(props)=><PopoverPage {...props}/>} />
     <Route path="/popconfirm" exact component={(props)=><PopconfirmPage {...props}/>} />
-    <Route path="/" exact component={(props)=><BadgePage {...props}/>} />
+    <Route path="/badge" exact component={(props)=><BadgePage {...props}/>} />
+    <Route path="/" exact component={(props)=><SkeletonPage {...props}/>} />
    
 </HashRouter>), document.getElementById("root"));

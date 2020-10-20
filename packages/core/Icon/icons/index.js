@@ -15,3 +15,4 @@ export { default as Edit} from './Edit';
 export { default as Check} from './Check';
 export { default as Warning } from './Warning';
 export { default as Person } from './Person';
+export { default as Image } from './Image';
