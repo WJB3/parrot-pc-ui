@@ -3,6 +3,7 @@ import classNames from '@packages/utils/classNames';
 import {
     ConfigContext
 } from '@packages/core/ConfigProvider';
+import capitalize from '@packages/utils/capitalize';
 import Element from './Element';
 
 const SkeletonAvatar=(props)=>{
@@ -11,7 +12,7 @@ const SkeletonAvatar=(props)=>{
         shape="circle",
         prefixCls:customizePrefixCls,
         className,
-        active,
+        animation="pluse",
         ...otherProps
     }=props;
 
@@ -23,7 +24,7 @@ const SkeletonAvatar=(props)=>{
             className,
             `${prefixCls}-Element`,
             {
-                [`${prefixCls}-Active`]:active
+                [`${prefixCls}-Animation-${capitalize(animation)}`]:animation
             }
         )}>
             <Element prefixCls={`${prefixCls}-Avatar`} size={size} shape={shape} {...otherProps} />

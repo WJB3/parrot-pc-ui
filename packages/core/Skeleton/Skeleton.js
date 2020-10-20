@@ -7,6 +7,7 @@ import Element from './Element';
 import Title from './Title';
 import Paragraph from './Paragraphy';
 import classNames from '@packages/utils/classNames';
+import capitalize from '@packages/utils/capitalize';
 import "./index.scss";
 
 function getAvatarBasicProps(hasTitle,hasParagraph){
@@ -62,7 +63,8 @@ const Skeleton=(props)=>{
         loading,
         avatar,
         title=true,
-        paragraph=true
+        paragraph=true,
+        animation="pluse"
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("Skeleton",customizePrefixCls);
@@ -120,7 +122,9 @@ const Skeleton=(props)=>{
 
         return (
             <div className={classNames(prefixCls,className,{
-                [`${prefixCls}-HasAvatar`]:hasAvatar
+                [`${prefixCls}-HasAvatar`]:hasAvatar,
+                [`${prefixCls}-Animation-${capitalize(animation)}`]:animation
+
             })}>
                 {avatarNode}
                 {contentNode}

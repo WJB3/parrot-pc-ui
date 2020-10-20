@@ -3,6 +3,7 @@ import classNames from '@packages/utils/classNames';
 import {
     ConfigContext
 } from '@packages/core/ConfigProvider';
+import capitalize from '@packages/utils/capitalize';
 import {
     Image
 } from '@packages/core/Icon';
@@ -11,7 +12,7 @@ const SkeletonImage=(props)=>{
     const { 
         prefixCls:customizePrefixCls,
         className,
-        active,
+        animation="pluse",
         ...otherProps
     }=props;
 
@@ -20,9 +21,13 @@ const SkeletonImage=(props)=>{
     return (
         <div className={classNames(
             prefixCls,
-            className  
+            className,
+            `${prefixCls}-Element`,
+            {
+                [`${prefixCls}-Animation-${capitalize(animation)}`]:animation
+            }
         )}>
-            <Image />
+            <Image className={classNames(`${prefixCls}-Image`)}/>
         </div>
     )
 }

@@ -3,6 +3,32 @@
 
 $prefixCls:"#{$global-prefix}-Skeleton";  
 $prefixClsTitle:"#{$global-prefix}-Skeleton-Title";  
+$prefixClsParagraph:"#{$global-prefix}-Skeleton-Paragraph";  
+$prefixClsElement:"#{$global-prefix}-Skeleton-Element";  
+$prefixClsAvatar:"#{$global-prefix}-Skeleton-Avatar";  
+$prefixClsButton:"#{$global-prefix}-Skeleton-Button";  
+$prefixClsInput:"#{$global-prefix}-Skeleton-Input";  
+$prefixClsImage:"#{$global-prefix}-Skeleton-Image";  
+$prefixClsAnimation:"#{$global-prefix}-Skeleton-Animation";  
+$prefixClsContent:"#{$global-prefix}-Skeleton-Content";  
+
+
+@mixin avatar_size_normal{
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+}
+@mixin avatar_size_small{
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+}
+@mixin avatar_size_large{
+    width:40px;
+    height: 40px;
+    line-height: 40px;
+}
+$skeleton-color:rgba(0,0,0,.08);
 
 .#{$prefixCls}{ 
     display:table;
@@ -12,6 +38,25 @@ $prefixClsTitle:"#{$global-prefix}-Skeleton-Title";
         display: table-cell;
         padding-right: 16px;
         vertical-align: top;
+
+        .#{$prefixClsAvatar}{
+            display: inline-block;
+            vertical-align: top;
+            background: $skeleton-color;
+            @include avatar_size_normal();
+
+            &-Small{
+                @include avatar_size_small();
+            }
+
+            &-Large{
+                @include avatar_size_large();
+            }
+
+            &-Circle{
+                border-radius: 50%;
+            }
+        }
     }
 
     &-Content{
@@ -23,8 +68,220 @@ $prefixClsTitle:"#{$global-prefix}-Skeleton-Title";
             width: 100%;
             height: 16px;
             margin-top: 16px;
-            background: rgba(0,0,0,.08);
+            background: $skeleton-color;
+
+            & + .#{$prefixClsParagraph}{
+                margin-top:24px;
+            }
+        }
+
+        .#{$prefixClsParagraph}{
+
+            padding:0;
+
+            >li{
+                width: 100%;
+                height: 16px;
+                list-style: none;
+                background: $skeleton-color;
+
+                & +li{
+                    margin-top:16px;
+                }
+            }
+           
         }
         
+    }
+
+    &.#{$prefixClsElement}{
+        display:inline-block;
+        width:auto;
+
+        .#{$prefixClsAvatar}{
+
+            display: inline-block;
+            vertical-align: top;
+            background: $skeleton-color;
+            @include avatar_size_normal();
+
+            &.#{$prefixClsAvatar}-Circle{
+                border-radius: 50%;
+            }
+
+            &.#{$prefixClsAvatar}-Small{
+                @include avatar_size_small();
+            }
+            &.#{$prefixClsAvatar}-Large{
+                @include avatar_size_large();
+            }
+        }
+
+        .#{$prefixClsButton}{
+            display: inline-block;
+            vertical-align: top;
+            background: $skeleton-color;
+            border-radius: 2px;
+            width: 64px;
+            height: 32px;
+            line-height: 32px;
+
+            &.#{$prefixClsButton}-Circle{
+                width:32px;
+                border-radius: 50%;
+            } 
+
+            &.#{$prefixClsButton}-Round{ 
+                border-radius:32px;
+            } 
+
+            &.#{$prefixClsButton}-Small{
+                width:48px;
+                height:24px;
+                line-height:24px;
+
+                &.#{$prefixClsButton}-Circle{
+                    width:24px;
+                    border-radius: 50%;
+                }
+
+                &.#{$prefixClsButton}-Round{ 
+                    border-radius:24px;
+                } 
+            }
+            &.#{$prefixClsButton}-Large{
+                width:80px;
+                height:40px;
+                line-height:40px;
+
+                &.#{$prefixClsButton}-Circle{
+                    width:40px;
+                    border-radius: 50%;
+                }
+
+                &.#{$prefixClsButton}-Round{ 
+                    border-radius:40px;
+                } 
+            }
+        }
+
+        .#{$prefixClsInput}{
+
+            display: inline-block;
+            vertical-align: top;
+            background: $skeleton-color; 
+            height: 32px;
+            line-height: 32px; 
+
+            &.#{$prefixClsInput}-Small{ 
+                height:24px;
+                line-height:24px;
+            }
+            &.#{$prefixClsInput}-Large{ 
+                height:40px;
+                line-height:40px;
+            }
+        }
+
+        
+    }
+
+    .#{$prefixClsImage}{
+        width: 96px;
+        height: 96px;
+        line-height: 96px;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $skeleton-color;
+        color: rgba(0,0,0,.14);
+        font-size:50px;
+    }
+
+    @keyframes skeleton-pluse {
+        0%{
+            opacity:1;
+        }
+        50%{
+            opacity:.4;
+        }
+        100%{
+            opacity:1;
+        }
+    }
+
+    @keyframes skeleton-wave {
+        0%{
+            transform:translateX(-100%);
+        }
+        80%{
+            transform:translateX(100%);
+        }
+        100%{
+            transform:translateX(100%);
+        }
+    }
+
+    @mixin skeleton-wave-minxin {
+        position:relative;
+        overflow: hidden;
+                    
+        &:after{
+
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        content: "";
+                        position: absolute;
+                        animation: skeleton-wave  1.6s linear .5s infinite;
+                        transform: translateX(-100%);
+                        background: linear-gradient(90deg,transparent,rgba(0,0,0,.04),transparent);
+
+        }
+    }
+
+    &.#{$prefixClsAnimation}{
+        &-Pluse{
+            .#{$prefixClsContent}{
+                .#{$prefixClsTitle},.#{$prefixClsParagraph} >li{
+                    animation:skeleton-pluse 1.5s ease-in-out .5s infinite;
+                }
+            }
+            .#{$prefixClsAvatar}{ 
+                    animation:skeleton-pluse 1.5s ease-in-out .5s infinite;
+            }
+            .#{$prefixClsButton}{ 
+                animation:skeleton-pluse 1.5s ease-in-out .5s infinite;
+            }
+            .#{$prefixClsInput}{ 
+                animation:skeleton-pluse 1.5s ease-in-out .5s infinite;
+            }
+            .#{$prefixClsImage}{ 
+                animation:skeleton-pluse 1.5s ease-in-out .5s infinite;
+            }
+        }
+
+
+
+        &-Wave{
+            .#{$prefixClsContent}{
+                .#{$prefixClsTitle},.#{$prefixClsParagraph} >li{
+                    @include skeleton-wave-minxin;
+                }
+            }
+            .#{$prefixClsAvatar}{ 
+                @include skeleton-wave-minxin;
+            }
+            .#{$prefixClsButton}{ 
+                @include skeleton-wave-minxin;
+            }
+            .#{$prefixClsInput}{ 
+                @include skeleton-wave-minxin;
+            }
+            .#{$prefixClsImage}{ 
+                @include skeleton-wave-minxin;
+            }
+        }
     }
 } 

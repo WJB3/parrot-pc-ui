@@ -1,6 +1,7 @@
 
 import React from 'react';
 import classNames from '@packages/utils/classNames';
+import "./index.scss";
 
 
 const Element=(props)=>{

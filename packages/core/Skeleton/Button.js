@@ -4,13 +4,14 @@ import {
     ConfigContext
 } from '@packages/core/ConfigProvider';
 import Element from './Element';
+import capitalize from '@packages/utils/capitalize';
 
 const SkeletonButton=(props)=>{
     const {
         size="default",
         prefixCls:customizePrefixCls,
         className,
-        active,
+        animation="pluse",
         ...otherProps
     }=props;
 
@@ -22,7 +23,7 @@ const SkeletonButton=(props)=>{
             className,
             `${prefixCls}-Element`,
             {
-                [`${prefixCls}-Active`]:active
+                [`${prefixCls}-Animation-${capitalize(animation)}`]:animation
             }
         )}>
             <Element prefixCls={`${prefixCls}-Button`} size={size} {...otherProps}  />
