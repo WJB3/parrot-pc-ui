@@ -382,3 +382,12 @@ animation:skeleton-pluse 1.5s ease-in-out .5s infinite;
 </blockquote>
 
  
+ ## 5.渐变轴的实现
+
+```css
+background: linear-gradient(90deg,transparent,rgba(0,0,0,.04),transparent);
+```
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    在我们的wave动画中，我们使用了<a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/linear-gradient">liner-gradient</a>来定义了元素的动画。
+</blockquote>
