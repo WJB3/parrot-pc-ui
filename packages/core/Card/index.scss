@@ -1,0 +1,13 @@
+
+@import "../styles/variable.scss";
+
+$prefixCls:"#{$global-prefix}-Card"; 
+
+.#{$prefixCls}{  
+    min-width: 275px;
+    display: inline-block;
+
+    &.#{$prefixCls}-notHasCardElement{
+        padding:24px;
+    }
+}
