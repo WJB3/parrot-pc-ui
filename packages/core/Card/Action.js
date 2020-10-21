@@ -3,8 +3,9 @@ import classNames from '@packages/utils/classNames';
 import {
     ConfigContext
 } from '@packages/core/ConfigProvider';
+import ButtonBase from '@packages/core/ButtonBase';
 
-const Content=React.forwardRef((props,ref)=>{
+const Action=React.forwardRef((props,ref)=>{
 
     const { 
         prefixCls:customizePrefixCls, 
@@ -13,14 +14,14 @@ const Content=React.forwardRef((props,ref)=>{
         children
     }=props;
 
-    const prefixCls=useContext(ConfigContext)?.getPrefixCls("Card-Content",customizePrefixCls);
+    const prefixCls=useContext(ConfigContext)?.getPrefixCls("Card-Action",customizePrefixCls);
 
-    return <div className={classNames(
+    return <ButtonBase className={classNames(
         prefixCls,className
     )} ref={ref} style={style}>
         {children}
-    </div>;
+    </ButtonBase>;
 })
  
 
-export default Content;
+export default Action;

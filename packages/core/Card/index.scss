@@ -2,12 +2,70 @@
 @import "../styles/variable.scss";
 
 $prefixCls:"#{$global-prefix}-Card"; 
+$prefixClsHeader:"#{$global-prefix}-Card-Header"; 
 
 .#{$prefixCls}{  
     min-width: 275px;
     display: inline-block;
+    overflow: hidden;
 
     &.#{$prefixCls}-notHasCardElement{
         padding:24px;
     }
+
+    &-Header{
+        display:flex;
+        padding:24px;
+        align-items: center;
+
+        &-Avatar{
+            flex: 0 0 auto;
+            margin-right: 20px;
+        }
+
+        &-Content{
+            flex: 1 1 auto;
+             
+            &-Title{
+                font-weight: 400;
+                color:$default-font-color;
+            }
+            &-SubTitle{
+                color:$default-color;
+                font-weight: 400;
+                font-size:12px;
+                color:$default-font-second-color;
+            }
+        }
+
+        &-Actions{
+            flex: 0 0 auto;
+            align-self: flex-start;
+        }
+    }
+
+    &-Meta{
+        display: block;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    &-Content{
+        padding:24px;
+        text-align: inherit;
+    }
+
+    &-Bottom{
+        display: flex;
+        padding: 8px;
+        align-items: center;
+    }
+
+    &-Action{
+        display: block;
+        width:100%;
+        text-align: inherit;
+    }
+
 }

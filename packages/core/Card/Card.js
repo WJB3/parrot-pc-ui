@@ -4,14 +4,17 @@ import {
     ConfigContext
 } from '@packages/core/ConfigProvider';
 import Paper from '@packages/core/Paper';
-import Title from './Title';
+import Header from './Header';
 import Content from './Content';
+import Meta from './Meta';
 import childrenToArray from '@packages/utils/childrenToArray';
 import "./index.scss";
 import Bottom from './Bottom';
+import Action from './Action';
 
+ 
 function isHaveCardElement(children){
-    childrenToArray(children).find((child)=>(child===<Title />||child===<Content />||child===<Bottom />))
+    return childrenToArray(children).find((child)=>(child.type===Header||child.type===Content||child.type===Bottom||child.type===Meta||child.type===Action))
 }
 
 const Card=React.forwardRef((props,ref)=>{
