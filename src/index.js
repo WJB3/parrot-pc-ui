@@ -27,6 +27,7 @@ import PopoverPage from '@packages/pages/display/PopoverPage';
 import PopconfirmPage from '@packages/pages/display/PopconfirmPage';
 import BadgePage from '@packages/pages/display/BadgePage';
 import SkeletonPage from '@packages/pages/display/SkeletonPage';
+import CardPage from '@packages/pages/display/CardPage';
 import "./index.scss"; 
 
 
@@ -34,8 +35,7 @@ ReactDOM.render((<HashRouter>
     <Route path="/avatar" exact component={(props)=><AvatarPage {...props}/>} />
     <Route path="/button" exact component={(props)=><ButtonPage {...props}/>} />
     <Route path="/tabs" exact component={(props)=><TabsPage {...props}/>} />
-    <Route path="/transitions" exact component={(props)=><TransitionPage {...props}/>} />
-
+    <Route path="/transitions" exact component={(props)=><TransitionPage {...props}/>} /> 
     <Route path="/resizeobserver" exact component={(props)=><ResizeObserverPage {...props}/>} />
     <Route path="/affix" exact component={(props)=><AffixPage {...props}/>} /> 
     <Route path="/grid" exact component={(props)=><GridPage {...props}/>} />
@@ -56,6 +56,7 @@ ReactDOM.render((<HashRouter>
     <Route path="/popover" exact component={(props)=><PopoverPage {...props}/>} />
     <Route path="/popconfirm" exact component={(props)=><PopconfirmPage {...props}/>} />
     <Route path="/badge" exact component={(props)=><BadgePage {...props}/>} />
-    <Route path="/" exact component={(props)=><SkeletonPage {...props}/>} />
+    <Route path="/skeleton" exact component={(props)=><SkeletonPage {...props}/>} />
+    <Route path="/" exact component={(props)=><CardPage {...props}/>} />
    
 </HashRouter>), document.getElementById("root"));

@@ -45,6 +45,36 @@ $prefixCls:"#{$global-prefix}-Button";
     }
 
   
+    &-TypeText{
+        
+    }
 
+    &-ColorTextDefault{
+        @include button-color-default-text();
+    }
+
+    &-ColorTextPrimary{
+        @include button-color-primary-text();
+    }
+
+    &-ColorTextDanger{
+        @include button-color-danger-text();
+    }
+
+    &-ColorTextSecond{
+        @include button-color-second-text();
+    }
+
+    &-ColorTextWarning{
+        @include button-color-warning-text();
+    }
+
+    &-ColorTextSuccess{
+        @include button-color-success-text();
+    }
+
+    &-ColorTextInfo{
+        @include button-color-info-text();
+    }
     
 }

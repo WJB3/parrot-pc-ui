@@ -11,8 +11,28 @@ $primary-color-hover:rgb(4, 153, 138);
     background-color:rgba(0,189,170,$opacity);
 }
 
+@mixin OpacityWarningColor($opacity) {
+    background-color:rgba(248,180,0,$opacity);
+}
+
+@mixin OpacitySecondColor($opacity) {
+    background-color:rgba(64,0,130,$opacity);
+}
+
 @mixin OpacityDangerColor($opacity) {
     background-color:rgba(247, 31, 85,$opacity);
+}
+
+@mixin OpacityDefaultColor($opacity) {
+    background-color:rgba(224,224,224,$opacity);
+}
+
+@mixin OpacitySuccessColor($opacity) {
+    background-color:rgba(107,198,0,$opacity);
+}
+
+@mixin OpacityInfoColor($opacity) {
+    background-color:rgba(7,121,228,$opacity);
 }
 
 $warning-color:rgba(248,180,0,1);

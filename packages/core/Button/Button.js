@@ -1,8 +1,10 @@
-import React from 'react';
+import React ,{useContext} from 'react';
 import classNames from '@packages/utils/classNames'; 
 import PropTypes from 'prop-types';
 import ButtonBase from '../ButtonBase';
-import usePrefixCls from '@packages/hooks/usePrefixCls';
+import {
+    ConfigContext
+} from '@packages/core/ConfigProvider'; 
 import capitalize from '@packages/utils/capitalize';
 import "./index.scss";
 
@@ -17,7 +19,7 @@ const Button=React.forwardRef((props,ref)=>{
         ...restProps
     }=props; 
 
-    const prefixCls=usePrefixCls('Button',customizePrefixCls);
+    const prefixCls=useContext(ConfigContext)?.getPrefixCls('Button',customizePrefixCls);
 
     return (
         <ButtonBase

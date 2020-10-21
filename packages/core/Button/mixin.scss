@@ -102,3 +102,67 @@
         background-color: $info-color-hover;
     }
 }
+
+@mixin button-color-default-text(){
+    color:rgba(0,0,0,.86);
+    background-color: #fff;
+
+    &:hover{
+        @include OpacityDefaultColor(.1);
+    }
+}
+
+@mixin button-color-primary-text(){
+    color:$primary-color;
+    background-color: #fff;
+
+    &:hover{
+        @include OpacityPrimaryColor(.1);
+    }
+}
+
+@mixin button-color-danger-text(){
+    color:$danger-color;
+    background-color: #fff;
+
+    &:hover{
+        @include OpacityDangerColor(.1);
+    }
+}
+
+@mixin button-color-second-text(){
+    color:$second-color;
+    background-color:#fff ;
+
+    &:hover{
+        @include OpacitySecondColor(.1);
+    }
+}
+
+@mixin button-color-warning-text(){
+    color:$warning-color;
+    background-color: #fff;
+
+    &:hover{
+        @include OpacityWarningColor(.1);
+    }
+}
+
+@mixin button-color-success-text(){
+    color:$success-color;
+    background-color: #fff;
+
+    &:hover{
+        @include OpacitySuccessColor(.1);
+    }
+}
+
+
+@mixin button-color-info-text(){
+    color:$info-color;
+    background-color: #fff;
+
+    &:hover{
+        @include OpacityInfoColor(.1);
+    }
+}

@@ -5,13 +5,12 @@ import Icon from '@packages/icon';
 
 const Page= React.forwardRef((props,ref)=>{
     return <React.Fragment>
-        <Button>测试</Button>
-        <Button color="primary"><Icon name={"Add"} />测试</Button>
-        <Button color="danger">测试</Button>
-        <Button color="second">测试</Button>
-        <Button color="warning">测试</Button>
-        <Button color="success">测试</Button>
-        <Button color="info">测试</Button>
+        <Button type="text" color="primary" size="small">测试</Button>
+        <Button type="text" color="default">测试</Button>
+        <Button type="text" color="danger">测试</Button>
+        <Button type="text" color="info">测试</Button>
+        <Button type="text" color="success">测试</Button>
+        
     </React.Fragment>
 });
 
