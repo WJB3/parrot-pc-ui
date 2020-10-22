@@ -16,6 +16,7 @@ const Button=React.forwardRef((props,ref)=>{
         children,
         color="default",
         type="contained", 
+        shape="round",
         ...restProps
     }=props; 
 
@@ -29,7 +30,8 @@ const Button=React.forwardRef((props,ref)=>{
                 {
                     [`${prefixCls}-${capitalize(size)}`]:size,
                     [`${prefixCls}-Color${capitalize(type)}${capitalize(color)}`]:color,
-                    [`${prefixCls}-Type${capitalize(type)}`]:type
+                    [`${prefixCls}-Type${capitalize(type)}`]:type,
+                    [`${prefixCls}-${capitalize(shape)}`]:shape
                 }
             )}
             ref={ref} 

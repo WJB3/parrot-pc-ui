@@ -134,9 +134,7 @@ const TabNavBar = React.forwardRef(function (props, ref) {
 
     const isTabScrollable = TabScrollable(tabListRef.current);
 
-    const handleEndScrollClick = () => {
-        moveTabsScroll(tabListRef.current["clientWidth"]);
-    };
+   
 
     const handleStartScrollClick = () => {
         moveTabsScroll(-tabListRef.current["clientWidth"]);
@@ -148,6 +146,10 @@ const TabNavBar = React.forwardRef(function (props, ref) {
         scroll(scrollValue);
     };
 
+    const handleEndScrollClick = () => {
+        moveTabsScroll(tabListRef.current["clientWidth"]);
+    };
+    
     const scroll = scrollValue => { 
         animate("scrollLeft", tabListRef.current, scrollValue,{},()=>{console.log("forceRender");forceRender({})});
     }; 

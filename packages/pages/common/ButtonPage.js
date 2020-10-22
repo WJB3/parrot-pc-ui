@@ -10,6 +10,9 @@ const Page= React.forwardRef((props,ref)=>{
         <Button type="text" color="danger">测试</Button>
         <Button type="text" color="info">测试</Button>
         <Button type="text" color="success">测试</Button>
+        <Button type="text" color="success" shape="circle" size="small">测试</Button>
+        <Button type="text" color="success" shape="circle">测试</Button>
+        <Button type="text" color="success" shape="circle" size="large">测试</Button>
         
     </React.Fragment>
 });

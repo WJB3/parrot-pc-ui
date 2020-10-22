@@ -1,0 +1,35 @@
+
+
+@import "../styles/variable.scss";
+  
+ 
+$prefixCls:"#{$global-prefix}-PickerContainer";
+
+.#{$prefixCls}{
+    color: $primary-color;
+    background-color: #fff;
+    width: 310px;
+    overflow: hidden;
+
+    &-Display{
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        flex-direction: column;
+        height:100px;
+        background-color: currentColor;
+        padding-left: 16px;
+        padding-right:16px;
+    }
+
+    @media (min-width:600px){
+        &-Display{
+            padding-left: 24px;
+            padding-right:24px;
+        }
+    }
+
+    &-Container{
+        padding-bottom:8px!important;
+    }
+}

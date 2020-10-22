@@ -28,6 +28,7 @@ import PopconfirmPage from '@packages/pages/display/PopconfirmPage';
 import BadgePage from '@packages/pages/display/BadgePage';
 import SkeletonPage from '@packages/pages/display/SkeletonPage';
 import CardPage from '@packages/pages/display/CardPage';
+import DatePickerPage from '@packages/pages/data/DatePickerPage';
 import "./index.scss"; 
 
 
@@ -57,6 +58,7 @@ ReactDOM.render((<HashRouter>
     <Route path="/popconfirm" exact component={(props)=><PopconfirmPage {...props}/>} />
     <Route path="/badge" exact component={(props)=><BadgePage {...props}/>} />
     <Route path="/skeleton" exact component={(props)=><SkeletonPage {...props}/>} />
-    <Route path="/" exact component={(props)=><CardPage {...props}/>} />
+    <Route path="/card" exact component={(props)=><CardPage {...props}/>} />
+    <Route path="/" exact component={(props)=><DatePickerPage {...props}/>} />
    
 </HashRouter>), document.getElementById("root"));
