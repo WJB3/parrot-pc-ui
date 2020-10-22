@@ -68,8 +68,11 @@ function complete(number) {
 export const weekEnum=['日','一','二','三','四','五','六']
 
 export function generateDate(date){
-    const { daysOfMonth,startOfMonth }=useDate(date);
+    
+    const { startOfMonth,daysOfMonth }=useDate(date);
     const { week }=useDate(startOfMonth);
+
+ 
 
     let arr=[];
 
@@ -85,7 +88,7 @@ export function generateDate(date){
     //总共五行 一行7个 所以数组总数应该为5*7=35
     const restNum=35-arr.length;
 
-    //剩余大于0，即大于28天
+    //6行
     if(restNum>0){
         if(arr.length>28){
             for(let i=0;i<restNum;i++){
@@ -93,15 +96,17 @@ export function generateDate(date){
             }
         }
     }else if(restNum<0){
-        //正好等于28
+        //7行
         for(let i=0;i<7+restNum;i++){
                 arr.push("");
         }
     }
+
+    return arr;
 }
 
-export const chunk=(input,size)=>{
-    return input.reduce((arr,item,idx)=>{
+export const chunk=(date,size)=>{ 
+    return generateDate(date).reduce((arr,item,idx)=>{
         return idx%size===0
         ?[...arr,[item]]
         :[...arr.slice(0, -1), [...arr.slice(-1)[0], item]];
@@ -113,18 +118,27 @@ export const chunk=(input,size)=>{
  * @param {}} date 
  */
 export default function useDate(date) {
-    const newDate = date ? new Date(date) : new Date();
+    //如果date是字符串 如果date是日期对象
+    const newDate = date && typeof date==="string" 
+        ? new Date(date) 
+        : date && date instanceof Date
+        ? date
+        : new Date();
 
     let year = newDate.getFullYear();
-    let month = newDate.getMonth();
-    let day = newDate.getDate();
+    let month = complete(newDate.getMonth()+1);
+    let day = complete(newDate.getDate());
     let week = newDate.getDay();
-    let monthday = `${complete(month)}-${complete(day)}`;
+    let monthday = `${month}-${day}`;
     let startOfMonth=`${year}-${month}-01`;
     let endOfMonth=`${year}-${month}-${new Date(year,month,0).getDate()}`;
     let daysOfMonth=`${new Date(year,month,0).getDate()}`;
+    let time=newDate.getTime();
 
+ 
     return {
+        date:newDate,
+        time:time,
         year: year,
         month: month,
         day: day,
