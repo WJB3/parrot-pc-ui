@@ -20,8 +20,14 @@ function transformWeek(number) {
     }
 }
 
-function transformMonth(number) {
-    switch (number) {
+export function transformMonth(number) {
+    let num;
+    if(typeof number==="number"){
+        num=number;
+    }else if(typeof number==="string"){
+        num=Number(number);
+    }
+    switch (num) {
         case 1:
             return "一月";
         case 2:
@@ -55,7 +61,7 @@ function transformYear(number){
     return `${number}年`
 }
 
-function complete(number) {
+export function complete(number) {
     if (!number) {
         return "";
     }
@@ -65,7 +71,7 @@ function complete(number) {
     return number;
 }
 
-export const weekEnum=['日','一','二','三','四','五','六']
+export const weekEnum=['日','一','二','三','四','五','六']; 
 
 export function generateDate(date){
     
@@ -113,6 +119,36 @@ export const chunk=(date,size)=>{
     },[])
 }
 
+export const chunkInput=(input,size)=>{ 
+    return input.reduce((arr,item,idx)=>{
+        return idx%size===0
+        ?[...arr,[item]]
+        :[...arr.slice(0, -1), [...arr.slice(-1)[0], item]];
+    },[])
+}
+ 
+
+export const  getPrevMonth=(date)=>{
+    const { year,month}=useDate(date);
+
+    if(month>1&&month<=12){
+        return `${year}-${complete(Number(month)-1)}-01`;
+    }
+
+    return `${year-1}-12-01`;
+
+}
+
+export const getNextMonth=(date)=>{
+    const { year,month }=useDate(date);
+ 
+    
+    if(month>0 && month<12){
+        return `${year}-${complete(Number(month)+1)}-01`;
+    }
+    return `${year+1}-01-01`;
+}
+
 /**
  * 传进来一个date对象或者一个时间字符串
  * @param {}} date 
@@ -138,6 +174,7 @@ export default function useDate(date) {
  
     return {
         date:newDate,
+        fullDate:`${year}-${month}-${day}`,
         time:time,
         year: year,
         month: month,

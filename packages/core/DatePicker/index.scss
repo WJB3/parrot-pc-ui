@@ -15,6 +15,7 @@ $time:450ms;
       
     &-Display{
         font-weight: 700;
+        user-select: none;
 
         &-Year{
             width: 100%;
@@ -24,6 +25,17 @@ $time:450ms;
             height: 16px;
             color:#fff;
             margin-bottom: 10px;
+            position: relative; 
+            overflow: hidden;
+
+            &-Text{
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                top: 0;
+                left: 0;
+                line-height:16px;
+            }
         }
 
         &-Monthday{ 
@@ -32,7 +44,18 @@ $time:450ms;
             height: 38px; 
             width: 100%;
             font-weight: 500;
+            position: relative; 
+            overflow: hidden;
             color: #fff;
+
+            &-Text{
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                top: 0;
+                left: 0;
+                line-height:38px;
+            }
         }
     }
 
@@ -42,15 +65,15 @@ $time:450ms;
         flex-direction: column;
         justify-content: space-between;
         font-size:12px;
-        font-weight:400;
+        font-weight:500;
         padding:0 8px; 
 
-        &-Monthday{
+        &-Monthday,&-Month{
             .#{$prefixClsToolbar}{
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                height:48px;
+                height:48px; 
 
                 &-Title{
                     font-size: 14px;
@@ -59,9 +82,28 @@ $time:450ms;
                     width: 100%;
                     flex:1;
                     color:$default-font-color;
-                }
-            }
+                    user-select: none;
+                    height:100%;
+                    position: relative;
+                    overflow: hidden;
 
+                    &-Text{
+                        position: absolute;
+                        height: 100%;
+                        width: 100%;
+                        top: 0;
+                        left: 0;
+                        line-height: 48px;
+                        cursor: pointer;
+                        &:hover{
+                            color:$primary-color;
+                        }
+                    }
+                }
+            } 
+        }
+
+        &-Monthday{
             &-Button{
                 width: 48px!important;
                 height: 48px!important;
@@ -89,6 +131,17 @@ $time:450ms;
             &-Day{
 
                 height: 214px;
+                position:relative;
+                overflow:hidden;
+
+                &-Wrapper{
+                    position: absolute;
+                    height: 100%;
+                    width: 100%;
+                    top: 0;
+                    left: 0;
+                    
+                }
 
                 &-Row{
                     display:flex;
@@ -113,12 +166,28 @@ $time:450ms;
                         cursor: pointer;
                         margin: 0; 
                         font-size: inherit;
-                        font-weight: 400;
+                        font-weight: 500;
                         padding:4px 0;
                         position: relative;
                         border: 10px;
                         width: 42px;
                         color: inherit;
+
+                        &.now{
+                            .#{$prefixClsDayButton}-Text{ 
+                                color:$primary-color;
+                            }
+                        }
+
+                        &.selected{
+                            .#{$prefixClsDayButton}-Bg{ 
+                                opacity: 1;
+                                transform: scale(1);
+                            }
+                            .#{$prefixClsDayButton}-Text{ 
+                                color:#fff;
+                            }
+                        }
 
                         &:hover{
 
@@ -155,11 +224,60 @@ $time:450ms;
                     }
                 }
             }
+ 
+        }
+
+        &-Month{
+            &-Content{
+
+            }
+            &-Button-Wrapper{
+                &-Row{
+                    display: flex;
+                    justify-content: space-around;
+                    margin-bottom: 2px;
+                }
+            }
+            &-Button{
+                display: inline-block;
+                background: none; 
+                user-select: none;
+                outline: none;
+                text-decoration: none;
+                cursor: pointer;
+                margin: 0;
+                font-size: inherit;
+                font-weight: 400;
+                position: relative;
+                border: 10px;
+                width: 84px;
+                height: 56px;
+                padding: 10px 0;
+                color: inherit;
+
+                &-Bg{
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    top: 10px;
+                    bottom: 10px;
+                    background-color: currentColor;
+                    border-radius: 2px;
+                    opacity: 0;
+                }
+
+                &-Text{
+                    color:$default-font-color;
+                    position: relative;
+                }
+            }
         }
     }
 
     &-Slider-Translation{
         &-UpDown{
+            
+
             &.#{$prefixClsDaySlider}{
                 &-Next{
                     //后面的进来是先
@@ -208,7 +326,7 @@ $time:450ms;
             }
         }
 
-        &-LeftRighy{
+        &-LeftRight{
             &.#{$prefixClsDaySlider}{
                 &-Next{
                     //后面的进来是先

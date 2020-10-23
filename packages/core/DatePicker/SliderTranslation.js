@@ -1,9 +1,9 @@
 import React,{cloneElement} from 'react';
-import { classNames } from '@/packages/utils/className';
+import classNames  from '@packages/utils/classNames';
 import { 
     ConfigContext
-} from '@/packages/core/ConfigProvider';
-import capitialize from '@packages/utils/capitialize';
+} from '@packages/core/ConfigProvider'; 
+import capitalize from '@packages/utils/capitalize'
 import { CSSTransition } from 'react-transition-group';
 import "./index.scss";
 
@@ -24,8 +24,7 @@ const SliderDisplay = React.forwardRef((props, ref) => {
 
     const prefixCls = React.useContext(ConfigContext)?.getPrefixCls("DatePicker-Slider-Translation", customizePrefixCls); 
 
-    const handleEnter = (node, isAppearing) => {
-        reflow(node); 
+    const handleEnter = (node, isAppearing) => { 
  
         if (onEnter) {
           onEnter(node, isAppearing);
@@ -54,9 +53,9 @@ const SliderDisplay = React.forwardRef((props, ref) => {
             appear
             classNames={classNames(
                 prefixCls,
-                {
-                    [`${prefixCls}-${capitialize(status)}`]:status,
-                    [`${prefixCls}-${capitialize(direction)}`]:direction,
+                { 
+                    [`${prefixCls}-${capitalize(direction,false)}`]:direction,
+                    [`${prefixCls}-${capitalize(status,false)}`]:status,
                 }
             )}
             onEnter={handleEnter}

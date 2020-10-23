@@ -8,7 +8,7 @@ import React,{useRef, useEffect} from 'react';
  */
 export default function usePrevState(value){
 
-    const ref=useRef(value);
+    const ref=useRef();
 
     useEffect(()=>{
         ref.current=value

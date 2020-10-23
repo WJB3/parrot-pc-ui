@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import SliderTranslation from './SliderTranslation';
-import childrenToArray from '@packages/utils/childrenToArray';
-import usePrevState from '@packages/cores/usePrevState';
-import useInit from '@pacakges/cores/useInit';
+import childrenToArray from '@packages/utils/childrenToArray'; 
+import useInit from '@packages/hooks/useInit';
+import usePrevState from '@packages/hooks/usePrevState';
  
 
  
@@ -11,10 +11,14 @@ const Slider=(props)=>{
     const {
         children:childrenProps,
         date, 
-        direction="next",//默认是下一个向上
+        status="next",//默认是下一个向上
+        direction="upDown",
+        renderChildren
     }=props;
  
     const [children,setChildren]=React.useState([]);
+
+    const prevDate=usePrevState(date);
 
     const index=React.useRef(0);
 
@@ -48,18 +52,42 @@ const Slider=(props)=>{
         
     }
 
-    useEffect(()=>{
-        if(!isInit){
-            setChildren([<SliderTranslation in={true} key={index.current} >{childrenProps}</SliderTranslation>]);
-        }
-        
-        setChildren([React.cloneElement(children[0],{
-            status:direction==="next"?"prev":"next",
-            in:false
-        }),<SliderTranslation in={true} key={index.current} status={direction}  >{childrenProps}</SliderTranslation>])
-
+    useEffect(()=>{ 
+        setChildren([<SliderTranslation in={true} key={index.current} direction={direction}>{childrenProps}</SliderTranslation>]);
+     
         index.current++;
-    },[date,isInit]);
+    },[]);
+
+    useEffect(()=>{
+        if(isInit){
+            let clearIndex=React.Children.count(children)===1?0:1;//遇到过渡清除不掉的情况下
+
+            setChildren([React.cloneElement(children[clearIndex],{
+                status:status==="next"?"prev":"next",
+                in:false
+            }),<SliderTranslation in={true} key={index.current} status={status} direction={direction} >{childrenProps}</SliderTranslation>]) 
+        }
+        index.current++;
+    },[date]);
+    
+    useEffect(()=>{
+        if(isInit){
+            let clearIndex=React.Children.count(children)===1?0:1;//遇到过渡清除不掉的情况下
+
+            setChildren([React.cloneElement(children[clearIndex],{
+                status:status==="next"?"prev":"next",
+                in:false
+            }),<SliderTranslation in={true} key={index.current} status={status} direction={direction} >{childrenProps}</SliderTranslation>]) 
+        }
+    },[]);
+
+    
+    useEffect(()=>{//当日期不变时 无法重新渲染 
+        if(isInit && renderChildren && prevDate===date){ 
+            setChildren([<SliderTranslation in={true} key={index.current} >{childrenProps}</SliderTranslation>])
+            index.current++;
+        }
+    },[childrenProps]);
    
     return <React.Fragment>
         {
