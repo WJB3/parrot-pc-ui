@@ -9,6 +9,9 @@ import useControlled from '@packages/hooks/useControlled';
 import capitalize from '@packages/utils/capitalize'; 
 import CheckGroupContext from './CheckboxGroupContext';
 import createChainedFunction from '@packages/utils/createChainedFunction';
+import {
+    Zoom
+} from '@packages/core/Transition';
 import "./index.scss";
 
 const Checkbox = React.forwardRef((props, ref) => {
@@ -95,7 +98,7 @@ const Checkbox = React.forwardRef((props, ref) => {
                         value={value}
                     />
 
-                    {checked ? selectIcon : unselectIcon}
+                    {checked ? <Zoom in={checked}>{selectIcon}</Zoom> : unselectIcon}
 
                     {indeterminate && !checked && <span className={classNames(`${prefixCls}-Indeterminate`)}></span>}
 

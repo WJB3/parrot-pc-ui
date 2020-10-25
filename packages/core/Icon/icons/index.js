@@ -18,3 +18,5 @@ export { default as Person } from './Person';
 export { default as Image } from './Image';
 export { default as KeyboardArrowLeft } from './KeyboardArrowLeft';
 export { default as KeyboardArrowRight } from './KeyboardArrowRight';
+export { default as RadioChecked } from './RadioChecked';
+export { default as RadioUncheck } from './RadioUncheck';

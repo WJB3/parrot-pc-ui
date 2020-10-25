@@ -20,6 +20,7 @@ const Zoom = React.forwardRef(function (props, ref) {
         onExit,
         onExited,
         onExiting,
+        zoom=0,
         timeout = {
             enter: duration.enteringScreen,
             exit: duration.leavingScreen
@@ -75,7 +76,7 @@ const Zoom = React.forwardRef(function (props, ref) {
                 (state, childProps) => {
                     return React.cloneElement(children, {
                         style: {
-                            transform: `scale(0) ${extraStyle}`,
+                            transform: `scale(${zoom}) ${extraStyle}`,
                             visibility: state === 'exited' && !visibleProp ? 'hidden' : undefined,
                             ...style,
                             ...styles[state],

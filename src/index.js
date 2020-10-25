@@ -8,8 +8,7 @@ import ResizeObserverPage from '@packages/pages/common/ResizeObserverPage';
 import AvatarPage from '@packages/pages/display/AvatarPage';
 import TabsPage from '@packages/pages/display/TabsPage';
 import TransitionPage from '@packages/pages/common/TransitionPage';
-import AffixPage from '@packages/pages/navigation/AffixPage';
-import BreadcrumbPage from '@packages/pages/navigation/BreadcrumbPage';
+import AffixPage from '@packages/pages/navigation/AffixPage'; 
 import GridPage from '@packages/pages/common/GridPage';
 import FormPage from '@packages/pages/data/FormPage';
 import ConfigProviderPage from '@packages/pages/else/ConfigProviderPage';
@@ -29,6 +28,7 @@ import BadgePage from '@packages/pages/display/BadgePage';
 import SkeletonPage from '@packages/pages/display/SkeletonPage';
 import CardPage from '@packages/pages/display/CardPage';
 import DatePickerPage from '@packages/pages/data/DatePickerPage';
+import RadioPage from '@packages/pages/data/RadioPage';
 import "./index.scss"; 
 
 
@@ -59,6 +59,7 @@ ReactDOM.render((<HashRouter>
     <Route path="/badge" exact component={(props)=><BadgePage {...props}/>} />
     <Route path="/skeleton" exact component={(props)=><SkeletonPage {...props}/>} />
     <Route path="/card" exact component={(props)=><CardPage {...props}/>} />
-    <Route path="/" exact component={(props)=><DatePickerPage {...props}/>} />
+    <Route path="/datepicker" exact component={(props)=><DatePickerPage {...props}/>} />
+    <Route path="/" exact component={(props)=><RadioPage {...props}/>} />
    
 </HashRouter>), document.getElementById("root"));
