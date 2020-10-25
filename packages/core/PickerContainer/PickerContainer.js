@@ -14,7 +14,8 @@ const PickerContainer=React.forwardRef((props,ref)=>{
         display,
         container,
         displayName,
-        containerName
+        containerName,
+        landspace
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("PickerContainer",customizePrefixCls);
@@ -23,9 +24,14 @@ const PickerContainer=React.forwardRef((props,ref)=>{
         <Paper
             className={
                 classNames(
-                    prefixCls,className
+                    prefixCls,
+                    className,
+                    {
+                        [`${prefixCls}-Landspace`]:landspace
+                    }
                 )
             }
+            ref={ref}
         >
             <div className={classNames(
                     `${prefixCls}-Display`, 

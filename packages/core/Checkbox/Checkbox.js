@@ -48,9 +48,7 @@ const Checkbox = React.forwardRef((props, ref) => {
 
     const handleChange = (e) => {
         setChecked(e.target.checked);
-        //onChange?.(e.target.checked, e,value);
-        onChangeProp?.(e.target.checked, e,value);
-        checkboxGroup?.onChange?.(e.target.checked, e,value);
+        onChange?.(e.target.checked, e,value); 
     } 
 
     return (

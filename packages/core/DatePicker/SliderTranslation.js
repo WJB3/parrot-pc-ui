@@ -7,7 +7,7 @@ import capitalize from '@packages/utils/capitalize'
 import { CSSTransition } from 'react-transition-group';
 import "./index.scss";
 
-const SliderDisplay = React.forwardRef((props, ref) => {
+const SliderTranslation = React.forwardRef((props, ref) => {
 
     const {
         prefixCls: customizePrefixCls,
@@ -81,4 +81,4 @@ const SliderDisplay = React.forwardRef((props, ref) => {
     )
 });
 
-export default SliderDisplay;
+export default SliderTranslation;

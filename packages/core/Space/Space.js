@@ -22,7 +22,8 @@ const Space=React.forwardRef((props,ref)=>{
         component:Component='div',
         direction="horizontal", 
         itemStyle,
-        size="default"
+        size="default",
+        style
     }=props;
 
     const prefixCls = useContext(ConfigContext)?.getPrefixCls("Space", customizePrefixCls);
@@ -30,7 +31,7 @@ const Space=React.forwardRef((props,ref)=>{
     const items=childrenToArray(children);
 
     return (
-        <Component ref={ref} className={classNames(
+        <Component ref={ref} style={style} className={classNames(
             prefixCls,className,
             direction?`${prefixCls}-${capitalize(direction)}`:`${prefixCls}-Horizontal`,
         )}>

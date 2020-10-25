@@ -129,10 +129,10 @@ export const chunkInput=(input,size)=>{
  
 
 export const  getPrevMonth=(date)=>{
-    const { year,month}=useDate(date);
+    const { year,month,day}=useDate(date);
 
     if(month>1&&month<=12){
-        return `${year}-${complete(Number(month)-1)}-01`;
+        return `${year}-${complete(Number(month)-1)}-${day}`;
     }
 
     return `${year-1}-12-01`;
@@ -140,13 +140,36 @@ export const  getPrevMonth=(date)=>{
 }
 
 export const getNextMonth=(date)=>{
-    const { year,month }=useDate(date);
+    const { year,month,day }=useDate(date);
  
     
     if(month>0 && month<12){
-        return `${year}-${complete(Number(month)+1)}-01`;
+        return `${year}-${complete(Number(month)+1)}-${day}`;
     }
     return `${year+1}-01-01`;
+}
+
+export const generateYear=(date)=>{
+    const currentYear=useDate(date).year;
+    const startYear=currentYear-50;
+    const endYear=currentYear+100;
+    const yearList=[];
+    for(let i=startYear;i<endYear;i++){
+        yearList.push(i);
+    }
+    return yearList;
+}
+
+export const getPrevYear=(date)=>{
+    const {year,month,day}=useDate(date);
+
+    return `${year-1}-${month}-${day}`;
+}
+
+export const getNextYear=(date)=>{
+    const {year,month,day}=useDate(date);
+
+    return `${year+1}-${month}-${day}`;
 }
 
 /**
