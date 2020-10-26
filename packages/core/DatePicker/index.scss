@@ -302,10 +302,14 @@ $time:450ms;
                     margin-bottom: 2px;
                 }
             }
+<<<<<<< Updated upstream
             &-Button{
                 display: flex;
                 justify-content: center;
                 align-items:center;
+=======
+            &-Button{ 
+>>>>>>> Stashed changes
                 background: none; 
                 user-select: none;
                 outline: none;
@@ -320,6 +324,9 @@ $time:450ms;
                 height: 56px;
                 padding: 10px 0;
                 color: inherit;
+                display: flex;
+                justify-content: center;
+                align-items: center;
 
                  &.now{
                             .#{$prefixClsMonthButton}-Text{ 
