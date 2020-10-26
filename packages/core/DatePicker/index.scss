@@ -121,6 +121,7 @@ $time:450ms;
 
         &.#{$prefixClsContainer}Year{
             padding: 0!important;
+            
         }
 
         &-Monthday,&-Month{
@@ -366,13 +367,31 @@ $time:450ms;
                 }
             }
         }
+ 
 
         &-Year{
-            position:relative;
-            height: 280px;
-            overflow: scroll;
+ 
+            display: flex; 
+            justify-content: space-between; 
+            flex-direction: column;
+            margin-top: 10px;
+            width: 310px;
+            height: 272px;
+            overflow: hidden;
+            
+
+            &-Wrapper{
+                height: inherit;
+                line-height: 35px;
+                overflow-x: hidden;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                position: relative;
+            }
 
             &-List{
+
+                min-height: 100%;
 
                 &-Item{
                     display: flex;

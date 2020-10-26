@@ -122,10 +122,7 @@ const DatePicker = React.forwardRef((props, ref) => {
         }
 
     }
-
-    // const handleSwicthToolbarText=(type)=>{//点击toolbar的title
-        
-    // }
+ 
 
     const handleSwicthType=(toMode)=>{//toMode表示切换到哪种模式
         if(typeProp==="day"){//typeProp为day时可以切换到任意模式
@@ -302,7 +299,7 @@ const DatePicker = React.forwardRef((props, ref) => {
         if (displayType === "year") {
             toolbarNode = null;
             weekNode = null;
-            contentNode = <div className={`${prefixCls}-Container-Year`} ref={yearListRef}>
+            contentNode =  <div className={`${prefixCls}-Container-Year-Wrapper`} ref={yearListRef}>
                 <div className={`${prefixCls}-Container-Year-List`} >
                     {
                         generateYear(value).map((item) => {
@@ -324,7 +321,7 @@ const DatePicker = React.forwardRef((props, ref) => {
                         })
                     }
                 </div>
-            </div>
+            </div> 
         }
 
 
@@ -347,6 +344,9 @@ const DatePicker = React.forwardRef((props, ref) => {
     useEffect(() => {
         if (displayType === "year") {
             let distance = currentYearRef.current.offsetTop;
+            console.log(distance);
+            console.log(yearListRef.current.scrollTop);
+            console.log(yearListRef.current);
 
             yearListRef.current.scrollTop = distance - 110;
 

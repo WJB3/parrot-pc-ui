@@ -9,8 +9,7 @@ $prefixClsDatepickerDisplay:"#{$global-prefix}-DatePicker-Display";
 .#{$prefixCls}{
     color: $primary-color;
     background-color: #fff;
-    width: 310px;
-    overflow: hidden;
+    width: 310px; 
 
     &.#{$prefixCls}-Landspace{
         width: 479px;
@@ -24,6 +23,8 @@ $prefixClsDatepickerDisplay:"#{$global-prefix}-DatePicker-Display";
             padding-top: 16px; 
             position: relative;
             justify-content: flex-start;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
         }
 
         .#{$prefixClsDatepickerDisplay}{
@@ -57,6 +58,8 @@ $prefixClsDatepickerDisplay:"#{$global-prefix}-DatePicker-Display";
         background-color: currentColor;
         padding-left: 16px;
         padding-right:16px;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
     }
 
     @media (min-width:600px){
