@@ -29,6 +29,8 @@ import SkeletonPage from '@packages/pages/display/SkeletonPage';
 import CardPage from '@packages/pages/display/CardPage';
 import DatePickerPage from '@packages/pages/data/DatePickerPage';
 import RadioPage from '@packages/pages/data/RadioPage';
+import SwitchPage from '@packages/pages/data/SwitchPage';
+import SliderPage from '@packages/pages/data/SliderPage';
 import "./index.scss"; 
 
 
@@ -60,6 +62,8 @@ ReactDOM.render((<HashRouter>
     <Route path="/skeleton" exact component={(props)=><SkeletonPage {...props}/>} />
     <Route path="/card" exact component={(props)=><CardPage {...props}/>} />
     <Route path="/datepicker" exact component={(props)=><DatePickerPage {...props}/>} />
-    <Route path="/" exact component={(props)=><RadioPage {...props}/>} />
+    <Route path="/radio" exact component={(props)=><RadioPage {...props}/>} />
+    <Route path="/switch" exact component={(props)=><SwitchPage {...props}/>} />
+    <Route path="/" exact component={(props)=><SliderPage {...props}/>} />
    
 </HashRouter>), document.getElementById("root"));

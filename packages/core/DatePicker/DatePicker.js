@@ -343,10 +343,7 @@ const DatePicker = React.forwardRef((props, ref) => {
 
     useEffect(() => {
         if (displayType === "year") {
-            let distance = currentYearRef.current.offsetTop;
-            console.log(distance);
-            console.log(yearListRef.current.scrollTop);
-            console.log(yearListRef.current);
+            let distance = currentYearRef.current.offsetTop; 
 
             yearListRef.current.scrollTop = distance - 110;
 
