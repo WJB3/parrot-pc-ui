@@ -13,9 +13,9 @@ import CilclePng from './circle.png';
 const Page=(props)=>{
     return (
         <div style={{padding:200}}> 
-            <Slider valueLabelDisplay="on"  />
+            <Slider valueLabelDisplay="auto" step={10} defaultValue={[10,20]} />
             <div style={{height:200}}></div>
-            <SliderA      valueLabelDisplay="on"  />
+            <SliderA valueLabelDisplay="auto" step={10} defaultValue={[10,20]}  />
             {/* <div style={{height:200}}>
                 <Slider orientation="vertical"   direction="vertical" onChange={(value)=>console.log(value)}/>
             </div> */}

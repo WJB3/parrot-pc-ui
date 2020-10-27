@@ -97,6 +97,11 @@ $prefixCls:"#{$global-prefix}-Slider";
                 justify-content: center;
                 background-color: currentColor;
             }
+
+            &-Label{
+                transform:rotate(45deg);
+                color: #fff;
+            }
         }
     }
 } 
