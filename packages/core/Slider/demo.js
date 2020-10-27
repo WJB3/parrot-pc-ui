@@ -278,9 +278,7 @@ export const styles = (theme) => ({
         boxShadow: 'none',
       },
     },
-    '&$active': {
-      boxShadow: `0px 0px 0px 14px ${alpha(theme.palette.primary.main, 0.16)}`,
-    },
+   
     '&$disabled': {
       width: 8,
       height: 8,
@@ -308,12 +306,8 @@ export const styles = (theme) => ({
     '&$focusVisible,&:hover': {
       boxShadow: `0px 0px 0px 8px ${alpha(theme.palette.secondary.main, 0.16)}`,
     },
-    '&$active': {
-      boxShadow: `0px 0px 0px 14px ${alpha(theme.palette.secondary.main, 0.16)}`,
-    },
-  },
-  /* Pseudo-class applied to the thumb element if it's active. */
-  active: {},
+     
+  }, 
   /* Pseudo-class applied to the thumb element if keyboard focused. */
   focusVisible: {},
   /* Styles applied to the thumb label element. */
@@ -328,8 +322,7 @@ export const styles = (theme) => ({
     height: 2,
     borderRadius: 1,
     backgroundColor: 'currentColor',
-  },
-  /* Styles applied to the mark element if active (depending on the value). */
+  }, 
   markActive: {
     backgroundColor: theme.palette.background.paper,
     opacity: 0.8,
@@ -353,8 +346,7 @@ export const styles = (theme) => ({
         left: 31,
       },
     },
-  },
-  /* Styles applied to the mark label element if active (depending on the value). */
+  }, 
   markLabelActive: {
     color: theme.palette.text.primary,
   },
@@ -394,10 +386,7 @@ const Slider = React.forwardRef(function Slider(props, ref) {
     ...other
   } = props;
   const theme = useTheme();
-  const touchId = React.useRef();
-  // We can't use the :active browser pseudo-classes.
-  // - The active state isn't triggered when clicking on the rail.
-  // - The active state isn't transferred when inversing a range slider.
+  const touchId = React.useRef(); 
   const [active, setActive] = React.useState(-1);
   const [open, setOpen] = React.useState(-1);
 

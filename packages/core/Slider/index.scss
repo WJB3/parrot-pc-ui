@@ -11,11 +11,36 @@ $prefixCls:"#{$global-prefix}-Slider";
     cursor: pointer;
     height:2px;
     display:inline-block;
-    padding:18px 0;
+    padding:13px 0;
     position: relative;
 
     &.#{$prefixCls}-Primary{
         color:$primary-color;
+    }
+
+    &.#{$prefixCls}-Vertical{
+        width: 2px;
+        height: 100%;
+        padding: 0 13px;
+
+        .#{$prefixCls}-Rail{
+            width:2px;
+            height:100%;
+            display: block;
+            opacity:.38;
+            position: absolute;
+            border-radius:1px;
+            background-color: currentColor;
+        }
+
+        .#{$prefixCls}-Track{
+            width:2px;
+        }
+
+        .#{$prefixCls}-Thumb{
+            margin-left: -5px;
+            margin-bottom: -6px;
+        }
     }
 
 
@@ -50,6 +75,28 @@ $prefixCls:"#{$global-prefix}-Slider";
 
         &:hover{
             box-shadow:0px 0px 0px 8px $primary-color-opacity2;
+        }
+
+        &.#{$prefixCls}-Thumb-Active{
+            box-shadow:0px 0px 0px 14px $primary-color-opacity2;
+        }
+
+        .#{$prefixCls}-ValueLabel{
+            top: -34px;
+            z-index: 1;
+            position: absolute;   
+            left: calc(-50% - 4px);
+
+            &-Circle{
+                width: 32px;
+                height: 32px;
+                display: flex;
+                transform: rotate(-45deg);
+                align-items: center;
+                border-radius: 50% 50% 50% 0;
+                justify-content: center;
+                background-color: currentColor;
+            }
         }
     }
 } 
