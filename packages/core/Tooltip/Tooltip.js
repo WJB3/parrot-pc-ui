@@ -50,7 +50,8 @@ const Tooltip = React.forwardRef(function (props, ref) {
         getPopupContainer,
         color,
         shadow,
-        externalNode
+        externalNode,
+        style
     } = props;
 
     const prefixCls = useContext(ConfigContext)?.getPrefixCls("Tooltip", customizePrefixCls);
@@ -237,6 +238,7 @@ const Tooltip = React.forwardRef(function (props, ref) {
                 mountNode={childNode} 
                 keepMounted={!destroyTooltipOnHide}
                 target={getPopupContainer}
+                style={style}
                 {...mergedPopperProps}
             >
                 {({placement:placementInner,TransitionProps})=>(

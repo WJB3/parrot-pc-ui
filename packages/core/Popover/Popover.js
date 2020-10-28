@@ -16,6 +16,8 @@ const Popover=React.forwardRef((props,ref)=>{
         title,
         content,
         arrow=true,
+        shadow=10,
+        style,
         ...restProps
     }=props;
 
@@ -35,8 +37,9 @@ const Popover=React.forwardRef((props,ref)=>{
                 </div>
             }
             arrow={arrow}
-            shadow={10}
+            shadow={arrow?shadow:5}
             color={"#fff"}
+            style={style}
         >
             {
                 React.cloneElement(children)

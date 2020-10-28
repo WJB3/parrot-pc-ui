@@ -49,7 +49,7 @@ const ClickAwayListener = React.forwardRef((props, ref) => {
             insideDOM=nodeRef.current.contains(event.target);
         }
 
-        if(!insideDOM || externalNode.indexOf(event.target)>-1){
+        if(!insideDOM || externalNode?.indexOf(event.target)>-1){
             onClickAway(event)
         } 
     }

@@ -20,3 +20,5 @@ export { default as KeyboardArrowLeft } from './KeyboardArrowLeft';
 export { default as KeyboardArrowRight } from './KeyboardArrowRight';
 export { default as RadioChecked } from './RadioChecked';
 export { default as RadioUncheck } from './RadioUncheck';
+export { default as ArrowUp } from './ArrowUp';
+export { default as ArrowDown } from './ArrowDown';

@@ -15,7 +15,7 @@ const Page = React.forwardRef((props, ref) => {
 
   return <div style={{padding:300}}>
     
-    <Popover trigger="hover"  title="Titke" content={content} defaultVisible={true}>
+    <Popover trigger="click"  arrow={false} title="Titke" content={content} defaultVisible={true}>
       <Button  >click</Button>
     </Popover>            
   

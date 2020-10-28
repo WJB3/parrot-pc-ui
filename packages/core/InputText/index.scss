@@ -66,8 +66,16 @@ $prefixClsInput:"#{$prefixCls}-Input";
             justify-content: center;
             line-height: 1;
             min-width: 16px;
-        }
-    
+        } 
+
+        &-FixRightBlock{
+            position:absolute;
+            right:0;
+            padding:0 4px;
+            display: inline-flex;
+            justify-content: center;
+            align-items:center;
+        } 
 
     }
 
@@ -80,24 +88,55 @@ $prefixClsInput:"#{$prefixCls}-Input";
     }
  
     &-Small{
+
         .#{$prefixClsInput}{
             padding:2px 2px;
             height:20px;
+        }
+
+        .#{$prefixClsInputWrapper}{
+
+            &-FixRightBlock{
+                font-size: 24px;
+                min-width: 16px;
+            } 
         }
         
     }
 
     &-Default{
+
+       
+
         .#{$prefixClsInput}{
             padding:4px 4px;
             height:32px;
+           
+        }
+
+        .#{$prefixClsInputWrapper}{
+
+            &-FixRightBlock{
+                height: 32px;
+                font-size: 24px;
+                min-width: 16px;
+            } 
         }
     }
 
     &-Large{
+
         .#{$prefixClsInput}{
             padding:4px 4px;
             height:40px;
+        }
+        .#{$prefixClsInputWrapper}{
+
+            &-FixRightBlock{
+                height: 40px;
+                font-size: 24px;
+                min-width: 16px;
+            } 
         }
     }
      

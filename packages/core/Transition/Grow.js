@@ -55,11 +55,11 @@ const Grow = React.forwardRef(function (props, ref) {
     const styles = {
         entering: {
             opacity: 1,
-            transform:`${getScale(0.75)} ${extraStyle}`,
+            transform:`${getScale(1)} ${extraStyle}`,
         },
         entered: {
             opacity: 1,
-            transform: `${getScale(1)} ${extraStyle}`,
+            transform: `${extraStyle}`,
         },
     };
 

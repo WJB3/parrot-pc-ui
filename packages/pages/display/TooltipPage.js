@@ -9,7 +9,7 @@ const Page = React.forwardRef((props, ref) => {
   const buttonRef=useRef(null);
 
   return <div style={{padding:100}}>
-    <Tooltip  title="Add" getPopupContainer={()=>buttonRef.current} arrow placement={"left"} destroyTooltipOnHide onVisibleChange={(visible)=>console.log(visible)}>
+    <Tooltip  title="Add" getPopupContainer={()=>buttonRef.current} arrow placement={"bottom"} onVisibleChange={(visible)=>console.log(visible)}>
       <Button ref={buttonRef}>Grow</Button>
     </Tooltip>
    

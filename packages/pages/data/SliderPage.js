@@ -15,7 +15,7 @@ import CilclePng from './circle.png';
 const Page=(props)=>{
     return (
         <div style={{padding:200}}> 
-            <Slider valueLabelDisplay="off"  step={1}  defaultValue={10} />
+            <Slider valueLabelDisplay="off"  step={1}  defaultValue={20} />
             {/* <SliderAn defaultValue={30} min={9}  /> */}
 {/*            
             <div style={{height:200}}></div> */}
@@ -25,6 +25,7 @@ const Page=(props)=>{
                 <Slider orientation="vertical"   direction="vertical" onChange={(value)=>console.log(value)}/>
             </div> */}
             
+         
            
 {/* 
             <div className={'ywcx-btn'} >

@@ -36,7 +36,7 @@ const InputText=React.forwardRef(function(props,ref){
         textareaStyles={},
         renderNumber,
         onKeyUp,
-        renderPassword
+        fixRightBlock
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("InputText",customizePrefixCls); 
@@ -130,6 +130,8 @@ const InputText=React.forwardRef(function(props,ref){
                         {suffix}
                     </span>
                 }
+
+                <span className={classNames(`${prefixCls}-InputWrapper-FixRightBlock`)}>{fixRightBlock}</span>
             </div>
 
             {renderNumber}

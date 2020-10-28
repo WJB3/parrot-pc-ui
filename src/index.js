@@ -31,6 +31,7 @@ import DatePickerPage from '@packages/pages/data/DatePickerPage';
 import RadioPage from '@packages/pages/data/RadioPage';
 import SwitchPage from '@packages/pages/data/SwitchPage';
 import SliderPage from '@packages/pages/data/SliderPage';
+import SelectPage from '@packages/pages/data/SelectPage';
 import "./index.scss"; 
 
 
@@ -64,6 +65,7 @@ ReactDOM.render((<HashRouter>
     <Route path="/datepicker" exact component={(props)=><DatePickerPage {...props}/>} />
     <Route path="/radio" exact component={(props)=><RadioPage {...props}/>} />
     <Route path="/switch" exact component={(props)=><SwitchPage {...props}/>} />
-    <Route path="/" exact component={(props)=><SliderPage {...props}/>} />
+    <Route path="/slider" exact component={(props)=><SliderPage {...props}/>} />
+    <Route path="/" exact component={(props)=><SelectPage {...props}/>} />
    
 </HashRouter>), document.getElementById("root"));

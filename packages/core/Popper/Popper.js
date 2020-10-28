@@ -58,6 +58,7 @@ const Popper = React.forwardRef(function(props,ref){
         transition=true,
         modifiers={},
         keepMounted=false,//是否一直挂载
+        style
     } = props;
 
     const [exited, setExited] = React.useState(true);//定义动画是否退出
@@ -155,7 +156,8 @@ const Popper = React.forwardRef(function(props,ref){
                     }
                 )}
                 style={{
-                    willChange:'transform'
+                    willChange:'transform',
+                    ...style
                 }}
                  
             >

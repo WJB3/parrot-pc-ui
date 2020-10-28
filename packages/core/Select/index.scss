@@ -1,0 +1,39 @@
+
+@import "../styles/variable.scss";
+  
+ 
+$prefixCls:"#{$global-prefix}-Select";
+$prefixClsOption:"#{$global-prefix}-SelectOption";
+$prefixClsPopover:"#{$global-prefix}-Popover";
+
+.#{$prefixCls}{
+    
+    min-width:120px;
+    display: inline-flex;
+
+    &-Popover{
+        min-width: 120px;
+        padding:0;
+        padding-top:8px;
+        padding-bottom:8px;
+        margin:0;
+
+        .#{$prefixClsPopover}-Content-Main{
+            padding:0px;
+        }
+
+        .#{$prefixClsOption}{
+            width:100%;
+            text-align: left;
+            padding-left: 16px;
+            padding-right: 16px;
+            min-height: auto;
+            justify-content: flex-start;
+            padding-top:8px;
+            padding-bottom:8px;
+            min-height:36px;
+        }
+    }
+
+    
+}
