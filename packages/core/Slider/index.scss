@@ -40,6 +40,19 @@ $prefixCls:"#{$global-prefix}-Slider";
         .#{$prefixCls}-Thumb{
             margin-left: -5px;
             margin-bottom: -6px;
+
+            .#{$prefixCls}-ValueLabel{
+                right:-46px;
+                top:auto;
+                left:auto;
+
+                &-Circle{ 
+                    transform: rotate(45deg); 
+                }
+                &-Label{
+                    transform:rotate(-45deg); 
+                }
+            }
         }
     }
 
