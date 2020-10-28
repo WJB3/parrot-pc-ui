@@ -15,10 +15,12 @@ import CilclePng from './circle.png';
 const Page=(props)=>{
     return (
         <div style={{padding:200}}> 
+            <Slider valueLabelDisplay="off"  step={1}  defaultValue={10} />
             {/* <SliderAn defaultValue={30} min={9}  /> */}
-           
-            <div style={{height:200}}> <Slider valueLabelDisplay="off"  step={1}  defaultValue={10} /></div>
-            <SliderA valueLabelDisplay="auto" step={1} min={9} defaultValue={[10,20]} />
+{/*            
+            <div style={{height:200}}></div> */}
+             <SliderA valueLabelDisplay="auto" step={1} min={9} defaultValue={[10,20]} />
+ 
             {/* <div style={{height:200}}>
                 <Slider orientation="vertical"   direction="vertical" onChange={(value)=>console.log(value)}/>
             </div> */}

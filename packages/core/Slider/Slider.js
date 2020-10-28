@@ -27,7 +27,7 @@ import toArray from '@packages/utils/toArray';
 import useForkRef from '@packages/hooks/useForkRef';
 import ownerDocument from '@packages/utils/ownerDocument';
 import ValueLabel from './ValueLabel';
-import "./index.scss";
+import "./index.scss"; 
 
 function computed(value, min, max) {
     //根据max和min得出正确的值
@@ -114,6 +114,7 @@ function setValueIndex({ values, source, newValue, index }) {
 
 function focusThumb({ sliderRef, activeIndex, setActive }) {
     const doc = ownerDocument(sliderRef.current);
+    console.log(!sliderRef.current.contains(doc.activeElement))
     if (
         !sliderRef.current.contains(doc.activeElement) ||
         Number(doc.activeElement.getAttribute('data-index')) !== activeIndex
@@ -241,9 +242,11 @@ const Slider = React.forwardRef((props, ref) => {
     }
 
     const handleKeyDown = (event) => { 
-        console.log("handleKeyDown")
+        console.log("handleKeyDownSlider")
         console.log(event.target)
         console.log(event.currentTarget)
+        // console.log(event.target)
+        // console.log(event.currentTarget)
         const index = Number(event.currentTarget.getAttribute('data-index'));
         const value = values[index];
         const tenPercents = (max - min) / 10;
@@ -301,7 +304,8 @@ const Slider = React.forwardRef((props, ref) => {
 
     }
 
-    const handleMouseDown = (event) => { 
+    const handleMouseDown =(event) => { 
+        console.log("mousedown")
         onMouseDown?.(event);
 
         // 单击
@@ -313,15 +317,13 @@ const Slider = React.forwardRef((props, ref) => {
 
         const { newValue, activeIndex } = getFingerNewValue({ finger ,values,source:valueDerived});
 
-        focusThumb({ sliderRef, activeIndex, setActive });
+        focusThumb({ sliderRef, activeIndex, setActive }); 
 
-        console.log(ownerDocument(event).activeElement)
-
-        setValue(newValue);
+        setValue(newValue); 
 
         const doc = ownerDocument(sliderRef.current);
         doc.addEventListener("mousemove", handleTouchMove);
-        doc.addEventListener('mouseup', handleTouchEnd);
+        // doc.addEventListener('mouseup', handleTouchEnd); 
     }
 
     const stopListening = () => {
@@ -355,9 +357,20 @@ const Slider = React.forwardRef((props, ref) => {
         ...axisProps[direction].leap(trackLeap)
     }; 
 
+    const handleBlur=()=>{
+        console.log("handleBlur")
+    }
+
+    const handleFocus=()=>{
+        console.log("handleFocus")
+    }
+
     useEffect(() => {
         onChange?.(range ? values : values[0]);
     }, [values]);
+
+    //子元素设置了onkeydown后父元素无法在监听到了
+
  
     return (
         <span
@@ -373,32 +386,17 @@ const Slider = React.forwardRef((props, ref) => {
             }
             ref={handleRef}
             style={style}
-            onMouseDown={handleMouseDown}
+            onMouseDown={handleMouseDown} 
         >
             <span className={`${prefixCls}-Rail`} />
             <span className={`${prefixCls}-Track`} style={trackStyle} />
-            <input type="hidden" />
+            <input type="hidden" /> 
             {
                 values.map((value, index) => {
                     const percent = valueToPercent(value, min, max);
-                    const style = axisProps[direction].offset(percent);
-                    const ValueLabelComponent = valueLabelDisplay === "off" ? ({ children }) => children : ValueLabelComponentProp
-
-                    return (
-                        <ValueLabelComponent
-                            key={index}
-                            className={classNames(
-                                `${prefixCls}-ValueLabel`
-                            )}
-                            value={
-                                typeof valueLabelFormat === "function"
-                                    ? valueLabelFormat(value, index)
-                                    : value
-                            }
-                            index={index}
-                            open={active === index || valueLabelDisplay === 'on'}
-                        >
-                            <ThumbComponent
+                    const style = axisProps[direction].offset(percent); 
+                    return ( 
+                            <span
                                 className={
                                     classNames(
                                         `${prefixCls}-Thumb`,
@@ -409,12 +407,14 @@ const Slider = React.forwardRef((props, ref) => {
                                 }
                                 style={style}
                                 role="slider"
-                                tabIndex={0}
+                                tabIndex="0"
                                 data-index={index}
-                                key={index}
-                                onKeyDown={handleKeyDown}  
+                                key={index} 
+                                onKeyDown={handleKeyDown}
+                                onFocus={handleFocus}
+                                onBlur={handleBlur}
                             />
-                        </ValueLabelComponent>
+                     
                     )
                 })
             }
