@@ -14,6 +14,8 @@
 //14. left: calc(-50% - 4px);
 //15.toFixed()
 //16.reduce
+//17.mousedown聚焦后失去交代呢
+
 
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import classNames from '@packages/utils/classNames';
@@ -26,7 +28,11 @@ import toArray from '@packages/utils/toArray';
 import useForkRef from '@packages/hooks/useForkRef';
 import ownerDocument from '@packages/utils/ownerDocument';
 import ValueLabel from './ValueLabel';
+import useEventCallback from '@packages/hooks/useEventCallback'
 import "./index.scss";
+
+
+const Forward = ({ children }) => children;
 
 function computed(value, min, max) {
     //根据max和min得出正确的值
@@ -111,7 +117,10 @@ function setValueIndex({ values, source, newValue, index }) {
 }
 
 function focusThumb({ sliderRef, activeIndex, setActive }) {
+    console.log("focusThumb")
+   
     const doc = ownerDocument(sliderRef.current);
+    console.log(sliderRef.current.contains(doc.activeElement))
     if (
         !sliderRef.current.contains(doc.activeElement) ||
         Number(doc.activeElement.getAttribute('data-index')) !== activeIndex
@@ -124,7 +133,7 @@ function focusThumb({ sliderRef, activeIndex, setActive }) {
     }
 }
 
-const Slider = React.forwardRef((props, ref) => {
+const Slider = React.forwardRef(function(props, ref){
 
     const {
         prefixCls: customizePrefixCls,
@@ -142,8 +151,7 @@ const Slider = React.forwardRef((props, ref) => {
         valueLabelDisplay = "off",
         ValueLabelComponent: ValueLabelComponentProp = ValueLabel,
         valueLabelFormat,
-        step = 1, 
-        
+        step = 1 
     } = props;
 
     const prefixCls = useContext(ConfigContext)?.getPrefixCls("Slider", customizePrefixCls);
@@ -152,6 +160,13 @@ const Slider = React.forwardRef((props, ref) => {
         controlled: valueProp,
         default: defaultValue
     });
+
+    //slice可以将类数组转化为数组
+    const range = Array.isArray(valueDerived);//判断是否是范围
+
+    let values = range ? valueDerived.slice().sort((a,b)=>a-b) : [valueDerived];
+
+    values=values.map((value) => computed(value, min, max));
 
     const previousIndex = React.useRef();
 
@@ -196,7 +211,6 @@ const Slider = React.forwardRef((props, ref) => {
             previousIndex.current = activeIndex;
         }
         
-
         return {
             newValue, activeIndex
         }
@@ -206,20 +220,18 @@ const Slider = React.forwardRef((props, ref) => {
 
     const touchId = useRef(null);
 
-    const handleRef = useForkRef(ref, sliderRef);
-
-    const [open, setOpen] = React.useState(-1);
-
-    //slice可以将类数组转化为数组
-    const range = Array.isArray(valueDerived);//判断是否是范围
-
-    let values = range ? valueDerived.slice().sort((a,b)=>a-b) : toArray(valueDerived);
-
-    values.map((value) => computed(value, min, max));
+    const handleRef = useForkRef(ref, sliderRef); 
 
    
 
-  
+    const handleFocus=()=>{
+        console.log("handleFocus")
+    }
+
+    const handleBlur=()=>{
+        console.log("handleBlur")
+    }
+    
 
     const handleTouchMove = (nativeEvent) => {
         const finger = trackFinger(nativeEvent, touchId);
@@ -229,7 +241,7 @@ const Slider = React.forwardRef((props, ref) => {
 
         if (nativeEvent.type === 'mousemove' && nativeEvent.buttons === 0) {
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
-            handleTouchEnd(nativeEvent);
+            // handleTouchEnd(nativeEvent);
             return;
         }
 
@@ -244,6 +256,7 @@ const Slider = React.forwardRef((props, ref) => {
     }
 
     const handleKeyDown = (event) => { 
+        console.log("handleKeyDown")
         const index = Number(event.currentTarget.getAttribute('data-index'));
         const value = values[index];
         const tenPercents = (max - min) / 10;
@@ -290,50 +303,52 @@ const Slider = React.forwardRef((props, ref) => {
 
     }
 
-    const handleMouseDown = (event) => {
+    const handleMouseDown =  (event) => {
         console.log("handleMouseDown")
-        onMouseDown?.(event);
+        // onMouseDown?.(event);
 
         // 单击
         if (event.button !== 0) {
             return;
         }
 
+       
         const finger = trackFinger(event, touchId);
-
+        event.preventDefault();
         const { newValue, activeIndex } = getFingerNewValue({ finger ,values,source:valueDerived});
 
         focusThumb({ sliderRef, activeIndex, setActive });
 
         setValue(newValue);
 
-        const doc = ownerDocument(sliderRef.current);
-        doc.addEventListener("mousemove", handleTouchMove);
-        doc.addEventListener('mouseup', handleTouchEnd);
+        // const doc = ownerDocument(sliderRef.current);
+        // doc.addEventListener("mousemove", handleTouchMove);
+        // doc.addEventListener('mouseup', handleTouchEnd);
     }
 
     const stopListening = () => {
         const doc = ownerDocument(sliderRef.current);
-        doc.removeEventListener("mousemove", handleTouchMove);
-        doc.removeEventListener("mouseup", handleTouchEnd);
-        doc.removeEventListener("touchmove", handleTouchMove);
-        doc.removeEventListener("touchend", handleTouchEnd);
+        // doc.removeEventListener("mousemove", handleTouchMove);
+        // doc.removeEventListener("mouseup", handleTouchEnd);
+        // doc.removeEventListener("touchmove", handleTouchMove);
+        // doc.removeEventListener("touchend", handleTouchEnd);
     };
 
-    const handleTouchEnd = (nativeEvent) => {
-        const finger = trackFinger(nativeEvent, touchId);
+    // const handleTouchEnd = (nativeEvent) => {
+    //     console.log("handleTouchEnd");
+    //     const finger = trackFinger(nativeEvent, touchId);
 
-        if (!finger) {
-            return;
-        }
-        const { newValue } = getFingerNewValue({ finger, values, source: valueDerived });
+    //     if (!finger) {
+    //         return;
+    //     }
+    //     const { newValue } = getFingerNewValue({ finger, values, source: valueDerived });
 
-        setActive(-1);
+    //     setActive(-1);
 
-        touchId.current = undefined;
+    //     touchId.current = undefined;
 
-        stopListening();
-    }
+    //     stopListening();
+    // }
 
     const trackOffset = valueToPercent(range ? values[0] : min, min, max);
     const trackLeap = valueToPercent(values[values.length - 1], min, max) - trackOffset;
@@ -343,14 +358,7 @@ const Slider = React.forwardRef((props, ref) => {
         ...axisProps[direction].leap(trackLeap)
     };
 
-    const handleFocus=()=>{
-        console.log("handleFocus")
-    }
-
-    const handleBlur=()=>{
-        console.log("handleBlur")
-    }
-    
+  
     useEffect(() => {
         onChange?.(range ? values : values[0]);
     }, [values]);
@@ -362,24 +370,24 @@ const Slider = React.forwardRef((props, ref) => {
                     prefixCls,
                     className,
                     {
-                        [`${prefixCls}-${capitalize(color)}`]: color,
-                        [`${prefixCls}-${capitalize(direction)}`]: direction
+                        [`${prefixCls}-${capitalize(color,false)}`]: color,
+                        [`${prefixCls}-${capitalize(direction,false)}`]: direction
                     }
                 )
             }
             ref={handleRef}
             style={style}
             onMouseDown={handleMouseDown}
+        
         >
             <span className={`${prefixCls}-Rail`} />
-            <span className={`${prefixCls}-Track`} style={trackStyle} />
-            <input type="hidden" />
+            <span className={`${prefixCls}-Track`} style={trackStyle} /> 
             {
                 values.map((value, index) => {
                     const percent = valueToPercent(value, min, max);
                     const style = axisProps[direction].offset(percent);
-                    const ValueLabelComponent = valueLabelDisplay === "off" ? ({ children }) => children : ValueLabelComponentProp
-
+                    const ValueLabelComponent = valueLabelDisplay === "off" ? Forward: ValueLabelComponentProp
+                    console.log(ValueLabelComponent===Forward)
                     return (
                         <ValueLabelComponent
                             key={index}
@@ -392,9 +400,9 @@ const Slider = React.forwardRef((props, ref) => {
                                     : value
                             }
                             index={index}
-                            open={open === index || active === index || valueLabelDisplay === 'on'}
+                            open={active === index || valueLabelDisplay === 'on'}
                         >
-                            <ThumbComponent
+                            <span
                                 className={
                                     classNames(
                                         `${prefixCls}-Thumb`,
@@ -404,7 +412,7 @@ const Slider = React.forwardRef((props, ref) => {
                                     )
                                 }
                                 style={style}
-                                role={"slider"}
+                                role="slider"
                                 tabIndex={0}
                                 data-index={index}
                                 key={index}

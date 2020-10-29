@@ -395,22 +395,7 @@ const Slider = React.forwardRef(function Slider(props, ref) {
     default: defaultValue,
     name: 'Slider',
   });
-
-  const handleChange =
-    onChange &&
-    ((event, value) => {
-      if (!(event instanceof Event)) event.persist();
-
-      // Redefine target to allow name and value to be read.
-      // This allows seamless integration with the most popular form libraries.
-      // https://github.com/mui-org/material-ui/issues/13485#issuecomment-676048492
-      Object.defineProperty(event, 'target', {
-        writable: true,
-        value: { value, name },
-      });
-
-      onChange(event, value);
-    });
+ 
 
   const range = Array.isArray(valueDerived);
   let values = range ? valueDerived.slice().sort(asc) : [valueDerived];
@@ -545,9 +530,7 @@ const Slider = React.forwardRef(function Slider(props, ref) {
     setValueState(newValue);
     setFocusVisible(index);
 
-    if (handleChange) {
-      handleChange(event, newValue);
-    }
+  
     if (onChangeCommitted) {
       onChangeCommitted(event, newValue);
     }
@@ -631,10 +614,7 @@ const Slider = React.forwardRef(function Slider(props, ref) {
 
     focusThumb({ sliderRef, activeIndex, setActive });
     setValueState(newValue);
-
-    if (handleChange) {
-      handleChange(nativeEvent, newValue);
-    }
+ 
   });
 
   const handleTouchEnd = useEventCallback((nativeEvent) => {
@@ -677,10 +657,7 @@ const Slider = React.forwardRef(function Slider(props, ref) {
     focusThumb({ sliderRef, activeIndex, setActive });
 
     setValueState(newValue);
-
-    if (handleChange) {
-      handleChange(event, newValue);
-    }
+ 
 
     const doc = ownerDocument(sliderRef.current);
     doc.addEventListener('touchmove', handleTouchMove);
@@ -717,6 +694,7 @@ const Slider = React.forwardRef(function Slider(props, ref) {
   }, [disabled, stopListening]);
 
   const handleMouseDown = useEventCallback((event) => {
+   
     if (onMouseDown) {
       onMouseDown(event);
     }
@@ -733,11 +711,7 @@ const Slider = React.forwardRef(function Slider(props, ref) {
     focusThumb({ sliderRef, activeIndex, setActive });
 
     setValueState(newValue);
-
-    if (handleChange) {
-      handleChange(event, newValue);
-    }
-
+ 
     const doc = ownerDocument(sliderRef.current);
     doc.addEventListener('mousemove', handleTouchMove);
     doc.addEventListener('mouseup', handleTouchEnd);
@@ -769,51 +743,8 @@ const Slider = React.forwardRef(function Slider(props, ref) {
       {...other}
     >
       <span className={classes.rail} />
-      <span className={classes.track} style={trackStyle} />
-      <input value={values.join(',')} name={name} type="hidden" />
-      {marks.map((mark, index) => {
-        const percent = valueToPercent(mark.value, min, max);
-        const style = axisProps[axis].offset(percent);
-
-        let markActive;
-        if (track === false) {
-          markActive = values.indexOf(mark.value) !== -1;
-        } else {
-          markActive =
-            (track === 'normal' &&
-              (range
-                ? mark.value >= values[0] && mark.value <= values[values.length - 1]
-                : mark.value <= values[0])) ||
-            (track === 'inverted' &&
-              (range
-                ? mark.value <= values[0] || mark.value >= values[values.length - 1]
-                : mark.value >= values[0]));
-        }
-
-        return (
-          <React.Fragment key={mark.value}>
-            <span
-              style={style}
-              data-index={index}
-              className={clsx(classes.mark, {
-                [classes.markActive]: markActive,
-              })}
-            />
-            {mark.label != null ? (
-              <span
-                aria-hidden
-                data-index={index}
-                style={style}
-                className={clsx(classes.markLabel, {
-                  [classes.markLabelActive]: markActive,
-                })}
-              >
-                {mark.label}
-              </span>
-            ) : null}
-          </React.Fragment>
-        );
-      })}
+      <span className={classes.track} style={trackStyle} /> 
+      
       {values.map((value, index) => {
         const percent = valueToPercent(value, min, max);
         const style = axisProps[axis].offset(percent);
