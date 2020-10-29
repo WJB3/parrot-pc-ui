@@ -15,6 +15,7 @@
 //15.toFixed()
 //16.reduce
 //17.mousedown聚焦后失去交代呢
+//18.在目前版本的Chrome浏览器下，浏览器认为键盘访问触发的元素聚焦才是:focus-visible所表示的聚焦。
 
 
 import React, { useState, useContext, useRef, useEffect } from 'react';
@@ -27,8 +28,8 @@ import useControlled from '@packages/hooks/useControlled';
 import toArray from '@packages/utils/toArray';
 import useForkRef from '@packages/hooks/useForkRef';
 import ownerDocument from '@packages/utils/ownerDocument';
-import ValueLabel from './ValueLabel';
-import useEventCallback from '@packages/hooks/useEventCallback'
+import ValueLabel from './ValueLabel'; 
+import useIsFocusVisible from '@packages/hooks/useIsFocusVisible';
 import "./index.scss";
 
 
@@ -116,11 +117,8 @@ function setValueIndex({ values, source, newValue, index }) {
     return output;
 }
 
-function focusThumb({ sliderRef, activeIndex, setActive }) {
-    console.log("focusThumb")
-   
-    const doc = ownerDocument(sliderRef.current);
-    console.log(sliderRef.current.contains(doc.activeElement))
+function focusThumb({ sliderRef, activeIndex, setActive }) { 
+    const doc = ownerDocument(sliderRef.current); 
     if (
         !sliderRef.current.contains(doc.activeElement) ||
         Number(doc.activeElement.getAttribute('data-index')) !== activeIndex
@@ -161,12 +159,27 @@ const Slider = React.forwardRef(function(props, ref){
         default: defaultValue
     });
 
+    const [focusVisible,setFocusVisible]=React.useState(-1);
+
     //slice可以将类数组转化为数组
     const range = Array.isArray(valueDerived);//判断是否是范围
 
-    let values = range ? valueDerived.slice().sort((a,b)=>a-b) : [valueDerived];
+    let values = range ? valueDerived.slice().sort((a,b)=>a-b) : toArray(valueDerived);
 
     values=values.map((value) => computed(value, min, max));
+
+    const sliderRef = useRef();
+
+    const touchId = useRef(null);
+
+    const {
+        isFocusVisibleRef,
+        onBlur:handleBlurVisible,
+        onFocus:handleFocusVisible,
+        ref:focusVisibleRef
+    }=useIsFocusVisible();
+
+    const handleRef = useForkRef(ref, sliderRef,focusVisibleRef); 
 
     const previousIndex = React.useRef();
 
@@ -216,34 +229,13 @@ const Slider = React.forwardRef(function(props, ref){
         }
     }
 
-    const sliderRef = useRef();
-
-    const touchId = useRef(null);
-
-    const handleRef = useForkRef(ref, sliderRef); 
-
-   
-
-    const handleFocus=()=>{
-        console.log("handleFocus")
-    }
-
-    const handleBlur=()=>{
-        console.log("handleBlur")
-    }
     
 
     const handleTouchMove = (nativeEvent) => {
         const finger = trackFinger(nativeEvent, touchId);
         if (!finger) {
             return;
-        }
-
-        if (nativeEvent.type === 'mousemove' && nativeEvent.buttons === 0) {
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
-            // handleTouchEnd(nativeEvent);
-            return;
-        }
+        } 
 
         const { newValue, activeIndex } = getFingerNewValue({
             finger,
@@ -255,8 +247,7 @@ const Slider = React.forwardRef(function(props, ref){
         setValue(newValue);
     }
 
-    const handleKeyDown = (event) => { 
-        console.log("handleKeyDown")
+    const handleKeyDown = (event) => {  
         const index = Number(event.currentTarget.getAttribute('data-index'));
         const value = values[index];
         const tenPercents = (max - min) / 10;
@@ -303,9 +294,8 @@ const Slider = React.forwardRef(function(props, ref){
 
     }
 
-    const handleMouseDown =  (event) => {
-        console.log("handleMouseDown")
-        // onMouseDown?.(event);
+    const handleMouseDown =  (event) => { 
+        onMouseDown?.(event);
 
         // 单击
         if (event.button !== 0) {
@@ -314,41 +304,55 @@ const Slider = React.forwardRef(function(props, ref){
 
        
         const finger = trackFinger(event, touchId);
-        event.preventDefault();
+   
         const { newValue, activeIndex } = getFingerNewValue({ finger ,values,source:valueDerived});
 
         focusThumb({ sliderRef, activeIndex, setActive });
 
         setValue(newValue);
 
-        // const doc = ownerDocument(sliderRef.current);
-        // doc.addEventListener("mousemove", handleTouchMove);
-        // doc.addEventListener('mouseup', handleTouchEnd);
+        const doc = ownerDocument(sliderRef.current);
+        doc.addEventListener("mousemove", handleTouchMove);
+        doc.addEventListener('mouseup', handleTouchEnd);
     }
+
+    const handleFocus = (event) => {
+        const index = Number(event.currentTarget.getAttribute('data-index'));
+        handleFocusVisible(event);
+        if (isFocusVisibleRef.current === true) {
+          setFocusVisible(index);
+        } 
+    };
+
+    const handleBlur = (event) => {
+        handleBlurVisible(event);
+        if (isFocusVisibleRef.current === false) {
+          setFocusVisible(-1);
+        } 
+    };
 
     const stopListening = () => {
         const doc = ownerDocument(sliderRef.current);
-        // doc.removeEventListener("mousemove", handleTouchMove);
-        // doc.removeEventListener("mouseup", handleTouchEnd);
-        // doc.removeEventListener("touchmove", handleTouchMove);
-        // doc.removeEventListener("touchend", handleTouchEnd);
+        doc.removeEventListener("mousemove", handleTouchMove);
+        doc.removeEventListener("mouseup", handleTouchEnd);
+        doc.removeEventListener("touchmove", handleTouchMove);
+        doc.removeEventListener("touchend", handleTouchEnd);
     };
 
-    // const handleTouchEnd = (nativeEvent) => {
-    //     console.log("handleTouchEnd");
-    //     const finger = trackFinger(nativeEvent, touchId);
+    const handleTouchEnd = (nativeEvent) => { 
+        const finger = trackFinger(nativeEvent, touchId);
 
-    //     if (!finger) {
-    //         return;
-    //     }
-    //     const { newValue } = getFingerNewValue({ finger, values, source: valueDerived });
+        if (!finger) {
+            return;
+        }
+        const { newValue } = getFingerNewValue({ finger, values, source: valueDerived });
 
-    //     setActive(-1);
+        setActive(-1);
 
-    //     touchId.current = undefined;
+        touchId.current = undefined;
 
-    //     stopListening();
-    // }
+        stopListening();
+    }
 
     const trackOffset = valueToPercent(range ? values[0] : min, min, max);
     const trackLeap = valueToPercent(values[values.length - 1], min, max) - trackOffset;
@@ -387,7 +391,7 @@ const Slider = React.forwardRef(function(props, ref){
                     const percent = valueToPercent(value, min, max);
                     const style = axisProps[direction].offset(percent);
                     const ValueLabelComponent = valueLabelDisplay === "off" ? Forward: ValueLabelComponentProp
-                    console.log(ValueLabelComponent===Forward)
+                     
                     return (
                         <ValueLabelComponent
                             key={index}
@@ -402,12 +406,13 @@ const Slider = React.forwardRef(function(props, ref){
                             index={index}
                             open={active === index || valueLabelDisplay === 'on'}
                         >
-                            <span
+                            <ThumbComponent
                                 className={
                                     classNames(
                                         `${prefixCls}-Thumb`,
                                         {
-                                            [`${prefixCls}-Thumb-Active`]: active === index
+                                            [`${prefixCls}-Thumb-Active`]: active === index,
+                                            [`${prefixCls}-Thumb-FocusVisible`]: focusVisible === index,
                                         }
                                     )
                                 }
@@ -416,9 +421,9 @@ const Slider = React.forwardRef(function(props, ref){
                                 tabIndex={0}
                                 data-index={index}
                                 key={index}
-                                onKeyDown={handleKeyDown}
-                                onFocus={handleFocus} 
-                                onBlur={handleBlur} 
+                                onKeyDown={handleKeyDown} 
+                                onFocus={handleFocus}
+                                onBlur={handleBlur}
                             />
                         </ValueLabelComponent>
                     )

@@ -86,9 +86,9 @@ $prefixCls:"#{$global-prefix}-Slider";
         border-radius: 50%; 
         background-color: currentColor;
 
-        &:hover{
+        &:hover,&.#{$prefixCls}-Thumb-FocusVisible{
             box-shadow:0px 0px 0px 8px $primary-color-opacity2;
-        }
+        } 
 
         &.#{$prefixCls}-Thumb-Active{
             box-shadow:0px 0px 0px 14px $primary-color-opacity2;
