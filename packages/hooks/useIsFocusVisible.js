@@ -18,8 +18,8 @@ function handlePointerDown(){
  
 function isFocusVisible(event) {
     const { target } = event;
-    try {
-      console.log(target.matches(':focus-visible'));
+    try { 
+        console.log(target.matches(':focus-visible'))
       return target.matches(':focus-visible');
     } catch (error) { 
     }

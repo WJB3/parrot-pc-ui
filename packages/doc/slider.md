@@ -47,7 +47,7 @@
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(247, 31, 85,1); background: rgb(239, 235, 233);line-height:1.5;'>
     <h2>问题2：小球是如何通过鼠标的变化而跟随移动的？</h2>
     1.首先这个小球的移动其实是通过自身的一个value值的变化，然后再通过内部的一些转化而得来的新值，最后算出百分比，再修改对应的样式：如果是horizontal水平方向则修改left值，如果是vertical垂直方向则修改bottom值<br />
-    2.具体操作(PC)：首先鼠标按下，触发mousedown事件，改变value值，然后监听整个页面的mousemove、mouseup事件，在鼠标移动时改变value值，鼠标松开即mouseup时移除监听事件。<br />
+    2.具体操作(PC)：首先鼠标按下，触发父div的mousedown事件，改变value值，并且手动触发小球的焦点，然后监听整个页面的mousemove、mouseup事件，在鼠标移动时改变value值，鼠标松开即mouseup时移除监听事件。<br />
 </blockquote>
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(247, 31, 85,1); background: rgb(239, 235, 233);line-height:1.5;'>
@@ -57,7 +57,7 @@
 
 # 三、Slider组件实战
 
-```js
+```js 
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import classNames from '@packages/utils/classNames';
 import {
@@ -68,8 +68,12 @@ import useControlled from '@packages/hooks/useControlled';
 import toArray from '@packages/utils/toArray';
 import useForkRef from '@packages/hooks/useForkRef';
 import ownerDocument from '@packages/utils/ownerDocument';
-import ValueLabel from './ValueLabel';
+import ValueLabel from './ValueLabel'; 
+import useIsFocusVisible from '@packages/hooks/useIsFocusVisible';
 import "./index.scss";
+
+
+const Forward = ({ children }) => children;
 
 function computed(value, min, max) {
     //根据max和min得出正确的值
@@ -127,9 +131,8 @@ function trackFinger(event, touchId) {
 
 
 function findClosest(values, currentValue) {
-    //通过距离判断出index
     const { index: closestIndex } = values.reduce((acc, value, index) => {
-      const distance = Math.abs(currentValue - value); 
+      const distance = Math.abs(currentValue - value);
   
       if (acc === null || distance < acc.distance || distance === acc.distance) {
         return {
@@ -154,8 +157,8 @@ function setValueIndex({ values, source, newValue, index }) {
     return output;
 }
 
-function focusThumb({ sliderRef, activeIndex, setActive }) {
-    const doc = ownerDocument(sliderRef.current);
+function focusThumb({ sliderRef, activeIndex, setActive }) { 
+    const doc = ownerDocument(sliderRef.current); 
     if (
         !sliderRef.current.contains(doc.activeElement) ||
         Number(doc.activeElement.getAttribute('data-index')) !== activeIndex
@@ -168,7 +171,7 @@ function focusThumb({ sliderRef, activeIndex, setActive }) {
     }
 }
 
-const Slider = React.forwardRef((props, ref) => {
+const Slider = React.forwardRef(function(props, ref){
 
     const {
         prefixCls: customizePrefixCls,
@@ -186,8 +189,7 @@ const Slider = React.forwardRef((props, ref) => {
         valueLabelDisplay = "off",
         ValueLabelComponent: ValueLabelComponentProp = ValueLabel,
         valueLabelFormat,
-        step = 1, 
-        
+        step = 1 
     } = props;
 
     const prefixCls = useContext(ConfigContext)?.getPrefixCls("Slider", customizePrefixCls);
@@ -197,11 +199,33 @@ const Slider = React.forwardRef((props, ref) => {
         default: defaultValue
     });
 
+    const [focusVisible,setFocusVisible]=React.useState(-1);
+
+    //slice可以将类数组转化为数组
+    const range = Array.isArray(valueDerived);//判断是否是范围
+
+    let values = range ? valueDerived.slice().sort((a,b)=>a-b) : toArray(valueDerived);
+
+    values=values.map((value) => computed(value, min, max));
+
+    const sliderRef = useRef();
+
+    const touchId = useRef(null);
+
+    const {
+        isFocusVisibleRef,
+        onBlur:handleBlurVisible,
+        onFocus:handleFocusVisible,
+        ref:focusVisibleRef
+    }=useIsFocusVisible();
+
+    const handleRef = useForkRef(ref, sliderRef,focusVisibleRef); 
+
     const previousIndex = React.useRef();
 
     const [active, setActive] = useState(-1);
 
-    const getFingerNewValue = ({ finger,move=false, values: values2, source }) => { 
+    const getFingerNewValue = ({ finger,move=false, values: values2, source }) => {
         const { current: slider } = sliderRef;
         const { width, height, bottom, left } = slider.getBoundingClientRect();
         let percent;
@@ -221,14 +245,14 @@ const Slider = React.forwardRef((props, ref) => {
 
         newValue = computed(newValue, min, max);
 
-        let activeIndex = 0; 
+        let activeIndex = 0;
 
         if (range) {
             if(!move){
                 activeIndex = findClosest(values2, newValue);
             }else{
                 activeIndex = previousIndex.current;
-            } 
+            }
             const previousValue = newValue;
             newValue = setValueIndex({
                 values: values2,
@@ -240,53 +264,18 @@ const Slider = React.forwardRef((props, ref) => {
             previousIndex.current = activeIndex;
         }
         
-
         return {
             newValue, activeIndex
         }
     }
 
-    const sliderRef = useRef();
-
-    const touchId = useRef(null);
-
-    const handleRef = useForkRef(ref, sliderRef);
-
-    const [open, setOpen] = React.useState(-1);
-
-    //slice可以将类数组转化为数组
-    const range = Array.isArray(valueDerived);//判断是否是范围
-
-    let values = range ? valueDerived.slice().sort((a,b)=>a-b) : toArray(valueDerived);
-
-    values.map((value) => computed(value, min, max));
-
-    const handleFocus = (event) => {
-        const index = Number(event.currentTarget.getAttribute('data-index'));
-        setOpen(index);
-    };
-
-    const handleMouseOver = (event) => {
-        const index = Number(event.currentTarget.getAttribute('data-index'));
-        setOpen(index);
-    };
-
-    const handleMouseLeave = () => {
-        setOpen(-1);
-    };
+    
 
     const handleTouchMove = (nativeEvent) => {
-        console.log("handleTouchMove")
         const finger = trackFinger(nativeEvent, touchId);
         if (!finger) {
             return;
-        }
-
-        if (nativeEvent.type === 'mousemove' && nativeEvent.buttons === 0) {
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
-            handleTouchEnd(nativeEvent);
-            return;
-        }
+        } 
 
         const { newValue, activeIndex } = getFingerNewValue({
             finger,
@@ -298,7 +287,7 @@ const Slider = React.forwardRef((props, ref) => {
         setValue(newValue);
     }
 
-    const handleKeyDown = (event) => { 
+    const handleKeyDown = (event) => {  
         const index = Number(event.currentTarget.getAttribute('data-index'));
         const value = values[index];
         const tenPercents = (max - min) / 10;
@@ -345,7 +334,7 @@ const Slider = React.forwardRef((props, ref) => {
 
     }
 
-    const handleMouseDown = (event) => { 
+    const handleMouseDown =  (event) => {  
         onMouseDown?.(event);
 
         // 单击
@@ -353,8 +342,10 @@ const Slider = React.forwardRef((props, ref) => {
             return;
         }
 
-        const finger = trackFinger(event, touchId);
+        event.preventDefault();
 
+        const finger = trackFinger(event, touchId);
+   
         const { newValue, activeIndex } = getFingerNewValue({ finger ,values,source:valueDerived});
 
         focusThumb({ sliderRef, activeIndex, setActive });
@@ -366,6 +357,21 @@ const Slider = React.forwardRef((props, ref) => {
         doc.addEventListener('mouseup', handleTouchEnd);
     }
 
+    const handleFocus = (event) => { 
+        const index = Number(event.currentTarget.getAttribute('data-index'));
+        handleFocusVisible(event);
+        if (isFocusVisibleRef.current === true) {
+          setFocusVisible(index);
+        } 
+    };
+
+    const handleBlur = (event) => { 
+        handleBlurVisible(event);
+        if (isFocusVisibleRef.current === false) {
+          setFocusVisible(-1);
+        } 
+    };
+
     const stopListening = () => {
         const doc = ownerDocument(sliderRef.current);
         doc.removeEventListener("mousemove", handleTouchMove);
@@ -374,8 +380,7 @@ const Slider = React.forwardRef((props, ref) => {
         doc.removeEventListener("touchend", handleTouchEnd);
     };
 
-    const handleTouchEnd = (nativeEvent) => {
-        console.log("handleTouchEnd")
+    const handleTouchEnd = (nativeEvent) => { 
         const finger = trackFinger(nativeEvent, touchId);
 
         if (!finger) {
@@ -398,11 +403,11 @@ const Slider = React.forwardRef((props, ref) => {
         ...axisProps[direction].leap(trackLeap)
     };
 
+  
     useEffect(() => {
         onChange?.(range ? values : values[0]);
     }, [values]);
 
-    console.log(values)
     return (
         <span
             className={
@@ -410,24 +415,24 @@ const Slider = React.forwardRef((props, ref) => {
                     prefixCls,
                     className,
                     {
-                        [`${prefixCls}-${capitalize(color)}`]: color,
-                        [`${prefixCls}-${capitalize(direction)}`]: direction
+                        [`${prefixCls}-${capitalize(color,false)}`]: color,
+                        [`${prefixCls}-${capitalize(direction,false)}`]: direction
                     }
                 )
             }
             ref={handleRef}
             style={style}
             onMouseDown={handleMouseDown}
+        
         >
             <span className={`${prefixCls}-Rail`} />
-            <span className={`${prefixCls}-Track`} style={trackStyle} />
-            <input type="hidden" />
+            <span className={`${prefixCls}-Track`} style={trackStyle} /> 
             {
                 values.map((value, index) => {
                     const percent = valueToPercent(value, min, max);
                     const style = axisProps[direction].offset(percent);
-                    const ValueLabelComponent = valueLabelDisplay === "off" ? ({ children }) => children : ValueLabelComponentProp
-
+                    const ValueLabelComponent = valueLabelDisplay === "off" ? Forward: ValueLabelComponentProp
+                     
                     return (
                         <ValueLabelComponent
                             key={index}
@@ -440,26 +445,26 @@ const Slider = React.forwardRef((props, ref) => {
                                     : value
                             }
                             index={index}
-                            open={open === index || active === index || valueLabelDisplay === 'on'}
+                            open={active === index || valueLabelDisplay === 'on'}
                         >
                             <ThumbComponent
                                 className={
                                     classNames(
                                         `${prefixCls}-Thumb`,
                                         {
-                                            [`${prefixCls}-Thumb-Active`]: active === index
+                                            [`${prefixCls}-Thumb-Active`]: active === index,
+                                            [`${prefixCls}-Thumb-FocusVisible`]: focusVisible === index,
                                         }
                                     )
                                 }
                                 style={style}
-                                role={"slider"}
+                                role="slider"
                                 tabIndex={0}
                                 data-index={index}
                                 key={index}
-                                onKeyDown={handleKeyDown}
+                                onKeyDown={handleKeyDown} 
                                 onFocus={handleFocus}
-                                onMouseOver={handleMouseOver}
-                                onMouseLeave={handleMouseLeave}
+                                onBlur={handleBlur}
                             />
                         </ValueLabelComponent>
                     )
@@ -469,7 +474,8 @@ const Slider = React.forwardRef((props, ref) => {
         </span>
     );
 });
- 
+
+
 export default Slider;
 ```
 
@@ -484,6 +490,19 @@ export default Slider;
 
 </blockquote>
 
+## 2.onMouseDown与onFocus事件触发的顺序
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(247, 31, 85,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    经过我们的测试触发子组件时：子组件onMouseDown->父组件onMouseDown->子onFocus->父onFocus
+</blockquote>
+
+
+## 2.全局变量与临时变量
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(247, 31, 85,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    写这个组件时，我遇到了一个极其简单但是却让我卡了整整2天的问题：因为我们需要使用onKeyDown事件来实现按键+ -也可以移动thumb/小球，那么我们就必须要使小球聚焦，但是我们每次在父div上的mousedown移动
+
+</blockquote>
 
 ## 1.currentTarget和target的区别
 

@@ -388,8 +388,8 @@
 
 "@material-ui/core@^4.11.0":
   version "4.11.0"
-  resolved "https://registry.npm.taobao.org/@material-ui/core/download/@material-ui/core-4.11.0.tgz#b69b26e4553c9e53f2bfaf1053e216a0af9be15a"
-  integrity sha1-tpsm5FU8nlPyv68QU+IWoK+b4Vo=
+  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.11.0.tgz#b69b26e4553c9e53f2bfaf1053e216a0af9be15a"
+  integrity sha512-bYo9uIub8wGhZySHqLQ833zi4ZML+XCBE1XwJ8EuUVSpTWWG57Pm+YugQToJNFsEyiKFhPh8DPD0bgupz8n01g==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@material-ui/styles" "^4.10.0"

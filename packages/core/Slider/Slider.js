@@ -16,6 +16,7 @@
 //16.reduce
 //17.mousedown聚焦后失去交代呢
 //18.在目前版本的Chrome浏览器下，浏览器认为键盘访问触发的元素聚焦才是:focus-visible所表示的聚焦。
+//19.e.target.matches
 
 
 import React, { useState, useContext, useRef, useEffect } from 'react';
@@ -294,7 +295,7 @@ const Slider = React.forwardRef(function(props, ref){
 
     }
 
-    const handleMouseDown =  (event) => { 
+    const handleMouseDown =  (event) => {  
         onMouseDown?.(event);
 
         // 单击
@@ -302,7 +303,8 @@ const Slider = React.forwardRef(function(props, ref){
             return;
         }
 
-       
+        event.preventDefault();
+
         const finger = trackFinger(event, touchId);
    
         const { newValue, activeIndex } = getFingerNewValue({ finger ,values,source:valueDerived});
@@ -316,7 +318,7 @@ const Slider = React.forwardRef(function(props, ref){
         doc.addEventListener('mouseup', handleTouchEnd);
     }
 
-    const handleFocus = (event) => {
+    const handleFocus = (event) => { 
         const index = Number(event.currentTarget.getAttribute('data-index'));
         handleFocusVisible(event);
         if (isFocusVisibleRef.current === true) {
@@ -324,7 +326,7 @@ const Slider = React.forwardRef(function(props, ref){
         } 
     };
 
-    const handleBlur = (event) => {
+    const handleBlur = (event) => { 
         handleBlurVisible(event);
         if (isFocusVisibleRef.current === false) {
           setFocusVisible(-1);

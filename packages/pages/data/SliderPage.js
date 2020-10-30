@@ -10,60 +10,30 @@ import {
 } from '@packages/core/Icon';   
 import SliderA from '@material-ui/core/Slider';
 import 'antd/dist/antd.css';
-import "./index.scss";
-import CilclePng from './circle.png';
-
+import "./index.scss"; 
 const Page=(props)=>{
-
-    const Forward=({children})=>children;
-
-    const [value,setValue]=useState([1]);
-
+ 
     return (
-        <div style={{padding:200}}>
+        <div style={{padding:100,border:"2px solid red"}}> 
+             
+            <div   
+                onFocus={()=>console.log("onFocus")}
+                onMouseDown={(e)=>{console.log("mousedownaa");  }} 
+                onKeyDown={()=>console.log("nishionKeyDown")}
+                style={{padding:100,border:"2px solid blue"}}
+            >
+                 
+                <div 
+                    id="input1"
+                    tabIndex={0} 
+                    onFocus={()=>{console.log("woshiOnfocus")}}
+                    onMouseDown={()=>console.log("woshiOnMouseDown")}
+                    onKeyDown={()=>console.log("woshioonKeyDown")}
+                    onBlur={()=>console.log("onBlur")}
+                >我是谁</div>
 
-            <input /> 
-            <input /> 
-            {/* {
-                value.map((item)=>{
-                    const Component=({children})=>children;
+            </div>
 
-                    return <Component>
-                        <span onClick={()=>setValue(value++)}>{item}</span>
-                    </Component>
-
-                })
-            }
-
-            {
-                value.map((item)=>{ 
-
-                    return <Forward>
-                        <span onClick={()=>setValue(value++)}>{item}</span>
-                    </Forward>
-
-                })
-            }
-             */}
-            <Slider defaultValue={30} min={9}  />
-
-            <div style={{height:200}}></div> 
-
-            <SliderA defaultValue={30} min={9}  />
- 
-             {/* <SliderA valueLabelDisplay="auto" step={1} min={9} defaultValue={20} /> */}
- 
-            {/* <div style={{height:200}}>
-                <Slider orientation="vertical"   direction="vertical" onChange={(value)=>console.log(value)}/>
-            </div> */}
-            
-         
-           
-{/* 
-            <div className={'ywcx-btn'} >
-                <img src={CilclePng} />
-                <a href="javascript:void;">{"content"}</a>
-            </div>  */}
         </div>
     )
 }
