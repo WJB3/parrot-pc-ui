@@ -14,26 +14,30 @@ import "./index.scss";
 const Page=(props)=>{
  
     return (
-        <div style={{padding:100,border:"2px solid red"}}> 
-             
-            <div   
-                onFocus={()=>console.log("onFocus")}
-                onMouseDown={(e)=>{console.log("mousedownaa");  }} 
-                onKeyDown={()=>console.log("nishionKeyDown")}
-                style={{padding:100,border:"2px solid blue"}}
+        <div 
+            style={{padding:100,border:"5px solid red"}}  
+            onMouseDown={(e)=>{console.log("mousedownaa3");  }} 
+            onMouseUp={(e)=>{console.log("mouseup3");  }}   
+        > 
+             3
+            <div    
+                onMouseDown={(e)=>{console.log("mousedownaa2"); e.preventDefault();document.getElementById("input1").focus() }}   
+                onMouseUp={(e)=>{console.log("mouseup2");  }} 
+                style={{padding:100,border:"5px solid blue"}}
             >
+                2
                  
                 <div 
                     id="input1"
+                    style={{padding:100,border:"5px solid skyblue"}}
                     tabIndex={0} 
-                    onFocus={()=>{console.log("woshiOnfocus")}}
-                    onMouseDown={()=>console.log("woshiOnMouseDown")}
-                    onKeyDown={()=>console.log("woshioonKeyDown")}
-                    onBlur={()=>console.log("onBlur")}
-                >我是谁</div>
+                    onFocus={()=>{console.log("woshiOnfocus1")}}
+                    onMouseUp={(e)=>{console.log("mouseup1");  }} 
+                    onMouseDown={()=>console.log("woshiOnMouseDown1")} 
+                    onBlur={()=>console.log("onBlur1")}
+                >1</div>
 
-            </div>
-
+            </div> 
         </div>
     )
 }
