@@ -1,11 +1,3 @@
-  
-//13.activeElement和contains
-//14. left: calc(-50% - 4px);
-//15.toFixed()
-//16.reduce
-//17.mousedown聚焦后失去交代呢
-//18.在目前版本的Chrome浏览器下，浏览器认为键盘访问触发的元素聚焦才是:focus-visible所表示的聚焦。
-
 
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import classNames from '@packages/utils/classNames';

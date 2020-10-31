@@ -608,6 +608,10 @@ const ValueLabelComponent = valueLabelDisplay === "off" ? ({ children }) => chil
     写这个组件时，我遇到了一个极其简单但是却让我卡了整整2天的问题：因为我们需要使用onKeyDown事件来实现按下+ -键也可以移动thumb/小球，那么我们就必须要使小球聚焦。但是我们每次在父div上的mousedown的方法手动focus时，他会触发onFocus但是onKeyDown没有用，一开始就怀疑是离开了焦点，最后确实是这样，但是他一直都不触发onBlur事件，但是onKeyDown事件总是不触发，一开始总是搞不懂究竟是为什么？经过我一系列的探索，我发现了是全局变量和临时变量的区别，因为全局变量是一直存在在内存中的，但是临时变量是这个作用域内执行完毕就会被销毁，每次value变化重新map时变量会重新创建之前的会销毁即thumb会被销毁重新创建，也就会自动离开焦点。
 </blockquote>
 
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(247, 31, 85,1); background: rgb(239, 235, 233);line-height:1.5;'>
+  Tips:在我们手动触发时，在mousedown方法中需要event.preventDefault()阻止默认事件，否则子组件就会离开焦点，这点还不知道是为啥。
+</blockquote>
+
 ## 8.currentTarget和target的区别
 
 ```js
@@ -780,7 +784,7 @@ export default function ownerDocument(node){
 或者多个文档中。这个属性为迅速访问文档节点提供了便利，因为无需在文档结构中逐层上溯了。
 </blockquote>
 
-## 17.activeElement和contains
+## 18.activeElement和contains
 
 ```js
 function focusThumb({ sliderRef, activeIndex, setActive }) { 
@@ -800,5 +804,54 @@ function focusThumb({ sliderRef, activeIndex, setActive }) {
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
 1.HTML5增加了辅助DOM焦点管理的功能。首先是
 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/DocumentOrShadowRoot/activeElement">document.activeElement</a>，始终包含当前拥有焦点的DOM元素。页面加载时，可以通过用户输入（按Tab键或代码中使用
-focus() 方法）让某个元素自动获得焦点。
+focus() 方法）让某个元素自动获得焦点。<br />
+2.<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Document/hasFocus">document.hasFocus()</a> 方法，该方法返回布尔值，表明当前文档或者当前文档内的节点是否获得了焦点。<br />
+3.DOM编程中经常需要确定一个元素是不是另一个元素的后代。IE
+首先引入了 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Node/contains">contains()</a> 方法，让开发者可以在不遍历DOM的情况
+下获取这个信息。 contains() 方法应该在要搜索的祖先元素上调
+用，参数是待确定的目标节点。<br />
+4.<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Node/compareDocumentPosition">Node.compareDocumentPosition</a>可以模仿contains的作用
+</blockquote>
+
+## 19. calc()
+
+```css
+left: calc(-50% - 4px);
+```
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+<a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/calc">calc()</a>函数允许在声明 CSS 属性值时执行一些计算。
+</blockquote>
+
+## 20.Number.toFixed()函数
+
+```js
+return Number(nearest.toFixed(getDecimalPrecision(step)));
+```
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+ 1.<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed">toFixed()</a> 方法返回包含指定小数点位数的数值字符串四舍五入。<br />
+ 2.<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number/toPrecision">toPrecision()</a> 方法以指定的精度返回该数值对象的字符串表示。<br />
+ 3.<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Number/toExponential">toExponential</a>方法以指数表示法返回该数值字符串表示形式。
+</blockquote>
+
+## 21.Array.prototype.reduce()
+
+```js
+function findClosest(values, currentValue) {
+    const { index: closestIndex } = values.reduce((acc, value, index) => {
+      const distance = Math.abs(currentValue - value);
+  
+      if (acc === null || distance < acc.distance || distance === acc.distance) {
+        return {
+          distance,
+          index,
+        };
+      }
+  
+      return acc;
+    }, null);
+    return closestIndex;
+}
+```
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce">reduce</a>方法对数组中的每个元素执行一个由您提供的reducer函数(升序执行)，将其结果汇总为单个返回值。
 </blockquote>
