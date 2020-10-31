@@ -1,6 +1,6 @@
 
 
-import React ,{ useState  } from 'react';
+import React ,{ useEffect, useState  } from 'react';
 import Slider from '@packages/core/Slider';   
 
 import { Slider as SliderAn } from 'antd';
@@ -12,6 +12,10 @@ import SliderA from '@material-ui/core/Slider';
 import 'antd/dist/antd.css';
 import "./index.scss"; 
 const Page=(props)=>{
+
+    useEffect(()=>{
+        console.log(1111111111111111111111+999999999999999999999);
+    },[]);
  
     return (
         <div 

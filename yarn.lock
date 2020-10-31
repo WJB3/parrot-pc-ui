@@ -984,6 +984,11 @@ babel-loader@^8.1.0:
     pify "^4.0.1"
     schema-utils "^2.6.5"
 
+babel-plugin-precise-floating@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.npm.taobao.org/babel-plugin-precise-floating/download/babel-plugin-precise-floating-1.2.0.tgz#d30ef18891d30619143b637d029bb05774feef97"
+  integrity sha1-0w7xiJHTBhkUO2N9ApuwV3T+75c=
+
 balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"

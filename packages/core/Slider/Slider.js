@@ -1,22 +1,10 @@
-//1.currentTarget的区别
-//2.computed函数
-//3.valueToPercent获得百分比
-//4.sort函数
-//5.slice函数
-//6.getAttribute函数
-//7.event.button==0代表单机左键 event.buttons===0代表 没有按键或者是没有初始化
-//8.event.changedTouched
-//9.event对象 clientX
-//10.getBoundingClientRect
-//11.Node.ownerDocument 只读属性会返回当前节点的顶层的 document 对象。
-//12.newValue=computed(newValue,min,max);为了不让
+  
 //13.activeElement和contains
 //14. left: calc(-50% - 4px);
 //15.toFixed()
 //16.reduce
 //17.mousedown聚焦后失去交代呢
 //18.在目前版本的Chrome浏览器下，浏览器认为键盘访问触发的元素聚焦才是:focus-visible所表示的聚焦。
-//19.e.target.matches
 
 
 import React, { useState, useContext, useRef, useEffect } from 'react';
