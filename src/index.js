@@ -32,6 +32,8 @@ import RadioPage from '@packages/pages/data/RadioPage';
 import SwitchPage from '@packages/pages/data/SwitchPage';
 import SliderPage from '@packages/pages/data/SliderPage';
 import SelectPage from '@packages/pages/data/SelectPage';
+import TreePage from '@packages/pages/data/TreePage';
+import VirtualListPage from '@packages/pages/data/VirtualListPage';
 import "./index.scss"; 
 
 
@@ -66,6 +68,8 @@ ReactDOM.render((<HashRouter>
     <Route path="/radio" exact component={(props)=><RadioPage {...props}/>} />
     <Route path="/switch" exact component={(props)=><SwitchPage {...props}/>} />
     <Route path="/slider" exact component={(props)=><SliderPage {...props}/>} />
-    <Route path="/" exact component={(props)=><SelectPage {...props}/>} />
+    <Route path="/select" exact component={(props)=><SelectPage {...props}/>} />
+    <Route path="/tree" exact component={(props)=><TreePage {...props}/>} />
+    <Route path="/" exact component={(props)=><VirtualListPage {...props}/>} />
    
 </HashRouter>), document.getElementById("root"));
