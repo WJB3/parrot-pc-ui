@@ -6,16 +6,14 @@ export default function useChildren(
     startIndex,
     endIndex,
     setNodeRef,
-    renderFunc,
-    {getKey}    
+    renderFunc
 ){
     return list.slice(startIndex,endIndex+1).map((item,index)=>{
         const eleIndex=startIndex+index;
-        const node=renderFunc(item,eleIndex);
-        const key=getKey(item);
+        const node=renderFunc(item,eleIndex); 
 
         return  (
-            <Item key={key} setRef={ele=>setNodeRef(item,ele)}>
+            <Item key={undefined} setRef={ele=>setNodeRef(item,ele)}>
                 {node}
             </Item>
         ) 

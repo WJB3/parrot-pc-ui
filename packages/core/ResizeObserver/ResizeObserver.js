@@ -1,6 +1,7 @@
 import React,{forwardRef,useRef, useEffect} from 'react'; 
 import useForkRef from '@packages/hooks/useForkRef';
 import ResizeObserver from 'resize-observer-polyfill'; 
+import childrenToArray from '@packages/utils/childrenToArray'; 
 import PropTypes from 'prop-types';
 
 const ResizeObserverComponent=forwardRef((props,ref)=>{
@@ -30,8 +31,7 @@ const ResizeObserverComponent=forwardRef((props,ref)=>{
         }
     }
 
-    const handleResize=()=>{ 
-        console.log("handleResize")
+    const handleResize=()=>{  
         onResize?.(childNode.current);
     }
 
@@ -41,6 +41,8 @@ const ResizeObserverComponent=forwardRef((props,ref)=>{
     },[]); 
 
     const handleRef=useForkRef(childNode,childrenProps.ref,ref);
+
+    const childNodes=childrenToArray(childrenProps);
 
     return  React.cloneElement(childrenProps,{
         ref:handleRef

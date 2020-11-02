@@ -986,8 +986,8 @@ babel-loader@^8.1.0:
 
 babel-plugin-precise-floating@^1.2.0:
   version "1.2.0"
-  resolved "https://registry.npm.taobao.org/babel-plugin-precise-floating/download/babel-plugin-precise-floating-1.2.0.tgz#d30ef18891d30619143b637d029bb05774feef97"
-  integrity sha1-0w7xiJHTBhkUO2N9ApuwV3T+75c=
+  resolved "https://registry.yarnpkg.com/babel-plugin-precise-floating/-/babel-plugin-precise-floating-1.2.0.tgz#d30ef18891d30619143b637d029bb05774feef97"
+  integrity sha512-E32flDdXztmpCWQk7qolATsBi5JKX6oxQHo1PXFdyxzvagpjPkeQqt4sX5UxlWqCBsOTn7pG/t2D1dbSey45mA==
 
 balanced-match@^1.0.0:
   version "1.0.0"

@@ -1,6 +1,6 @@
 
-import React, { Children } from 'react';
-import ResizeObserver from '@package/cores/ResizeObserver';
+import React from 'react';
+import ResizeObserver from '@packages/core/ResizeObserver';
 import classNames from '@packages/utils/classNames';
 
 
@@ -10,47 +10,27 @@ const Filler=React.forwardRef((props,ref)=>{
         height,
         offset,
         prefixCls,
-        children
+        children,
+        onInnerResize
     }=props;
 
-    let outerStyle={};
-
-    let innerStyle={
-        display:"flex",
-        flexDirection:"column"
-    }
+    let outerStyle={}; 
 
     if(offset!==undefined){
-        outerStyle={height,position:"relative",overflow:"hidden"};
-
-        innerStyle={
-            ...innerStyle,
-            transform:`translateY(${offset}px)`,
-            position:"absolute",
-            left:0,
-            right:0,
-            top:0
-        }
-    
+        outerStyle={height,position:"relative",overflow:"hidden",transform:`translateY(${offset}px)`};
     }
-
     
     return (
-        <div style={outerStyle}>
-            <ResizeObserver>
-                <div 
-                    style={innerStyle}
-                    className={
-                        classNames(
-                            {
-                                [`${prefixCls}-Inner`]:prefixCls
-                            }
-                        )
-                    }
-                    ref={ref}
-                >
-                    {children}
-                </div>
+        <div style={outerStyle}  >
+            <ResizeObserver onResize={({offsetHeight})=>{
+                console.log("ResizeObserver")
+                if(offsetHeight && onInnerResize){
+                    onInnerResize();
+                }
+            }}> 
+                <>
+                    {children} 
+                </>
             </ResizeObserver>
         </div>
     )

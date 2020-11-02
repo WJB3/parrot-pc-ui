@@ -1,15 +1,12 @@
+ 
 
-
-import React,{useRef} from 'react';
+import React,{useState,useRef } from 'react';
 import CacheMap from '@packages/utils/CacheMap';
-import { findDOMNode }  from 'react-dom'
+import { findDOMNode } from 'react-dom';
 
-export default function useHeights(
-    getKey,
-    onItemAdd,
-    onItemRemove
-){
-    const [updatedMark,setUpdatedMark]=React.useState(0);
+export default function useHeights(){
+
+    const [updatedMark,setUpdatedMark]=useState(0);
     const instanceRef=useRef(new Map());
     const heightsRef=useRef(new CacheMap());
     const heightUpdateIdRef=useRef(0);
@@ -24,41 +21,27 @@ export default function useHeights(
             instanceRef.current.forEach((element,key)=>{
                 if(element && element.offsetParent){
                     const htmlElement=findDOMNode(element);
-                    const {offsetHeight}=htmlElement;
+                    const { offsetHeight }=htmlElement;
+
                     if(heightsRef.current.get(key)!==offsetHeight){
                         heightsRef.current.set(key,htmlElement.offsetHeight);
                     }
                 }
             });
-
-            setUpdatedMark(c=>c+1);
-        })
+            //总是触发更新标记，告诉父级在调整大小时应该重新计算高度
+            setUpdatedMark(c => c + 1);
+        });
     }
-
 
     function setInstanceRef(item,instance){
-        const key=getKey(item);
-        const origin=instanceRef.current.get(key);
         if(instance){
-            instanceRef.current.set(key,instance);
-            collectHeight()
+            instanceRef.current.set(undefined,instance);
+            collectHeight();
         }else{
-            instanceRef.current.delete(key);
+            instanceRef.current.delete(undefined);
         }
+    }   
 
-        if(!origin !== !instance){
-            if(instance){
-                onItemAdd?.(item);
-            }else{
-                onItemRemove?.(item);
-            }
-        }
-    }
+    return [setInstanceRef,collectHeight,heightsRef.current,updatedMark];
 
-    return [
-        setInstanceRef,
-        collectHeight,
-        heightsRef.current,
-        updatedMark
-    ];
 }

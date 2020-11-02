@@ -1,4 +1,4 @@
-import React ,{useContext,useRef,useMemo, useCallback} from 'react';
+import React ,{useState ,useContext,useRef,useMemo, useCallback} from 'react';
 import classNames from '@packages/utils/classNames';
 import {
     ConfigContext
@@ -6,6 +6,16 @@ import {
 import useHeights from './hooks/useHeights';
 import useChildren from './hooks/useChildren';
 import Filler from './Filler';
+
+//1.Promise.resolve意义
+//2.offsetParent
+//3.CacheMap
+//4.<></>
+
+const ScrollStyle={
+    overflowY:"auto"
+}
+
 
 const VirtualList=React.forwardRef((props,ref)=>{
 
@@ -18,8 +28,8 @@ const VirtualList=React.forwardRef((props,ref)=>{
         itemHeight,
         component:Component="div",
         data=[],
-        children,
-        itemKey
+        children
+        
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("VirtualList",customizePrefixCls);
@@ -31,22 +41,12 @@ const VirtualList=React.forwardRef((props,ref)=>{
  
     const inVirtual=useVirtual && data && itemHeight * data.length > height;
 
-    const getKey=useCallback(item=>{
-        if(typeof itemKey==="function"){
-            return itemKey(item);
-        }
-        return item[itemKey];
-    },[itemKey]);
-
+    const [scrollTop, setScrollTop] = useState(0);
    
     //=====================Height===========================
-    const [setInstanceRef,collectHeight,heights,heightUpdatedMark]=useHeights(
-        getKey,
-        null,
-        null
-    )
+    const [setInstanceRef,collectHeight,heights,heightUpdatedMark]=useHeights();
 
-    const { scrollHeight,start,end }=useMemo(()=>{
+    const { scrollHeight,start,end,offset }=useMemo(()=>{
         if(!useVirtual){
             return {
                 scrollHeight:undefined,
@@ -55,6 +55,7 @@ const VirtualList=React.forwardRef((props,ref)=>{
                 offset:undefined
             }   
         }
+
         if(!inVirtual){
             return {
                 scrollHeight:fillerInnerRef.current?.offsetHeight||0,
@@ -63,24 +64,28 @@ const VirtualList=React.forwardRef((props,ref)=>{
                 offset:undefined
             }
         }
+
         let itemTop=0;
         let startIndex;
         let startOffset;
         let endIndex;
 
         const dataLen=data.length;
-        for(let i=0;i<dataLen;i++){
-            const item=data[i];
-            const key=getKey(item);
+        console.log(heights)
+        for(let i=0;i<1;i++){ 
 
-            const cacheHeight=heights.get(key);
+            const cacheHeight=heights.get();
+            console.log(cacheHeight)
+            console.log(heights.get())
+            
             const currentItemBottom=itemTop+(cacheHeight===undefined?itemHeight:cacheHeight);
 
+            //在范围内检查项目顶部
             if(currentItemBottom>=scrollTop && startIndex===undefined){
                 startIndex=i;
                 startOffset=itemTop;
             }
-
+            //检查范围底部的项目。我们将渲染额外的一个项目用于运动使用
             if(currentItemBottom>scrollTop+height && endIndex===undefined){
                 endIndex=1;
             }
@@ -104,15 +109,25 @@ const VirtualList=React.forwardRef((props,ref)=>{
             offset:startOffset
         }
 
-    },[inVirtual,useVirtual,data,height])
+    },[inVirtual,useVirtual,data,heights,scrollTop,height])
 
-    //=====================Item key========================
-    const sharedConfig={
-        getKey
-    }
+  
 
     //====================Render===========================
-    const listChildren=useChildren(data, start, end, setInstanceRef, children, sharedConfig);
+    // console.log(data);
+    // console.log(start);
+    // console.log(end);
+
+    const listChildren=useChildren(data, start, end, setInstanceRef, children);
+
+    let componentStyle=null;
+    if(height){
+        componentStyle={"height":height,...ScrollStyle};
+
+        if(useVirtual){
+            componentStyle.overflowY="hidden";
+        }
+    }
 
 
     return (
@@ -124,9 +139,11 @@ const VirtualList=React.forwardRef((props,ref)=>{
                 ...style,
                 position:"relative"
             }}
+            ref={ref}
         >
             <Component
                 className={`${prefixCls}-Fixator`}
+                style={componentStyle}
                 ref={componentRef}
             >
                 <Filler
