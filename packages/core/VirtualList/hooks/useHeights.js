@@ -1,6 +1,6 @@
  
 
-import React,{useState,useRef } from 'react';
+import React,{ useState,useRef } from 'react';
 import CacheMap from '@packages/utils/CacheMap';
 import { findDOMNode } from 'react-dom';
 
@@ -17,7 +17,8 @@ export default function useHeights(){
 
         Promise.resolve().then(()=>{
             if(currentId!==heightUpdateIdRef.current) return ;
-
+            
+            //只在最后一次中执行
             instanceRef.current.forEach((element,key)=>{
                 if(element && element.offsetParent){
                     const htmlElement=findDOMNode(element);

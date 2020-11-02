@@ -7,7 +7,7 @@ import useHeights from './hooks/useHeights';
 import useChildren from './hooks/useChildren';
 import Filler from './Filler';
 
-//1.Promise.resolve意义
+//1.Promise.resolve意义微任务、宏任务
 //2.offsetParent
 //3.CacheMap
 //4.<></>
@@ -70,13 +70,10 @@ const VirtualList=React.forwardRef((props,ref)=>{
         let startOffset;
         let endIndex;
 
-        const dataLen=data.length;
-        console.log(heights)
-        for(let i=0;i<1;i++){ 
-
-            const cacheHeight=heights.get();
-            console.log(cacheHeight)
-            console.log(heights.get())
+        const dataLen=data.length; 
+        for(let i=0;i<dataLen.length;i++){ 
+            console.log(heights.get());
+            const cacheHeight=heights.get(); 
             
             const currentItemBottom=itemTop+(cacheHeight===undefined?itemHeight:cacheHeight);
 
@@ -109,14 +106,15 @@ const VirtualList=React.forwardRef((props,ref)=>{
             offset:startOffset
         }
 
-    },[inVirtual,useVirtual,data,heights,scrollTop,height])
+    },[inVirtual,useVirtual,data,scrollTop,height,heightUpdatedMark])
 
   
 
     //====================Render===========================
-    // console.log(data);
-    // console.log(start);
-    // console.log(end);
+    console.log(scrollHeight);
+    console.log(data);
+    console.log(start);
+    console.log(end);
 
     const listChildren=useChildren(data, start, end, setInstanceRef, children);
 
