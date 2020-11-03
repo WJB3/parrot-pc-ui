@@ -19,6 +19,7 @@ import ScrollBar from './ScrollBar';
 //7.requestAnimationFrame
 //8.scrollTop 只有可滚动元素
 //9./滚动条高度=容器高度/内容高度*容器高度容器高度比内容高度等于滚动条高度比容器高度
+//10.不取消滚动条的默认行为 外层div容器会动
 
 const ScrollStyle={
     overflowY:"auto"
