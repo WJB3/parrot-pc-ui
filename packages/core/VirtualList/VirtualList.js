@@ -8,6 +8,7 @@ import useChildren from './hooks/useChildren';
 import Filler from './Filler';
 import useFrameWheel from './hooks/useFrameWheel';
 import useOriginScroll from './hooks/useOriginScroll';
+import ScrollBar from './ScrollBar';
 
 //1.Promise.resolve意义微任务、宏任务
 //2.offsetParent
@@ -17,6 +18,7 @@ import useOriginScroll from './hooks/useOriginScroll';
 //6.节流函数
 //7.requestAnimationFrame
 //8.scrollTop 只有可滚动元素
+//9./滚动条高度=容器高度/内容高度*容器高度容器高度比内容高度等于滚动条高度比容器高度
 
 const ScrollStyle={
     overflowY:"auto"
@@ -42,6 +44,7 @@ const VirtualList=React.forwardRef((props,ref)=>{
 
     const componentRef=useRef();
     const fillerInnerRef=useRef();
+    const scrollBarRef=useRef(null);
 
     const useVirtual=!!(virtual!==false && height && itemHeight);
  
@@ -127,6 +130,10 @@ const VirtualList=React.forwardRef((props,ref)=>{
     const originScroll=useOriginScroll(isScrollAtTop,isScrollAtBottom);
 
     //====================Scroll===========================
+    function onScrollBar(newScrollTop) {
+        const newTop = newScrollTop;
+        syncScrollTop(newTop);
+    }
 
     function syncScrollTop(newTop){ 
 
@@ -136,9 +143,7 @@ const VirtualList=React.forwardRef((props,ref)=>{
                 value=newTop(origin);
             }else{
                 value=newTop;
-            }
-            console.log(origin);
-            console.log(value);
+            } 
             const alignedTop=keepInRange(value);
 
             componentRef.current.scrollTop = alignedTop;
@@ -207,6 +212,17 @@ const VirtualList=React.forwardRef((props,ref)=>{
                     {listChildren}
                 </Filler>
             </Component>
+
+            {useVirtual && (
+                <ScrollBar 
+                    ref={scrollBarRef}
+                    prefixCls={prefixCls}
+                    scrollTop={scrollTop}
+                    height={height}
+                    scrollHeight={scrollHeight}
+                    onScroll={onScrollBar}
+                />
+            )}
         </div>
     )
 });

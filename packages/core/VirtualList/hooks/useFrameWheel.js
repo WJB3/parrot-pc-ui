@@ -10,20 +10,19 @@ export default function useFrameWheel(inVirtual,isScrollAtTop,isScrollAtBottom,o
 
     const originScroll=useOriginScroll(isScrollAtTop,isScrollAtBottom);
 
-    function onWheel(event){ 
+    function onWheel(event){  
         if(!inVirtual) return ;
         //防抖
         raf.cancel(nextFrameRef.current);
 
         const { deltaY }=event; 
-        offsetRef.current+=deltaY;
+        offsetRef.current+=deltaY; 
 
         //边滚动时不做任何事，滚动时跳过检查
         if(originScroll(deltaY)) return ;
 
         nextFrameRef.current=raf(()=>{ 
-            //保证只16ms执行一次
-            console.log("onRaf")
+            //保证只16ms执行一次 
             const patchMultiple=1;
             onWheelDelta(offsetRef.current*patchMultiple);
             offsetRef.current=0;
