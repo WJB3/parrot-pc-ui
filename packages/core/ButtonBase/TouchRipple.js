@@ -159,7 +159,7 @@ const TouchRipple=React.forwardRef((props,ref)=>{
 
 TouchRipple.propTypes = {
     //TouchRipple的前缀
-    prefixCls:PropTypes.string,
+    prefixCls:PropTypes.any,
     //center是否居中
     center:PropTypes.bool
 }

@@ -22,8 +22,7 @@ const Filler=React.forwardRef((props,ref)=>{
     
     return (
         <div style={outerStyle}  >
-            <ResizeObserver onResize={({offsetHeight})=>{
-                console.log("ResizeObserver")
+            <ResizeObserver onResize={({offsetHeight})=>{ 
                 if(offsetHeight && onInnerResize){
                     onInnerResize();
                 }

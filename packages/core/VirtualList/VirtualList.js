@@ -1,4 +1,4 @@
-import React ,{useState ,useContext,useRef,useMemo, useCallback} from 'react';
+import React ,{useState ,useContext,useRef,useMemo, useCallback,useLayoutEffect} from 'react';
 import classNames from '@packages/utils/classNames';
 import {
     ConfigContext
@@ -6,11 +6,17 @@ import {
 import useHeights from './hooks/useHeights';
 import useChildren from './hooks/useChildren';
 import Filler from './Filler';
+import useFrameWheel from './hooks/useFrameWheel';
+import useOriginScroll from './hooks/useOriginScroll';
 
 //1.Promise.resolve意义微任务、宏任务
 //2.offsetParent
 //3.CacheMap
 //4.<></>
+//5.useLayoutEffect
+//6.节流函数
+//7.requestAnimationFrame
+//8.scrollTop 只有可滚动元素
 
 const ScrollStyle={
     overflowY:"auto"
@@ -56,36 +62,29 @@ const VirtualList=React.forwardRef((props,ref)=>{
             }   
         }
 
-        if(!inVirtual){
-            return {
-                scrollHeight:fillerInnerRef.current?.offsetHeight||0,
-                start:0,
-                end:data.length-1,
-                offset:undefined
-            }
-        }
-
         let itemTop=0;
         let startIndex;
         let startOffset;
         let endIndex;
 
         const dataLen=data.length; 
-        for(let i=0;i<dataLen.length;i++){ 
-            console.log(heights.get());
-            const cacheHeight=heights.get(); 
+        
+        for(let i=0;i<dataLen;i++){ 
             
+            const cacheHeight=heights.get(); 
+         
             const currentItemBottom=itemTop+(cacheHeight===undefined?itemHeight:cacheHeight);
-
+ 
             //在范围内检查项目顶部
             if(currentItemBottom>=scrollTop && startIndex===undefined){
                 startIndex=i;
                 startOffset=itemTop;
-            }
+            } 
             //检查范围底部的项目。我们将渲染额外的一个项目用于运动使用
             if(currentItemBottom>scrollTop+height && endIndex===undefined){
-                endIndex=1;
+                endIndex=i;
             }
+    
             itemTop=currentItemBottom;
         }
 
@@ -97,8 +96,8 @@ const VirtualList=React.forwardRef((props,ref)=>{
             endIndex=data.length-1;
         }
 
-        endIndex=Math.min(endIndex+1,data.length);
-
+        endIndex=endIndex+1,data.length;
+ 
         return {
             scrollHeight:itemTop,
             start:startIndex,
@@ -106,16 +105,65 @@ const VirtualList=React.forwardRef((props,ref)=>{
             offset:startOffset
         }
 
-    },[inVirtual,useVirtual,data,scrollTop,height,heightUpdatedMark])
+    },[inVirtual,useVirtual,data,scrollTop,height,heightUpdatedMark]);
+    //======================In Range======================
 
-  
+    //最大可滚动高度为滚动高度减去高度
+    const maxScrollHeight=scrollHeight-height;
+    const maxScrollHeightRef=useRef(maxScrollHeight);
+    maxScrollHeightRef.current=maxScrollHeight;
+
+    function keepInRange(newScrollTop){
+        let newTop=Math.max(newScrollTop,0);
+        if(!Number.isNaN(maxScrollHeightRef.current)){
+            newTop=Math.min(newTop,maxScrollHeight.current);
+        }
+        return newTop;
+    }
+
+    const isScrollAtTop=scrollTop<=0;
+    const isScrollAtBottom=scrollTop>=maxScrollHeight;
+
+    const originScroll=useOriginScroll(isScrollAtTop,isScrollAtBottom);
+
+    //====================Scroll===========================
+
+    function syncScrollTop(newTop){
+        // console.log("syncScrollTop");
+        // console.log(newTop(origin));
+
+        setScrollTop(origin=>{
+            let value;
+            if(typeof newTop==='function'){
+                value=newTop(origin);
+            }else{
+                value=newTop;
+            }
+            const alignedTop=keepInRange(value);
+
+            componentRef.current.scrollTop = alignedTop;
+            return alignedTop;
+        });
+    }
+
+    const [onRawWheel]=useFrameWheel(
+        useVirtual,
+        isScrollAtTop,
+        isScrollAtBottom,
+        offsetY=>{
+            syncScrollTop(top=>{
+                console.log(offsetY)
+                const newTop=top+offsetY;
+                return newTop;
+            })
+        }
+    )
 
     //====================Render===========================
-    console.log(scrollHeight);
-    console.log(data);
+
     console.log(start);
     console.log(end);
-
+ 
     const listChildren=useChildren(data, start, end, setInstanceRef, children);
 
     let componentStyle=null;
@@ -127,6 +175,13 @@ const VirtualList=React.forwardRef((props,ref)=>{
         }
     }
 
+    React.useLayoutEffect(()=>{
+        componentRef.current.addEventListener("wheel",onRawWheel);
+         
+        return ()=>{
+            componentRef.current.removeEventListener("wheel",onRawWheel);
+        }
+    },[useVirtual]);
 
     return (
         <div 

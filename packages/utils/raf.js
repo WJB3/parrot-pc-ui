@@ -1,35 +1,15 @@
-import raf from 'raf';
 
- 
-let id = 0;
-const ids = {};
 
-// Support call raf with delay specified frame
-export default function wrapperRaf(callback, delayFrames = 1) {
-  const myId = id++;
-  let restFrames= delayFrames;
+let raf=(callback)=>setTimeout(callback,16);
+let caf=(num)=>clearTimeout(num);
 
-  function internalCallback() {
-    restFrames -= 1;
-
-    if (restFrames <= 0) {
-      callback();
-      delete ids[myId];
-    } else {
-      ids[myId] = raf(internalCallback);
-    }
-  }
-
-  ids[myId] = raf(internalCallback);
-
-  return myId;
+if(typeof window!=="undefined" && "requestAnimationFrame" in window){
+  raf=(callback)=>window.requestAnimationFrame(callback);
+  caf=(handle)=>window.cancelAnimationFrame(handle);
 }
 
-wrapperRaf.cancel = function cancel(pid) {
-  if (pid === undefined) return;
+export default function wrapperRaf(callback){
+  return raf(callback);
+}
 
-  raf.cancel(ids[pid]);
-  delete ids[pid];
-};
-
-wrapperRaf.ids = ids; // export this for test usage
+wrapperRaf.cancel=caf;

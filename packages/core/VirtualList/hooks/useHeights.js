@@ -10,13 +10,19 @@ export default function useHeights(){
     const instanceRef=useRef(new Map());
     const heightsRef=useRef(new CacheMap());
     const heightUpdateIdRef=useRef(0);
+    
+   
 
     function collectHeight(){
         heightUpdateIdRef.current+=1;
         const currentId=heightUpdateIdRef.current;
 
         Promise.resolve().then(()=>{
+ 
+
             if(currentId!==heightUpdateIdRef.current) return ;
+
+            console.log(instanceRef.current)
             
             //只在最后一次中执行
             instanceRef.current.forEach((element,key)=>{
