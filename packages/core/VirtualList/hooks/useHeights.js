@@ -20,9 +20,7 @@ export default function useHeights(){
         Promise.resolve().then(()=>{
  
 
-            if(currentId!==heightUpdateIdRef.current) return ;
-
-            console.log(instanceRef.current)
+            if(currentId!==heightUpdateIdRef.current) return ; 
             
             //只在最后一次中执行
             instanceRef.current.forEach((element,key)=>{

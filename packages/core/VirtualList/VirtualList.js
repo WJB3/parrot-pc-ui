@@ -128,9 +128,7 @@ const VirtualList=React.forwardRef((props,ref)=>{
 
     //====================Scroll===========================
 
-    function syncScrollTop(newTop){
-        // console.log("syncScrollTop");
-        // console.log(newTop(origin));
+    function syncScrollTop(newTop){ 
 
         setScrollTop(origin=>{
             let value;
@@ -139,6 +137,8 @@ const VirtualList=React.forwardRef((props,ref)=>{
             }else{
                 value=newTop;
             }
+            console.log(origin);
+            console.log(value);
             const alignedTop=keepInRange(value);
 
             componentRef.current.scrollTop = alignedTop;
@@ -151,9 +151,8 @@ const VirtualList=React.forwardRef((props,ref)=>{
         isScrollAtTop,
         isScrollAtBottom,
         offsetY=>{
-            syncScrollTop(top=>{
-                console.log(offsetY)
-                const newTop=top+offsetY;
+            syncScrollTop(originTop=>{ 
+                const newTop=originTop+offsetY;
                 return newTop;
             })
         }
@@ -161,8 +160,7 @@ const VirtualList=React.forwardRef((props,ref)=>{
 
     //====================Render===========================
 
-    console.log(start);
-    console.log(end);
+   
  
     const listChildren=useChildren(data, start, end, setInstanceRef, children);
 
