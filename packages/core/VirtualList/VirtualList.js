@@ -1,4 +1,4 @@
-import React ,{useState ,useContext,useRef,useMemo, useCallback,useLayoutEffect} from 'react';
+import React ,{useState ,useContext,useRef,useMemo,useLayoutEffect} from 'react';
 import classNames from '@packages/utils/classNames';
 import {
     ConfigContext
@@ -37,7 +37,6 @@ const VirtualList=React.forwardRef((props,ref)=>{
         component:Component="div",
         data=[],
         children
-        
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("VirtualList",customizePrefixCls);
@@ -164,8 +163,6 @@ const VirtualList=React.forwardRef((props,ref)=>{
     )
 
     //====================Render===========================
-
-   
  
     const listChildren=useChildren(data, start, end, setInstanceRef, children);
 
@@ -178,7 +175,7 @@ const VirtualList=React.forwardRef((props,ref)=>{
         }
     }
 
-    React.useLayoutEffect(()=>{
+    useLayoutEffect(()=>{
         componentRef.current.addEventListener("wheel",onRawWheel);
          
         return ()=>{
@@ -213,7 +210,7 @@ const VirtualList=React.forwardRef((props,ref)=>{
                 </Filler>
             </Component>
 
-            {useVirtual && (
+            {/* {useVirtual && (
                 <ScrollBar 
                     ref={scrollBarRef}
                     prefixCls={prefixCls}
@@ -222,7 +219,7 @@ const VirtualList=React.forwardRef((props,ref)=>{
                     scrollHeight={scrollHeight}
                     onScroll={onScrollBar}
                 />
-            )}
+            )} */}
         </div>
     )
 });
