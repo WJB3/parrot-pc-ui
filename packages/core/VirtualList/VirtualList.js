@@ -116,7 +116,7 @@ const VirtualList=React.forwardRef((props,ref)=>{
     function keepInRange(newScrollTop){
         let newTop=Math.max(newScrollTop,0);
         if(!Number.isNaN(maxScrollHeightRef.current)){
-            newTop=Math.min(newTop,maxScrollHeight.current);
+            newTop=Math.min(newTop,maxScrollHeightRef.current);
         }
         return newTop;
     }
