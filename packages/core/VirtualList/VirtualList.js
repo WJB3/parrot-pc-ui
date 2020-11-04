@@ -20,6 +20,7 @@ import ScrollBar from './ScrollBar';
 //8.scrollTop 只有可滚动元素
 //9./滚动条高度=容器高度/内容高度*容器高度容器高度比内容高度等于滚动条高度比容器高度
 //10.不取消滚动条的默认行为 外层div容器会动
+//11.scroll blur focus无法冒泡
 
 const ScrollStyle={
     overflowY:"auto"
@@ -42,8 +43,7 @@ const VirtualList=React.forwardRef((props,ref)=>{
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("VirtualList",customizePrefixCls);
 
-    const componentRef=useRef();
-    const fillerInnerRef=useRef();
+    const componentRef=useRef(); 
     const scrollBarRef=useRef(null);
 
     const useVirtual=!!(virtual!==false && height && itemHeight);
@@ -125,9 +125,7 @@ const VirtualList=React.forwardRef((props,ref)=>{
     }
 
     const isScrollAtTop=scrollTop<=0;
-    const isScrollAtBottom=scrollTop>=maxScrollHeight;
-
-    const originScroll=useOriginScroll(isScrollAtTop,isScrollAtBottom);
+    const isScrollAtBottom=scrollTop>=maxScrollHeight; 
 
     //====================Scroll===========================
     function onScrollBar(newScrollTop) {
@@ -177,8 +175,8 @@ const VirtualList=React.forwardRef((props,ref)=>{
     }
 
     useLayoutEffect(()=>{
-        componentRef.current.addEventListener("wheel",onRawWheel);
-         
+        componentRef.current.addEventListener("wheel",onRawWheel); 
+
         return ()=>{
             componentRef.current.removeEventListener("wheel",onRawWheel);
         }
@@ -200,18 +198,15 @@ const VirtualList=React.forwardRef((props,ref)=>{
                 style={componentStyle}
                 ref={componentRef}
             >
-                <Filler
-                    prefixCls={prefixCls}
+                <Filler 
                     height={scrollHeight}
-                    offset={offset}
-                    onInnerResize={collectHeight}
-                    ref={fillerInnerRef}
+                    offset={offset}  
                 >
                     {listChildren}
                 </Filler>
             </Component>
 
-            {/* {useVirtual && (
+            {useVirtual && (
                 <ScrollBar 
                     ref={scrollBarRef}
                     prefixCls={prefixCls}
@@ -220,7 +215,7 @@ const VirtualList=React.forwardRef((props,ref)=>{
                     scrollHeight={scrollHeight}
                     onScroll={onScrollBar}
                 />
-            )} */}
+            )}
         </div>
     )
 });

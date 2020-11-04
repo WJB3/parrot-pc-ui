@@ -1,17 +1,13 @@
 
-import React from 'react';
-import ResizeObserver from '@packages/core/ResizeObserver';
-import classNames from '@packages/utils/classNames';
+import React from 'react';  
 
 
-const Filler=React.forwardRef((props,ref)=>{
+const Filler=(props)=>{
 
     const {
         height,
-        offset,
-        prefixCls,
-        children,
-        onInnerResize
+        offset, 
+        children
     }=props;
 
     let outerStyle={}; 
@@ -22,17 +18,9 @@ const Filler=React.forwardRef((props,ref)=>{
     
     return (
         <div style={outerStyle}  >
-            <ResizeObserver onResize={({offsetHeight})=>{ 
-                if(offsetHeight && onInnerResize){
-                    onInnerResize();
-                }
-            }}> 
-                <>
-                    {children} 
-                </>
-            </ResizeObserver>
+            {children} 
         </div>
     )
-});
+};
 
 export default Filler;

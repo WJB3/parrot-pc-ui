@@ -15,7 +15,7 @@ export default function useFrameWheel(inVirtual,isScrollAtTop,isScrollAtBottom,o
     function onWheel(event){  
         if(!inVirtual) return ;
 
-        event.preventDefault();
+        // event.preventDefault()
         //防抖
         raf.cancel(nextFrameRef.current);
 

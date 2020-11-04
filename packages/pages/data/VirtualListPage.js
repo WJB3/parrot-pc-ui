@@ -13,10 +13,15 @@ const Page=(props)=>{
 
     const sss=useRef();
     const ssss=useRef();
+
+    useEffect(()=>{
+        window.addEventListener("scroll",function(){console.log("virtualpagescroll")})
+        document.getElementById("root").addEventListener("scroll",function(){console.log("virtusssalpagescroll")})
+        //window.onscroll=(e)=>{console.log("virtualpagescroll")}
+    },[])
     
     return (
-        <>  
-      
+        <>    
             <List data={new Array(100).fill("").map((_,index)=>index+1)} height={200} itemHeight={30} itemKey="id">
                 {index => <div >{index}</div>}
             </List>
