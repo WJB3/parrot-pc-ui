@@ -1,7 +1,7 @@
 
 import React,{ useEffect, useRef,useState } from 'react';
-import classNames from '@packages/utils/classNames';
-import raf from '@packages/utils/raf';
+import classNames from '@packages/utils/classNames'; 
+import useInit from '@packages/hooks/useInit';
  
 const MIN_SIZE = 20;
 
@@ -13,14 +13,15 @@ const ScrollBar=React.forwardRef((props,ref)=>{
 
     const {
         prefixCls,
-        height,
-        count,
+        height, 
         scrollHeight, 
         scrollTop,
         onScroll
     }=props;
 
     const moveRef=useRef(null);
+
+    const isInit=useInit();
 
     const visibleTimeout=useRef(null);
 
@@ -52,21 +53,14 @@ const ScrollBar=React.forwardRef((props,ref)=>{
     //========================== Events ==============================
     const patchEvents=()=>{
         window.addEventListener("mousemove",handleMouseMove);
-        window.addEventListener("mouseup",handleMouseUp);
-
-        thumbRef.current.addEventListener("touchmove",handleMouseMove);
-        thumbRef.current.addEventListener("touchend",handleMouseUp);
+        window.addEventListener("mouseup",handleMouseUp); 
     }
 
     const removeEvents=()=>{
         window.removeEventListener("mousemove",handleMouseMove);
-        window.removeEventListener("mouseup",handleMouseUp);
+        window.removeEventListener("mouseup",handleMouseUp); 
 
-        thumbRef.current.removeEventListener("touchstart",handleMouseDown);
-        thumbRef.current.removeEventListener("touchmove",handleMouseMove);
-        thumbRef.current.removeEventListener("touchend",handleMouseUp);
-
-        raf.cancel(moveRef.current);
+        moveRef.current=null;
     }
 
     //========================== Thumb ===============================
@@ -74,16 +68,12 @@ const ScrollBar=React.forwardRef((props,ref)=>{
         setDragging(true);
         setPageY(getPageY(e));
         setStartTop(getTop()); 
-        patchEvents();
-
-        e.stopPropagation();
-        e.preventDefault();
-
+        patchEvents();  
     }
 
     const handleMouseMove=(e)=>{
 
-        raf.cancel(moveRef);
+        moveRef.current=null;
 
         if(dragging){
             const offsetY=getPageY(e)-pageY;
@@ -94,10 +84,10 @@ const ScrollBar=React.forwardRef((props,ref)=>{
 
             const ptg=enableHeightRange?newTop/enableHeightRange:0;
             const newScrollTop=Math.ceil(ptg*enableScrollRange);
-            moveRef=raf(()=>{
+            moveRef.current=()=>{
                 onScroll?.(newScrollTop)
-            })
-
+            }
+            moveRef.current();
         }
     }
 
@@ -109,6 +99,8 @@ const ScrollBar=React.forwardRef((props,ref)=>{
 
     const delayHidden=()=>{
 
+        console.log("delayHidden")
+
         clearTimeout(visibleTimeout);
 
         setVisible(true);
@@ -119,13 +111,25 @@ const ScrollBar=React.forwardRef((props,ref)=>{
 
     }
 
+    const containerMouseDown=(e)=>{
+        e.stopPropagation();
+        e.preventDefault();
+    }
+
     useEffect(()=>{
-         ()=>{
+        if(isInit){
+            delayHidden();
+        }
+
+        ()=>{
             removeEvents();
             clearTimeout(visibleTimeout.current);
-         }
-    },[]);
+        }
+    },[scrollTop]);
 
+    console.log(visible);
+
+    
     return (
         <div
             ref={scrollBarRef}
@@ -138,6 +142,7 @@ const ScrollBar=React.forwardRef((props,ref)=>{
                 position:"absolute",
                 
             }}
+            onMouseDown={containerMouseDown}
             onMouseMove={delayHidden}
         >
             <div 
@@ -158,7 +163,8 @@ const ScrollBar=React.forwardRef((props,ref)=>{
                     background:"rgba(0,0,0,0.5)",
                     borderRadius:99,
                     cursor:"pointer",
-                    useSelect:"none"
+                    useSelect:"none",
+                    display: visible ? null : 'none'
                 }}
                 onMouseDown={handleMouseDown}
             />

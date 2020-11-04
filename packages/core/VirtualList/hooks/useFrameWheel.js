@@ -1,6 +1,5 @@
 
-import React ,{ useRef } from 'react';
-import raf from '@packages/utils/raf';
+import React ,{ useRef } from 'react'; 
 import useOriginScroll from './useOriginScroll';
 
 export default function useFrameWheel(inVirtual,isScrollAtTop,isScrollAtBottom,onWheelDelta){
@@ -15,9 +14,9 @@ export default function useFrameWheel(inVirtual,isScrollAtTop,isScrollAtBottom,o
     function onWheel(event){  
         if(!inVirtual) return ;
 
-        // event.preventDefault()
+        event.preventDefault()
         //防抖
-        raf.cancel(nextFrameRef.current);
+        nextFrameRef.current=null;
 
         const { deltaY }=event; 
         offsetRef.current+=deltaY; 
@@ -25,12 +24,13 @@ export default function useFrameWheel(inVirtual,isScrollAtTop,isScrollAtBottom,o
         //边滚动时不做任何事，滚动时跳过检查
         if(originScroll(deltaY)) return ;
 
-        nextFrameRef.current=raf(()=>{ 
+        nextFrameRef.current=()=>{ 
             //保证只16ms执行一次 
             const patchMultiple=1;
             onWheelDelta(offsetRef.current*patchMultiple);
             offsetRef.current=0;
-        }); 
+        };
+        nextFrameRef.current()
     }
 
     return [onWheel];

@@ -6,8 +6,7 @@ import {
 import useHeights from './hooks/useHeights';
 import useChildren from './hooks/useChildren';
 import Filler from './Filler';
-import useFrameWheel from './hooks/useFrameWheel';
-import useOriginScroll from './hooks/useOriginScroll';
+import useFrameWheel from './hooks/useFrameWheel'; 
 import ScrollBar from './ScrollBar';
 
 //1.Promise.resolve意义微任务、宏任务
@@ -46,9 +45,7 @@ const VirtualList=React.forwardRef((props,ref)=>{
     const componentRef=useRef(); 
     const scrollBarRef=useRef(null);
 
-    const useVirtual=!!(virtual!==false && height && itemHeight);
- 
-    const inVirtual=useVirtual && data && itemHeight * data.length > height;
+    const useVirtual=!!(virtual!==false && height && itemHeight); 
 
     const [scrollTop, setScrollTop] = useState(0);
    
@@ -108,7 +105,7 @@ const VirtualList=React.forwardRef((props,ref)=>{
             offset:startOffset
         }
 
-    },[inVirtual,useVirtual,data,scrollTop,height,heightUpdatedMark]);
+    },[useVirtual,data,scrollTop,height,heightUpdatedMark]);
     //======================In Range======================
 
     //最大可滚动高度为滚动高度减去高度
@@ -149,7 +146,7 @@ const VirtualList=React.forwardRef((props,ref)=>{
         });
     }
 
-    const [onRawWheel]=useFrameWheel(
+    const [ onRawWheel ]=useFrameWheel(
         useVirtual,
         isScrollAtTop,
         isScrollAtBottom,
