@@ -56,422 +56,65 @@
     <img src="./assets/virtuallist/yuanli.jpg"><br />
     如上图所示，假设容器元素的高度是500px,而列表项元素的height是50px,那么容器元素内此时最多可以显示10个元素项，也就是说当元素初始化的时候，实际上我们只需要渲染十条数据，而不是1000个数据项。<br />
 </blockquote> 
-```js
-
-```
-
-# 三、Avatar组件实战
-
-## 1、代码实战
 
 ```js
-import React,{ useContext,useState,useRef } from 'react';
-import classNames from '@packages/utils/classNames';
-import PropTypes from 'prop-types'; 
-import capitalize from '@packages/utils/capitalize';
-import {
-    ConfigContext
-} from '@packages/core/ConfigProvider';
-import ResponsiveObserve, {
-    responsiveArray
-} from '@packages/utils/responsiveObserve';
-import useImageLoad from '@packages/hooks/useImageLoad'; 
-import { Person } from  "@packages/core/Icon";
-import Paper from '@packages/core/Paper';
-import useBreakpoint from '@packages/hooks/useBreakpoint';
-import useForkRef from '@packages/hooks/useForkRef';
-import "./index.scss";
-
-const Avatar = React.forwardRef((props, ref) => {
-    const {
-        prefixCls: customizePrefixCls,
-        component: Component = Paper,
-        className,
-        size = "default",
-        children: childrenProp,
-        type = "circle",
-        src,
-        srcSet,
-        alt,
-        imgProps,
-        color="default",
-        icon,
-        //字符类型距离左右2侧边界单位像素
-        gap=4,
-        style,
-        onError,
-        onLoaded,
-        ...restProps
-    } = props;
-
-    const prefixCls = useContext(ConfigContext)?.getPrefixCls("Avatar", customizePrefixCls);
-    const [mounted, setMounted] = useState(false);
-    const [scale,setScale]=useState(false);
-    const screens =useBreakpoint();
-    //string孩子节点
-    const avatarChildrenRef=useRef(null);
-    const avatarRef=useRef(null);
-
-    React.useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    let children = null;
-
-    const loaded = useImageLoad({ src, srcSet });
-
-    if(loaded==="error"){
-        onError?.("error");
-    }else if(loaded==="loaded"){
-        onLoaded?.("loaded")
-    }
-
-    const hasImg = src || srcSet;
-    //有src或者srcSet但是图片没有加载成功
-    const hasImgNotFailing = hasImg && loaded !== 'error';
-
-    const setScaleParam=()=>{
-        if(!avatarChildrenRef.current||!avatarRef.current){
-            return ;
-        }
-        const childrenWidth=avatarChildrenRef.current.offsetWidth;
-        const nodeWidth=avatarRef.current.offsetWidth;
-
-        if(childrenWidth!==0 && nodeWidth!==0){
-            if(gap*2 < nodeWidth){
-                setScale(nodeWidth-gap*2<childrenWidth?(nodeWidth-gap*2)/childrenWidth:1)
-            }
-        } 
-    }
-
-    React.useEffect(()=>{
-        setScaleParam();
-    },[gap]);
-
-    if (hasImgNotFailing) {
-        children = (
-          <img
-            alt={alt}
-            src={src}
-            srcSet={srcSet} 
-            className={`${prefixCls}-Image`}
-            {...imgProps}
-          />
-        );
-    } else if(loaded == 'error'){
-        children=<Person />
-    } else if(icon){
-        children=icon;
-    } else if(mounted||scale!==1){ 
-
-        const transformString=`scale(${scale})`;
-        const childrenStyle = {
-            msTransform: transformString,
-            WebkitTransform: transformString,
-            transform: transformString,
-        };
-        children=(
-            <span style={childrenStyle} className={classNames(`${prefixCls}-String`)} ref={avatarChildrenRef}>
-                {childrenProp}
-            </span>
-        )
-    } else{
-        children=(
-            <span style={{opacity:0}} className={classNames(`${prefixCls}-String`)} ref={avatarChildrenRef}>
-                {childrenProp}
-            </span>
-        )
-    }
-
-    const renderStyle=()=>{
-        let sizeValue;
-        if(typeof size==="number"){
-            sizeValue=size; 
-        }else if(typeof size==="object"){
-            const currentBreakpoint=responsiveArray.find(screen=>screens[screen]);
-            sizeValue=size[currentBreakpoint]||18; 
-        }else if(typeof size==="string"){
-            return {}
-        } 
-        return {
-            width: sizeValue,
-            height: sizeValue,
-            lineHeight: `${sizeValue}px`,
-            fontSize: icon ? sizeValue / 2 : 18,
-        }
-    }
-
-    const handleRef=useForkRef(ref,avatarRef);
-
-    return (
-        <Component
-            className={classNames(
-                prefixCls,
-                className,
-                { 
-                    [`${prefixCls}-Circle`]:type==="circle",
-                    [`${prefixCls}-Color${capitalize(color)}`]:color && !hasImgNotFailing,
-                    [`${prefixCls}-${capitalize(size)}`]:typeof size==="string"
-                }
-            )}
-            style={{...renderStyle(),...style}}
-            ref={handleRef} 
-            square={type==="square"}
-            {...restProps}
-        >
-            {children}
-        </Component>
-    )
-}); 
-
-export default Avatar;
+//初始化渲染数据
+const wantData=originData.splice(0,Math.ceil(containerHeight/itemHeight));
 ```
- 
 
-<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    代码非常简单，相信直接看也是可以看懂的。
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(247, 31, 85,1); background: rgb(239, 235, 233);line-height:1。5;'>
+1.wantData:代表需要展示的数据。<br />
+2.originData:代表原始的数据。<br />
+3.containerHeight:代表容器元素高度。<br />
+4.itemHeight:表示列表项高度。<br />
+5.scrollTop:表示容器元素Y轴滚动值。  
 </blockquote> 
 
-## 2、AvatarGroup组件的设计
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
+    如下图所示，当元素滚动位置如上图所示时：根据前面的计算，此时在容器元素内所能展示的第一个数据项应该是 3，最后一个数据项应该是 13 而不是 12，因为列表项元素 3 是只是部分隐藏了。那么，此时根据 originalData 进行对应的数据项截取即可。
+    <img src="./assets/virtuallist/scrolling.jpg"><br />
+</blockquote> 
 
 ```js
-
-import React, { useContext,cloneElement } from 'react';
-import classNames from '@packages/utils/classNames';
-import PropTypes from 'prop-types'; 
-import childrenToArray from '@packages/utils/childrenToArray';
-import Popover from '@packages/core/Popover';
-import Avatar from './Avatar';
-import {
-    ConfigContext
-} from '@packages/core/ConfigProvider';
-import "./index.scss";
-
-const Group=React.forwardRef((props,ref)=>{
-    const {
-        prefixCls:customizePrefixCls,
-        maxCount,
-        maxStyle,
-        children:childrenProps,
-        maxPopoverPlacement="top",
-        className,
-        style
-    }=props;
-
-    let children;
-
-    const prefixCls = useContext(ConfigContext)?.getPrefixCls("AvatarGroup", customizePrefixCls);
-
-    children=childrenToArray(childrenProps).map((child,index)=>{
-        return cloneElement(child,{
-            key:`avatar-key-${index}`
-        })
-    });
-
-    const numOfChildren=children.length;
-
-    if(maxCount && maxCount<numOfChildren){
-        const childrenShow=children.slice(0,maxCount);
-        const childrenHidden=children.slice(maxCount,numOfChildren);
-
-        childrenShow.push(
-            <Popover
-                key="avatar-popover-key"
-                content={childrenHidden}
-                trigger="hover"
-                placement={maxPopoverPlacement}
-            >
-                <Avatar style={maxStyle}>{`+${numOfChildren-maxCount}`}</Avatar>
-            </Popover>
-        )
-
-        return (
-            <div className={classNames(`${prefixCls}`,className)} style={style}>
-                {childrenShow}
-            </div>
-        )
-    }
-
-    return (
-        <div className={classNames(`${prefixCls}`,className)} style={style}>
-            {children}
-        </div>
-    )
-
-
-}); 
-
-export default Group;
-```
-
-## 3、Avatar组件的目录结构
-
-```js
-|-Avatar.js
-|-Group.js
-|-index.js
-|-index.scss
-```
-
-# 四、Avatar组件设计核心要素
-
-## 1.mounted变量的使用
-
-```js
-const [mounted, setMounted] = useState(false);
-
-React.useEffect(() => {
-        setMounted(true);
-}, []);
-
-} else if(mounted||scale!==1){ 
-    ...
-} else{
-
-
-if(!avatarChildrenRef.current||!avatarRef.current){
-            return ;
-}
+const from=Math.floor(scrollTop/itemHeight);
+const to=Math.ceil((scrollTop+containerHeight)/itemHeight); 
+const wantData = originalData.slice(from, to)
 ```
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    通过mounted来判断已经渲染完毕，可以成功拿到我们后续操作需要的节点。
-</blockquote>
+    这里我们大概就简述完了我们虚拟滚动的大部分内容。
+</blockquote> 
 
 
-## 2.通过gap结合scale属性
+# 三、Virtual-List组件设计核心要素
 
-<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
-    基本逻辑：判断avatar外层节点和string字符节点包裹节点的offsetWidth，然后得出scale的值为(nodeWidth-gap*2)/childrenWidth
-</blockquote>
+## 1.组件框架结构大体简述
 
-```js
-const [scale,setScale]=useState(false);
-const setScaleParam=()=>{ 
-        if(!avatarChildrenRef.current||!avatarRef.current){
-            return ;
-        }
-        const childrenWidth=avatarChildrenRef.current.offsetWidth;
-        const nodeWidth=avatarRef.current.offsetWidth;
+![哈哈](./assets/virtuallist/div.jpg)
 
-        if(childrenWidth!==0 && nodeWidth!==0){
-            if(gap*2 < nodeWidth){
-                setScale(nodeWidth-gap*2<childrenWidth?(nodeWidth-gap*2)/childrenWidth:1)
-            }
-        } 
-}
-const transformString=`scale(${scale})`;
-        const childrenStyle = {
-            msTransform: transformString,
-            WebkitTransform: transformString,
-            transform: transformString,
-};
-children=(
-            <span style={childrenStyle} className={classNames(`${prefixCls}-String`)} ref={avatarChildrenRef}>
-                {childrenProp}
-            </span>
-)
-```
 
-## 3.通过size的类型判断赋予不同的值
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
+    在这里我们要设计这个组件分为2个部分：虚拟列表的主体部分container、滚动条thumb。既然我们需要自己实现虚拟滚动，那么浏览器原生的滚动条必然满足不了我们的需求。
+    <br />
+    <br />
+    VirtualList是组件的最外层的div，主要是为了放置组件的2个主要部分的div的，可以设置<i>position:"relative"</i>为滚动条提供一个父元素定位，滚动条实现时可以使用<i>position:"absolute"</i>很方便实现定位。
+    <br />
+    <br />
+    Container是我们前章节中提到一个高度容器，这里我们设置一个固定高度：<i>height:props.height</i>,因为这里的滚动条我们自己实现，所以我们使用<i>overflow:hidden</i>来隐藏滚动条。
+    <br />
+    <br />
+    ScrollContainer是一个高度为所有元素总高度的一个容器：这里我们需要设置一个<i>height:item.length*item.width</i>,同时为了实现元素向上移动，向下移动时有那种平移的效果，我们需要设置<i>transform:translateY(srollTop px)</i>
+    <br />
+    <br />
+    WantDataChildNode则是我们实际需要在页面渲染的节点，每次滚动条滚动都需要重新渲染新的节点。
+    <br />
+    <br />
+    Thumb-Wrapper是滚动条的容器，一般就是滚动条所在的那个在浏览器右侧的滚动条垂直容器。
+    <br />
+    <br />
+    Thumb是我们的滚动条，这里我们需要实现可以移动滚动条实现列表的滚动、点击滚动条所在容器可以实现列表的移动、在滚轮一定时间内没有滚动或者没有没有拖动滚动条时，滚动条自己隐藏/显示等。
+</blockquote> 
 
-```js
-const screens =useBreakpoint();
-const renderStyle=()=>{
-        let sizeValue;
-        if(typeof size==="number"){
-            sizeValue=size; 
-        }else if(typeof size==="object"){
-            const currentBreakpoint=responsiveArray.find(screen=>screens[screen]);
-            sizeValue=size[currentBreakpoint]||18; 
-        }else if(typeof size==="string"){
-            return {}
-        } 
-        return {
-            width: sizeValue,
-            height: sizeValue,
-            lineHeight: `${sizeValue}px`,
-            fontSize: icon ? sizeValue / 2 : 18,
-        }
-}
-style={{...renderStyle(),...style}}
-```
 
-<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
-    使用useBreakpoint()来判断当前的屏幕尺寸。
-</blockquote>
 
-## 4.使用useImageLoaded hooks函数
-
-```js
-
-const loaded = useImageLoad({ src, srcSet });
-
-if(loaded==="error"){
-        onError?.("error");
-}else if(loaded==="loaded"){
-        onLoaded?.("loaded")
-}
-
-import React from 'react';
-
-export default function useLoaded({ src, srcSet }) {
-    const [loaded, setLoaded] = React.useState(false);
   
-    React.useEffect(() => {
-      if (!src && !srcSet) {
-        return undefined;
-      }
-  
-      setLoaded(false);
-  
-      let active = true;
-      const image = new Image();
-      image.src = src;
-      image.srcSet = srcSet;
-      image.onload = () => {
-        if (!active) {
-          return;
-        }
-        setLoaded('loaded');
-      };
-      image.onerror = () => {
-        if (!active) {
-          return;
-        }
-        setLoaded('error');
-      };
-  
-      return () => {
-        active = false;
-      };
-    }, [src, srcSet]);
-  
-    return loaded;
-}
-```
-
-<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
-    使用useImageLoaded()可以判断是否加载以及加载是否成功。
-</blockquote>
-
-## 5.Group组件除第一个以外其余组件向左移动
-
-```css
-
-$prefixCls:"#{$global-prefix}-Avatar";
-$prefixClsGroup:"#{$global-prefix}-AvatarGroup";
-
-.#{$prefixClsGroup}{
-    display: inline-flex;
-    
-    .#{$prefixCls}{
-        &:not(:first-child){
-            margin-left: -8px;
-        }
-    }
-}
-```
-<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
-    使用 <a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/:not">:not</a> 选择器即可实现效果。
-</blockquote>

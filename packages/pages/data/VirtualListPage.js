@@ -23,13 +23,13 @@ const Page=(props)=>{
                 <div><div><div>{index}</div></div></div>
             </div>)} */}
 
-            <VirtualList data={new Array(100000).fill("").map((_,index)=>index+1)} height={800} itemHeight={30} itemKey="id">
+            <List data={new Array(100000).fill("").map((_,index)=>index+1)} height={800} itemHeight={30} itemKey="id">
                 {index=> <div style={{backgroundColor:`rgba(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},1)`}}>
                     <div><div><div>{index}</div></div></div>
                     <div><div><div>{index}</div></div></div>
                     <div><div><div>{index}</div></div></div>
                 </div>} 
-            </VirtualList>
+            </List>
         </>
     )
 }
