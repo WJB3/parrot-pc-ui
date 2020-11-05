@@ -1,19 +1,18 @@
  
 
-import React,{ useState,useRef } from 'react';
-import CacheMap from '@packages/utils/CacheMap';
+import React,{ useState,useRef } from 'react'; 
 import { findDOMNode } from 'react-dom';
 
 export default function useHeights(){
 
     const [updatedMark,setUpdatedMark]=useState(0);
     const instanceRef=useRef(new Map());
-    const heightsRef=useRef(new CacheMap());
-    const heightUpdateIdRef=useRef(0);
-    
+    const heightsRef=useRef(new Map());
+    const heightUpdateIdRef=useRef(0); 
    
 
     function collectHeight(){
+        
         heightUpdateIdRef.current+=1;
         const currentId=heightUpdateIdRef.current;
 
@@ -38,7 +37,7 @@ export default function useHeights(){
         });
     }
 
-    function setInstanceRef(item,instance){
+    function setInstanceRef(item,instance){ 
         if(instance){
             instanceRef.current.set(undefined,instance);
             collectHeight();

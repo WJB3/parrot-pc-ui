@@ -14,23 +14,51 @@
 ## 1.组件概述
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1;'>
-    用来代表用户或事物，支持图片、图标或字符展示。
+    根据上文，虚拟列表是按需显示思路的一种实现，即虚拟列表是一种根据滚动容器元素的可视区域来渲染长列表数据中某一个部分数据的技术。
 </blockquote>
 
 ## 2.为什么需要这个组件
 
+```js
+//不使用虚拟列表
+{new Array(100000).fill("").map((_,index)=>index+1).map(index=> <div style={{backgroundColor:`rgba(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},1)`}}>
+                <div><div><div>{index}</div></div></div>
+                <div><div><div>{index}</div></div></div>
+                <div><div><div>{index}</div></div></div>
+            </div>)}
+//使用虚拟列表
+<VirtualList data={new Array(100000).fill("").map((_,index)=>index+1)} height={800} itemHeight={30} itemKey="id">
+                {index=> <div style={{backgroundColor:`rgba(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},1)`}}>
+                    <div><div><div>{index}</div></div></div>
+                    <div><div><div>{index}</div></div></div>
+                    <div><div><div>{index}</div></div></div>
+                </div>} 
+            </VirtualList>
+```
+
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    无论是在表格中还是到对话框菜单中，都可以找到使用头像的身影。
+    列表形态的数据格式是一种非常常见的数据展示格式。 <br />
+    如果某用户需要有10000条数据在客户端进行展示，那么会产生什么影响呢？<br />
+    如上代码：<br />
+    1.第一种情况下：在不使用虚拟列表时，浏览器渲染100000条数据时,如下图所示,总渲染时间超过25s，在页面上表现得非常卡顿，这对于用于的体验来说是致命的。<br />
+    <img src="./assets/virtuallist/nouse.jpg"><br />
+    2.在第二种情况下：在使用虚拟列表时，浏览器渲染100000条数据时，如下图所示，总渲染事件仅仅花了1s，在页面上表现的十分流程，并没有卡顿感。<br />
+    <img src="./assets/virtuallist/use.jpg"><br />
 </blockquote>
 
-# 二、Avatar组件设计
+# 二、Virtual-List组件设计
   
 
 ## 原理解析
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    一个非常简单的样式修改。
+    虚拟列表本质上是按需渲染。按需渲染是指根据容器元素的高度以及列表项元素的高度来渲染数据。<br >
+    <img src="./assets/virtuallist/yuanli.jpg"><br />
+    如上图所示，假设容器元素的高度是500px,而列表项元素的height是50px,那么容器元素内此时最多可以显示10个元素项，也就是说当元素初始化的时候，实际上我们只需要渲染十条数据，而不是1000个数据项。<br />
 </blockquote> 
+```js
+
+```
 
 # 三、Avatar组件实战
 

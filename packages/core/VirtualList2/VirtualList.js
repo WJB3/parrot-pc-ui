@@ -1,4 +1,4 @@
-import React ,{useState ,useContext,useRef,useMemo,useLayoutEffect} from 'react';
+import React ,{useState ,useContext,useRef,useMemo,useLayoutEffect, useCallback} from 'react';
 import classNames from '@packages/utils/classNames';
 import {
     ConfigContext
@@ -25,7 +25,6 @@ const ScrollStyle={
     overflowY:"auto"
 }
 
-
 const VirtualList=React.forwardRef((props,ref)=>{
 
     const {
@@ -37,8 +36,17 @@ const VirtualList=React.forwardRef((props,ref)=>{
         itemHeight,
         component:Component="div",
         data=[],
-        children
+        children,
+        itemKey,
     }=props;
+
+    const getKey=useCallback(()=>{
+        let key;
+        if(typeof itemKey==="function"){
+            key=itemKey
+        }
+
+    },[itemKey])
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("VirtualList",customizePrefixCls);
 
@@ -71,8 +79,7 @@ const VirtualList=React.forwardRef((props,ref)=>{
         
         for(let i=0;i<dataLen;i++){ 
             
-            const cacheHeight=heights.get(); 
-         
+            const cacheHeight=heights.get();  
             const currentItemBottom=itemTop+(cacheHeight===undefined?itemHeight:cacheHeight);
  
             //在范围内检查项目顶部
@@ -159,6 +166,8 @@ const VirtualList=React.forwardRef((props,ref)=>{
     )
 
     //====================Render===========================
+    console.log(start)
+    console.log(end) 
  
     const listChildren=useChildren(data, start, end, setInstanceRef, children);
 
