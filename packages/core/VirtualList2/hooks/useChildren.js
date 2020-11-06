@@ -8,8 +8,7 @@ export default function useChildren(
     setNodeRef,
     renderFunc
 ){
-
-    console.log("useChildren")
+ 
     return list.slice(startIndex,endIndex+1).map((item,index)=>{
         const eleIndex=startIndex+index;
         const node=renderFunc(item,eleIndex); 

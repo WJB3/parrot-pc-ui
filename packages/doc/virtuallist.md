@@ -115,6 +115,68 @@ const wantData = originalData.slice(from, to)
     Thumb是我们的滚动条，这里我们需要实现可以移动滚动条实现列表的滚动、点击滚动条所在容器可以实现列表的移动、在滚轮一定时间内没有滚动或者没有没有拖动滚动条时，滚动条自己隐藏/显示等。
 </blockquote> 
 
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
+    根据前文我们可以得出虚拟列表的大致代码结构如下：
+</blockquote> 
+
+```js
+
+import React ,{ useContext } from 'react';
+import PropTypes from 'prop-types'; 
+import {
+    ConfigContext
+} from '@packages/core/ConfigProvider';
+import classNames from '@packages/utils/classNames';
+import "./index.scss";
+
+const List=React.forwardRef((props,ref)=>{
+
+    const {
+        height,
+        prefixCls:customizePrefixCls
+    }=props;
+
+    const preficCls=useContext(ConfigContext)?.getPrefixCls("VirtualList",customizePrefixCls);
+
+    const containerStyle={
+        height,
+        overflow:"hidden"
+    };
+
+    return <div className={preficCls} style={{position:"relative"}}>
+
+        <div className={`${preficCls}-Container`} style={containerStyle}>
+            <div ></div>
+        </div>
+
+        <div className={`${prefixCls}-ThumbWrapper`} style={{position:"absolute",width:8,right:0,top:0,bottom:0}}>
+            <div className={`${prefixCls}-Thumb`}></div>
+        </div>
 
 
+    </div>
+});
+
+List.propTypes = {
+    //显示区域的容器高度
+    height:PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+    ])
+};
+
+export default List;
+```
+
+## 2.初始化时应该需要怎么处理？
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    我们回想一下，如果在不使用虚拟列表的情况下，无论是初次渲染还是后期的渲染都会花费巨大的时间，这是为什么呢？
+    <br />
+    <br />
+    因为浏览器每次都要渲染100000个节点，那么我们在初次渲染时就必须控制住渲染节点的数量，那么如何控制渲染节点的数量是我们需要实现的重中之重，默认情况下列表未滚动，也就是scrollTop=0，如果需要计算出初次渲染需要渲染的节点数，必然要结合容器高度和列表的高度：<i>初次渲染节点数=容器高度/单个列表高度</i>。
+    <br />
+    <br />
+    但是在未渲染节点时，我们是无法获取列表的高度的，这个时候itemHeight的属性就起到了关键性作用，即如果在列表没有渲染到页面上时，使用itemHeight来替代单个列表的高度。
+</blockquote> 
   
