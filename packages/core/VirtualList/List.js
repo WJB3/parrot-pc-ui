@@ -31,6 +31,8 @@ const List=React.forwardRef((props,ref)=>{
         overflow:"hidden"
     };
 
+    const [setIntanceRef,heights]=useHeights(getKey);
+
     const viewChildren=useChildren(originData,startIndex,endIndex,getKey);
 
     return <div className={preficCls} style={{position:"relative"}}>

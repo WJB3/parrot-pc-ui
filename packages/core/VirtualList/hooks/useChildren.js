@@ -14,9 +14,7 @@ import React ,{ useCallback } from 'react';
 
 export default function useChildren(originData,startIndex,endIndex,setIntance=()=>{},renderFunc,getKey=()=>{}){
 
-    const refFunc=useCallback((ref)=>{
-        console.log("refFunc");
-        console.log(ref);
+    const refFunc=useCallback((ref)=>{ 
         setIntance(ref)
     },[]);
 
