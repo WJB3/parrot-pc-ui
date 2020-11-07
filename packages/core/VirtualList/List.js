@@ -1,15 +1,19 @@
 
-import React ,{ useContext,useCallback } from 'react';
+import React ,{ useContext,useCallback,useState,useMemo, useEffect,useRef } from 'react';
 import PropTypes from 'prop-types'; 
 import {
     ConfigContext
 } from '@packages/core/ConfigProvider';
 import classNames from '@packages/utils/classNames';
 import "./index.scss";
+import useHeights from './hooks/useHeights';
+import useChildren from './hooks/useChildren';
+import useFrameWheel from './hooks/useFrameWheel';
+import ScrollBar from './ScrollBar';
 
-//1.当 ref 属性是一个回调函数时，此函数会（根据元素的类型）接收底层 DOM 元素或 class 实例作为其参数。这能够让你直接访问 DOM 元素或组件实例。
-//2.slice
-//3.useCallback
+ 
+
+const MIN_HEIGHT=20;
 
 const List=React.forwardRef((props,ref)=>{
 
@@ -17,35 +21,129 @@ const List=React.forwardRef((props,ref)=>{
         height,
         prefixCls:customizePrefixCls,
         data:originData,
-        itemKey
+        itemKey,
+        itemHeight=MIN_HEIGHT,
+        children
     }=props;
 
-    const preficCls=useContext(ConfigContext)?.getPrefixCls("VirtualList",customizePrefixCls);
+    const componentRef=useRef(null);
+
+    const prefixCls=useContext(ConfigContext)?.getPrefixCls("VirtualList",customizePrefixCls);
+
+    const [scrollTop,setScrollTop]=useState(0);
+
+    const isVirtual=height && itemHeight;
 
     const getKey=useCallback((item)=>{
         return item[itemKey];
     },[itemKey]);
+
+    const syncScroll=(deltaY)=>{
+        setScrollTop((originScrollTop)=>{
+
+            let newTop;
+
+            if(typeof deltaY==="function"){
+                newTop=deltaY(originScrollTop);
+            }else{
+                newTop=deltaY;
+            }
+
+            const rangeValue=keepInRange(newTop); 
+
+            componentRef.current.scrollTop=rangeValue;  
+
+            return rangeValue;
+        })
+    }
+
+    const [onRawWheel]=useFrameWheel(
+        (offsetY)=>syncScroll((top)=>{return top+offsetY})
+    );
 
     const containerStyle={
         height,
         overflow:"hidden"
     };
 
-    const [setIntanceRef,heights]=useHeights(getKey);
+    const [setInstanceRef,heights,heightMarkedUpdate]=useHeights(getKey); 
 
-    const viewChildren=useChildren(originData,startIndex,endIndex,getKey);
+    const {startIndex,endIndex,scrollHeight,offsetHeight}=useMemo(()=>{
+        if(!isVirtual){
+            return {
+                startIndex:0,
+                endIndex:originData.length-1,
+                scrollHeight:undefined,
+                offsetHeight:undefined
+            }
+        }
 
-    return <div className={preficCls} style={{position:"relative"}}>
+        let itemTop=0;
+        let startIndex;
+        let endIndex; 
+        let startOffset; 
 
-        <div className={`${preficCls}-Container`} style={containerStyle}>
-            <div ></div>
+        for(let i=0;i<originData.length;i++){
+            let itemKey=getKey(originData[i]);  
+            let calcuHeight=heights.get(itemKey);
+          
+            let currentItemBottom=itemTop+(calcuHeight===undefined?itemHeight:calcuHeight);   
+
+            if(currentItemBottom>scrollTop && startIndex===undefined){//如果此时item的高度大于scrollTop 即可以判断出开始下标
+                startIndex=i;
+                startOffset=itemTop;
+            }
+
+            if(currentItemBottom>=scrollTop+height  && endIndex===undefined ){
+                endIndex=i;
+            } 
+
+            itemTop=currentItemBottom;
+        }
+ 
+        return {
+            startIndex:startIndex,
+            endIndex:endIndex,
+            scrollHeight:itemTop,
+            offsetHeight:startOffset
+        }
+
+    },[isVirtual,scrollTop,originData,height,heightMarkedUpdate]);  
+ 
+    const viewChildren=useChildren(originData,startIndex,endIndex,setInstanceRef,children,getKey);
+
+    //==============================Range=============================
+    let maxScrollHeight=scrollHeight-height; 
+    let maxScrollHeightRef=useRef(maxScrollHeight);
+    maxScrollHeightRef.current=maxScrollHeight;
+    
+    const keepInRange=(value)=>{    
+        return Math.min(Math.max(value,0),maxScrollHeightRef.current);
+    }
+
+    useEffect(()=>{
+        componentRef.current.addEventListener("wheel",onRawWheel);
+
+        ()=>{
+            return componentRef.current.removeEventListener("wheel",onRawWheel);
+        }
+    },[]); 
+
+    return <div className={prefixCls} style={{position:"relative"}}>
+
+        <div className={`${prefixCls}-Container`} style={containerStyle} ref={componentRef}>
+            <div style={{height:scrollHeight,transform:`translateY(${offsetHeight}px)`}}>{viewChildren}</div>
         </div>
 
-        <div className={`${prefixCls}-ThumbWrapper`} style={{position:"absolute",width:8,right:0,top:0,bottom:0}}>
-            <div className={`${prefixCls}-Thumb`}></div>
-        </div>
-
-
+        {
+            isVirtual && <ScrollBar 
+                            prefixCls={prefixCls} 
+                            scrollHeight={scrollHeight}   
+                            scrollTop={scrollTop} 
+                            height={height}    
+                            onScroll={syncScroll}
+                        />
+        }
     </div>
 });
 

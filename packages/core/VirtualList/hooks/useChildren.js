@@ -1,5 +1,4 @@
-
-
+ 
 import React ,{ useCallback } from 'react';
 
 /**
@@ -12,21 +11,31 @@ import React ,{ useCallback } from 'react';
  * @param {*} getKey 获取单个Item的key
  */
 
-export default function useChildren(originData,startIndex,endIndex,setIntance=()=>{},renderFunc,getKey=()=>{}){
-
-    const refFunc=useCallback((ref)=>{ 
-        setIntance(ref)
-    },[]);
-
+export default function useChildren(originData,startIndex,endIndex,setInstanceRef,renderFunc,getKey){
 
     return originData.slice(startIndex,endIndex+1).map((item,index)=>{
         const elementIndex=startIndex+index;
         const node=renderFunc(item,elementIndex);
         const key=getKey(item);
 
-        return React.cloneElement(node,{
-            ref:refFunc,
-            key:key
-        })
+        return <Item key={key} setRef={(node)=>{setInstanceRef(item,node)}}>
+            {node}
+        </Item>
+    })
+}
+
+const Item=(props)=>{
+    
+    const {
+        children,
+        setRef
+    }=props;
+
+    const refFunc=useCallback((node)=>{ 
+        setRef(node)
+    },[]);
+
+    return React.cloneElement(children,{
+        ref:refFunc
     })
 }

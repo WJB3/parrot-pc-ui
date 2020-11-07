@@ -128,6 +128,8 @@ const VirtualList=React.forwardRef((props,ref)=>{
         return newTop;
     }
 
+    console.log(scrollHeight)  
+
     const isScrollAtTop=scrollTop<=0;
     const isScrollAtBottom=scrollTop>=maxScrollHeight; 
 
@@ -164,10 +166,6 @@ const VirtualList=React.forwardRef((props,ref)=>{
             })
         }
     )
-
-    //====================Render===========================
-    console.log(start)
-    console.log(end) 
  
     const listChildren=useChildren(data, start, end, setInstanceRef, children);
 

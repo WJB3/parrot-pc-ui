@@ -98,8 +98,7 @@ const ScrollBar=React.forwardRef((props,ref)=>{
     }
 
     const delayHidden=()=>{
-
-        console.log("delayHidden")
+ 
 
         clearTimeout(visibleTimeout);
 
@@ -126,9 +125,7 @@ const ScrollBar=React.forwardRef((props,ref)=>{
             clearTimeout(visibleTimeout.current);
         }
     },[scrollTop]);
-
-    console.log(visible);
-
+ 
     
     return (
         <div

@@ -180,3 +180,351 @@ export default List;
     但是在未渲染节点时，我们是无法获取列表的高度的，这个时候itemHeight的属性就起到了关键性作用，即如果在列表没有渲染到页面上时，使用itemHeight来替代单个列表的高度。
 </blockquote> 
   
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    第一步：定义state值scrollTop<br />
+    <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(247, 31, 85,1); background: rgb(239, 235, 233);line-height:1.5;'>
+
+JavaScript高级教程第四版16章2节3小节中：scrollTop为内容区顶部隐藏的像素数，设置这个属性可以改变元素的滚动位置。且document.documentElement.scrollTop和document.body.scrollTop同时只有一个属性是有值的。
+    </blockquote>
+    因为我们是采用的overflow:hidden所以我们实际上是没有真正滚动滚动条来改变scrollTop，所以我们的scrollTop是没有实际作用的，那么我们此时就需要定义一个state来模拟scrollTop。
+
+</blockquote> 
+
+```js
+//初始化时scrollTop为0
+const [scrollTop,setScrollTop]=useState(0);
+```
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    第二步：计算出渲染元素的总高度和渲染元素对应的起始下标<br />
+</blockquote> 
+
+```js
+const MIN_HEIGHT=20;
+
+{
+    originData,
+    itemHeight=MIN_HEIGHT,
+}=props;
+
+const getKey=useCallback((item)=>{
+        return item[itemKey];
+},[itemKey]);
+
+const {startIndex,endIndex,scrollHeight}=useMemo(()=>{
+        if(!isVirtual){
+            return {
+                startIndex:0,
+                endIndex:originData.length-1,
+                scrollHeight:undefined
+            }
+        }
+
+        let itemTop=0;
+        let startIndex;
+        let endIndex; 
+
+        for(let i=0;i<originData.length;i++){
+            let itemKey=getKey(originData[i]);  
+            let calcuHeight=heights.get(itemKey);
+          
+            let currentItemBottom=itemTop+(calcuHeight===undefined?itemHeight:calcuHeight);   
+
+            if(currentItemBottom>scrollTop && startIndex===undefined){//如果此时item的高度大于scrollTop 即可以判断出开始下标
+                startIndex=i;
+            }
+
+            if(currentItemBottom>scrollTop+height  && endIndex===undefined ){
+                endIndex=i;
+            }
+
+            itemTop=currentItemBottom;
+        }
+ 
+        return {
+            startIndex:startIndex,
+            endIndex:endIndex,
+            scrollHeight:itemTop,
+        }
+
+},[isVirtual,scrollTop,originData,height,heightMarkedUpdate]); 
+```
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    计算出渲染元素对应的起始坐标可以让我们判断出哪些元素需要被渲染，当我们第一次渲染节点前，我们是无法取到对应节点的高度值的所以这个时候我们就需要拿itemHeight参数来进行判断开始下标和结束下标，当元素对应下边的高度刚好大于scrollTop的大小时，即可判断此元素为开始元素，即可获得对应开始下标。当元素对应的下边高度刚好大于scrollTop+height(可视区域高度)的大小时，即可判断此元素为结束元素，即可获得对应结束下标。每次累加高度即可获取元素对应总高度。
+</blockquote> 
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    第三步：渲染元素<br />
+</blockquote> 
+
+```js
+const viewChildren=useChildren(originData,startIndex,endIndex,setInstanceRef,children,getKey);
+
+function useChildren(originData,startIndex,endIndex,setInstanceRef,renderFunc,getKey){
+
+    return originData.slice(startIndex,endIndex+1).map((item,index)=>{
+        const elementIndex=startIndex+index;
+        const node=renderFunc(item,elementIndex);
+        const key=getKey(item);
+
+        return <Item key={key} setRef={(node)=>{setInstanceRef(item,node)}}>
+            {node}
+        </Item>
+    })
+}
+
+const Item=(props)=>{
+    
+    const {
+        children,
+        setRef
+    }=props;
+
+    const refFunc=useCallback((node)=>{ 
+        setRef(node)
+    },[]);
+
+    return React.cloneElement(children,{
+        ref:refFunc
+    })
+}
+```
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    根据前面得出的startIndex和endIndex我们可以使用slice截取的数据并渲染：<br />
+    1.slice() 返回从开始索引到结束索引对应的所有元素，其中不包含结束索引对应的元素。所以我们这里第二个参数加1表示包含最后一个元素。<br />
+    2.ref属性可以是一个由 React.createRef() 函数创建的对象、或者一个回调函数、或者一个字符串（遗留 API）。当 ref 属性是一个回调函数时，此函数会（根据元素的类型）接收底层 DOM 元素或 class 实例作为其参数。<br />
+    3.ref上使用useCallback可以避免refFunc重复渲染，当再次渲染重复节点时，refFunc会检查内存是否有此函数，如果有的话，就直接返回原函数，并不会继续执行，创建。这里setRef已经计算过了height属性，所以没有必要。
+</blockquote> 
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    第四步：计算元素高度<br />
+</blockquote> 
+
+```js
+const [setInstanceRef,heights,heightMarkedUpdate]=useHeights(getKey); 
+
+
+import React,{useRef,useState} from 'react';
+import { findDOMNode } from 'react-dom';
+
+export default function useHeights(getKey){
+    
+    let [markedUpdate,setMarkedUpdate]=useState(0);
+    let heightsRef=useRef(new Map());
+    let instanceRef=useRef(new Map());
+    let heightsUpdateRef=useRef(0);
+     
+    function collectHeight(){
+        heightsUpdateRef.current+=1;
+        const currentId=heightsUpdateRef.current;
+
+        
+        Promise.resolve().then(()=>{
+            //这样的写法只有最后一次才会往后执行
+            if(currentId!==heightsUpdateRef.current) return;
+
+            instanceRef.current.forEach((instance,key)=>{
+                if(instance && instance.offsetParent){
+                    const htmlElement = findDOMNode(instance);
+                    const { offsetHeight } = htmlElement;
+                    if (heightsRef.current.get(key) !== offsetHeight) {
+                        heightsRef.current.set(key, htmlElement.offsetHeight);
+                    }
+                }
+            })
+            //每次计算出高度都重新计算出
+            setMarkedUpdate(m=>m+1);
+        })
+        
+    }
+
+    function setInstanceRef(item,instance){
+        const itemKey=getKey(item);
+        if(instance){
+            instanceRef.current.set(itemKey,instance);
+            collectHeight();
+        }else{
+            instanceRef.current.delete(itemKey);
+        }
+    }
+
+
+    return [setInstanceRef,heightsRef.current,markedUpdate]
+}
+```
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    前文中我们知道了根据itemHeight得到startIndex、endIndex并渲染出了相应的元素，当元素渲染到界面上时，触发了setRef方法，也就触发了上面setIntanceRef方法，设置完instance后，就触发collectHeight来计算元素的高度，这里采用了Promise.resolve().then()微任务来只渲染一次的效果，微任务是异步任务，当主线程任务当重复触发collectHeight时，只有最后一次才会真正执行到下面，这里使用了一个闭包的用法，currentId这个变量并没有在collectHeight这个方法执行完以后就被销毁了，反而是存在了Promise微任务里，再最后一次collectHeight执行以后再将所有的instance循环获取元素的高度，此时也会更新state。
+</blockquote> 
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    上面我们提到了更新state->这个时候会触发重渲染->依赖项有这个state的memo函数更新->startIndex、endIndex变化->渲染节点变化->触发setInstanceRef->更新state->触发重渲染->...........<br />
+    由此可以得出这是一个不断渲染计算高度渲染的过程。所以我们应该尽可能小的定义itemHeight,如果ItemHeight过于大的话，会使组件多次渲染，造成性能瓶颈。
+</blockquote> 
+
+## 3.滚动时该如何处理？
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    前文中我们实现了初始化状态的组件，那么滚动元素的变化，我们应该如何编写呢？这里我们通过<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/WheelEvent">wheel滚轮事件</a>,这个事件不同于scroll事件。 wheel 事件不一定会触发 scroll 事件。我们只需要监听滚轮事件，然后通过他的deltaY值来作为列表滚动的值。
+</blockquote> 
+
+```js
+const [onRawWheel]=useFrameWheel(
+    (offsetY)=>syncScroll(offsetY)
+);
+
+export default function useFrameWheel(syncScroll){
+    function onWheel(e){
+        e.preventDefault();
+        syncScroll(e.deltaY);
+    };
+    return [onWheel];
+}
+
+useEffect(()=>{
+    componentRef.current.addEventListener("wheel",onRawWheel);
+    ()=>{
+        return componentRef.current.removeEventListener("wheel",onRawWheel);
+    }
+},[]); 
+```
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    我们在页面初始化的时候监听滚轮滚动事件，将e.deltaY值回调给List页面，注意e.preventDefault这可以防止外层滚轮滚动，可以作为避免scroll事件滚动冒泡的方法，接下来：
+</blockquote> 
+
+```js
+const syncScroll=(deltaY)=>{
+        setScrollTop((originScrollTop)=>{
+
+            const rangeValue=keepInRange(originScrollTop+deltaY); 
+
+            componentRef.current.scrollTop=rangeValue;  
+
+            return rangeValue;
+        })
+
+let maxScrollHeight=scrollHeight-height; 
+    let maxScrollHeightRef=useRef(maxScrollHeight);
+    maxScrollHeightRef.current=maxScrollHeight;
+    
+const keepInRange=(value)=>{    
+        return Math.min(Math.max(value,0),maxScrollHeightRef.current);
+}
+
+<div style={{height:scrollHeight,transform:`translateY(${offsetHeight}px)`}}>{viewChildren}</div>
+```
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+这里有2点值得我们注意：<br />
+1.有的同学会很疑惑为什么既要改变scrollTop,又需要改变translate属性，是否是画蛇添足呢？其实不然，试想下如果单纯的使用scrollTop或者translateY能不能达到相同的效果。元素的可视区域是固定的，且元素渲染个数是固定的，如果使用scrollTop会不会导致元素向上移动导致出现空白。同理使用translateY是一样的道理。持续改变scrollTop使元素有向上滑动的动画效果，同时将元素translate向下平移，达到中和的效果。<br />
+2.在这里我们使用ref获得maxScrollHeightRef引用，为什么我们需要这么做呢？因为keepInRange中获取不到最新的scrollHeight,也就无法获取最大的滚动值，故就无法实现最大最小值回应。
+</blockquote> 
+
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    第五步：编写滚动条元素<br />
+</blockquote> 
+
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+首先，我们需要计算出这个滚动条的高度，可以想象出来，可视区域高度比上滚动高度大致上等于滚动条高度比上可视区域高度，这里为了更美观，我们给了滚动条一个最小值。
+</blockquote> 
+
+```js
+//滚动条高度/可视区域=可视区域高度/滚动高度
+const thumbWidth=Math.max((height/scrollHeight)*height,MIN_HEIGHT);
+
+<div 
+            className={`${prefixCls}-Thumb`}
+            style={{
+                width:"100%",
+                height:thumbWidth,
+                top:getTop(),
+                left:0, 
+                position:"absolute",
+                background:dragging.current?"rgba(0,0,0,0.8)":"rgba(0,0,0,0.5)",
+                borderRadius:99,
+                cursor:"pointer",
+                useSelect:"none", 
+                display:visible?"block":"none"
+            }}   
+            onMouseDown={handleMouseDown} 
+></div>
+```
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+其次，我们需要计算出滚动条距离顶部的距离给予合适的top值，我们是根据传过来的属性值来算出top值，已知滚动条距离顶部的距离可视区域的scrollTop,即滚动条距离顶部的距离/可视区域内可滚动高度=滚动区域的scroll/滚动区域的可滚动高度。
+</blockquote> 
+
+```js
+const enableScrollRange=scrollHeight-height||0;
+
+const enableHeightRange=height-thumbWidth||0;
+
+const getTop=()=>{
+        //和计算滚动条高度计算方法一致
+        //已滚动高度/总可滚动高度=滚动条的top/可视区域总可滚动高度
+        if(scrollTop===0){
+            return 0;
+        }
+        return (scrollTop/enableScrollRange)*enableHeightRange;
+}
+```
+
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+既然是模拟滚动条，那么最基础的拖拽滚动条实现元素移动的功能是必须要实现的了。当鼠标按下时，监听鼠标移动和鼠标离开事件。根据比例算出滚动区域需要的scrollTop,再接着回调即可。
+</blockquote> 
+
+```js
+const patchEvents=()=>{
+        window.addEventListener("mousemove",handleMouseMove);
+        window.addEventListener("mouseup",handleMouseUp); 
+}
+
+const removeEvents=()=>{
+        window.removeEventListener("mousemove",handleMouseMove);
+        window.removeEventListener("mouseup",handleMouseUp);  
+}
+const handleMouseDown=(e)=>{
+        dragging.current=true;
+        setPageY(getPageY(e));
+        setStartTop(getTop());
+        patchEvents();
+}
+
+const handleMouseMove=(e)=>{
+        
+        if(dragging.current){
+            //偏移高度
+            const offsetY=getPageY(e)-pageY;
+            const newTop=startTop+offsetY; 
+
+            onScroll?.((newTop/enableHeightRange)*enableScrollRange)
+        }
+}
+const handleMouseUp=()=>{
+        removeEvents();
+        dragging.current=false;
+}
+```
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+最后，滚动条不可能一直存在，希望在滚动或者拖拽的时候显示，一定时间内隐藏即可，想必大家已经猜到了定时器哈哈哈。
+</blockquote> 
+
+```js
+useEffect(()=>{
+        if(isInit){
+            if(visibleTimeout.current) clearTimeout(visibleTimeout.current);
+            setVisible(true)
+            visibleTimeout.current=setTimeout(()=>{
+                setVisible(false);
+            },scrollTimeout);
+        }
+        return ()=>{
+            clearTimeout(visibleTimeout.current);
+        }
+},[scrollTop,scrollTimeout]); 
+```
