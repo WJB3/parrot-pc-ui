@@ -20,7 +20,7 @@ const Page=(props)=>{
     
     return (
         <>     
-            <VirtualList data={new Array(10000).fill("").map((_,index)=>({id:index+1,item:index+1}))} height={800} itemHeight={30} itemKey="id">
+            <VirtualList data={new Array(1000000).fill("").map((_,index)=>({id:index+1,item:index+1}))} height={800} itemHeight={30} itemKey="id">
                 {index=> <div>
                     <div><div><div>{index.item}</div></div></div>
                     <div><div><div>{index.item}</div></div></div>

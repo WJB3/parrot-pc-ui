@@ -511,7 +511,7 @@ const handleMouseUp=()=>{
 ```
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
-最后，滚动条不可能一直存在，希望在滚动或者拖拽的时候显示，一定时间内隐藏即可，想必大家已经猜到了定时器哈哈哈。
+最后，滚动条不可能一直存在，希望在滚动或者拖拽的时候显示，一定时间内隐藏即可，想必大家已经猜到了 定时器哈哈哈。
 </blockquote> 
 
 ```js
