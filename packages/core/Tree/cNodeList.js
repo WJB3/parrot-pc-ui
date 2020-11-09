@@ -55,8 +55,6 @@ const RefNodeList = (props, ref) => {
     dragging,
     dragOverNodeKey,
     dropPosition,
-    motion,
-
     height,
     itemHeight,
     virtual,
@@ -89,14 +87,12 @@ const RefNodeList = (props, ref) => {
 
   // ============================== Motion ==============================
   const [prevExpandedKeys, setPrevExpandedKeys] = React.useState(expandedKeys);
-  const [prevData, setPrevData] = React.useState(data);
-  const [transitionData, setTransitionData] = React.useState(data);
+  const [prevData, setPrevData] = React.useState(data); 
   const [transitionRange, setTransitionRange] = React.useState([]);
   const [motionType, setMotionType] = React.useState(null);
 
   function onMotionEnd() {
-    setPrevData(data);
-    setTransitionData(data);
+    setPrevData(data); 
     setTransitionRange([]);
     setMotionType(null);
 
@@ -122,8 +118,7 @@ const RefNodeList = (props, ref) => {
 
         const newTransitionData  = prevData.slice();
         newTransitionData.splice(keyIndex + 1, 0, MotionFlattenData);
-
-        setTransitionData(newTransitionData);
+ 
         setTransitionRange(rangeNodes);
         setMotionType('show');
       } else {
@@ -138,26 +133,22 @@ const RefNodeList = (props, ref) => {
 
         const newTransitionData  = data.slice();
         newTransitionData.splice(keyIndex + 1, 0, MotionFlattenData);
-
-        setTransitionData(newTransitionData);
+ 
         setTransitionRange(rangeNodes);
         setMotionType('hide');
       }
     } else if (prevData !== data) {
       // If whole data changed, we just refresh the list
-      setPrevData(data);
-      setTransitionData(data);
+      setPrevData(data); 
     }
   }, [expandedKeys, data]);
 
-  // We should clean up motion if is changed by dragging
   React.useEffect(() => {
     if (!dragging) {
       onMotionEnd();
     }
   }, [dragging]);
-
-  const mergedData = motion ? transitionData : data;
+ 
 
   const treeNodeRequiredProps = {
     expandedKeys,
@@ -175,7 +166,7 @@ const RefNodeList = (props, ref) => {
     <> 
       <VirtualList 
         {...domProps}
-        data={mergedData}
+        data={data}
         itemKey={itemKey}
         height={height}
         fullHeight={false}
@@ -204,8 +195,7 @@ const RefNodeList = (props, ref) => {
               pos={pos}
               data={treeNode.data}
               isStart={isStart}
-              isEnd={isEnd}
-              motion={motion}
+              isEnd={isEnd} 
               motionNodes={key === MOTION_KEY ? transitionRange : null}
               motionType={motionType}
               onMotionStart={onListChangeStart}

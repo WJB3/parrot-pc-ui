@@ -1,9 +1,8 @@
  
 import * as React from 'react';
-import RcTree, { TreeNode, TreeProps  } from 'rc-tree';
+import RcTree  from 'rc-tree';
 import classNames from 'classnames'; 
-
-import DirectoryTree from './DirectoryTree';
+ 
 import { ConfigContext } from '../config-provider';
 import collapseMotion from '../_util/motion';
 import renderSwitcherIcon from './utils/iconUtil';
@@ -47,11 +46,8 @@ const Tree = React.forwardRef((props, ref) => {
       {children}
     </RcTree>
   );
-}) as CompoundedComponent;
-
-Tree.TreeNode = TreeNode;
-
-Tree.DirectoryTree = DirectoryTree;
+}) ;
+  
 
 Tree.defaultProps = {
   checkable: false,

@@ -27,7 +27,7 @@ import {
   convertNodePropsToEventData,
   getTreeNodeProps,
 } from './utils/treeUtil';
-import NodeList, { MOTION_KEY, MotionEntity } from './NodeList';
+import NodeList  from './NodeList';
 import TreeNode from './TreeNode';
 import { conductCheck } from './utils/conductUtil';
 import DropIndicator from './DropIndicator';
@@ -135,14 +135,10 @@ class Tree extends React.Component{
     if (treeData) {
       newState.treeData = treeData;
       const entitiesMap = convertDataToEntities(treeData);
-      newState.keyEntities = {
-        [MOTION_KEY]: MotionEntity,
+      newState.keyEntities = { 
         ...entitiesMap.keyEntities,
       };
- 
-      if (process.env.NODE_ENV !== 'production') {
-        warningWithoutKey(treeData);
-      }
+  
     }
 
     const keyEntities = newState.keyEntities || prevState.keyEntities;
@@ -154,8 +150,7 @@ class Tree extends React.Component{
           ? conductExpandParent(props.expandedKeys, keyEntities)
           : props.expandedKeys;
     } else if (!prevProps && props.defaultExpandAll) {
-      const cloneKeyEntities = { ...keyEntities };
-      delete cloneKeyEntities[MOTION_KEY];
+      const cloneKeyEntities = { ...keyEntities }; 
       newState.expandedKeys = Object.keys(cloneKeyEntities).map(key => cloneKeyEntities[key].key);
     } else if (!prevProps && props.defaultExpandedKeys) {
       newState.expandedKeys =
