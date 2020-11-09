@@ -2,7 +2,8 @@
 import React from 'react';
 import VirtualList from '@packages/core/VirtualList';
 import TreeNode from './TreeNode';
-import { getKey } from './utils/treeUtil';
+import { getKey,getTreeNodeProps } from './utils/treeUtil';
+import  { TreeContext } from './TreeContext';
 
 const NodeList=React.forwardRef((props,ref)=>{
 
@@ -10,6 +11,16 @@ const NodeList=React.forwardRef((props,ref)=>{
         prefixCls,
         itemHeight
     }=props;
+
+    const {
+        keyEntities,
+        expandedKeys
+    }=useContext(TreeContext);
+
+    const treeNodeRequiredProps={
+        keyEntities,
+        expandedKeys
+    };
  
 
     return (
@@ -22,16 +33,19 @@ const NodeList=React.forwardRef((props,ref)=>{
                     (treeNode)=>{
                         const {
                             pos,
-                            data:{key},
+                            data:{key,...restProps},
                             isStart,
                             isEnd
                         }=treeNode;
 
                         const mergedKey=getKey(key,pos);
+                        const treeNodeProps=getTreeNodeProps(mergedKey,treeNodeRequiredProps);
 
                         return (
                             <TreeNode 
-                            
+                                {...restProps}
+                                {...treeNodeProps}
+                                data={treeNode.data}
                             />
                         )
 

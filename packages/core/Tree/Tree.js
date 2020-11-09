@@ -83,10 +83,11 @@ const Tree=React.forwardRef((props,ref)=>{
         }
 
     },[treeDataProp,expandedKeys,expandParent]);
-
+ 
     return <TreeContext.Provider
         value={{
-
+            keyEntities,
+            expandedKeys
         }}
     >
         <div className={
@@ -98,6 +99,7 @@ const Tree=React.forwardRef((props,ref)=>{
             <NodeList 
                 prefixCls={prefixCls}
                 data={flattenNodes}
+                expandedKeys={expandedKeys}
             />
         </div>
     </TreeContext.Provider>
