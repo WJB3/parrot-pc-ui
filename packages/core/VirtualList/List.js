@@ -20,7 +20,7 @@ const List=React.forwardRef((props,ref)=>{
     const {
         height,
         prefixCls:customizePrefixCls,
-        data:originData,
+        data:originData=[],
         itemKey,
         itemHeight=MIN_HEIGHT,
         children

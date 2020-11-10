@@ -8,10 +8,11 @@ import { TreeContext } from './TreeContext';
 import { convertDataToEntities,flattenTreeData } from './utils/treeUtil';
 import { conductExpandParent } from './utils/helper';
 import NodeList from './NodeList';
+import "./index.scss";
 
 function haveValue(name){
     //有值且不为空
-    return (name || []).length>1;
+    return (name || []).length>0;
 }
 
 //惰性初始 state
@@ -64,6 +65,7 @@ const Tree=React.forwardRef((props,ref)=>{
 
             setTreeData(newTreeData);
             newEntitiesMap=convertDataToEntities(treeDataProp);
+            console.log(newEntitiesMap)
             setKeyEntities({...newEntitiesMap.keyEntities});
         }
 
@@ -73,12 +75,13 @@ const Tree=React.forwardRef((props,ref)=>{
                 setExpandedKeys(newExpandedKeys);
             }
         }
+         
 
-        if(haveValue(newExpandedKeys)){
+        if(haveValue(newExpandedKeys)||haveValue(newTreeData)){
             newFlattenNodes=flattenTreeData(
                 newTreeData,
                 newExpandedKeys
-            );
+            ); 
             setFlattenNodes(newFlattenNodes);
         }
 
@@ -87,7 +90,8 @@ const Tree=React.forwardRef((props,ref)=>{
     return <TreeContext.Provider
         value={{
             keyEntities,
-            expandedKeys
+            expandedKeys,
+            prefixCls
         }}
     >
         <div className={
@@ -96,8 +100,7 @@ const Tree=React.forwardRef((props,ref)=>{
                 className
             )
         }>
-            <NodeList 
-                prefixCls={prefixCls}
+            <NodeList  
                 data={flattenNodes}
                 expandedKeys={expandedKeys}
             />

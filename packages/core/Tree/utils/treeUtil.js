@@ -37,6 +37,42 @@ export function convertTreeToData(rootNodes){
  
 }
 
+/**
+ * 
+ * @param {*} dataNodes 
+ * 获取node、key、index、pos、parentPos、level
+ *     const treeData = [
+        {
+          title: 'parent 1',
+          key: '0-0',
+          children: [
+            {
+              title: 'parent 1-0',
+              key: '0-0-0', 
+              isLeaf:true,
+              children:[
+                {
+                  title:"parent 1-0-0",
+                  key: '0-0-0-0',  
+                },
+                {
+                  title:"parent 1-0-1",
+                  key: '0-0-0-1',  
+                }
+              ]
+            },
+            {
+              title: 'parent 1-1',
+              key: '0-0-1' 
+            },
+          ],
+        }
+    ];
+*/
+ 
+
+
+ 
 export function convertDataToEntities(
     dataNodes
 ){
@@ -121,7 +157,6 @@ export function traverseDataNodes(
    * @param {节点下标} index 
    * @param {节点parent} parent 
    */
-
     function processNode(
         node,
         index,

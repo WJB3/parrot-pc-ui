@@ -3,12 +3,8 @@
 import React ,{ useEffect, useState } from 'react';
 import Switch from '@packages/core/Switch'; 
 import { ArrowUp,ArrowDown } from '@packages/core/Icon'; 
-import { Tree } from 'antd';  
-<<<<<<< HEAD
-import axios from 'axios';
-=======
-
->>>>>>> 072b6219dff8451c72fa5abccde67e309bd11d00
+import Tree from '@packages/core/Tree'; 
+import { Tree as ATree} from 'antd';  
 import 'antd/dist/antd.css';
 
 const Page=(props)=>{
@@ -23,14 +19,15 @@ const Page=(props)=>{
             {
               title: 'parent 1-0',
               key: '0-0-0', 
+              isLeaf:true,
               children:[
                 {
                   title:"parent 1-0-0",
-                  key: '0-0-0-0', 
+                  key: '0-0-0-0',  
                 },
                 {
                   title:"parent 1-0-1",
-                  key: '0-0-0-1', 
+                  key: '0-0-0-1',  
                 }
               ]
             },
@@ -43,7 +40,7 @@ const Page=(props)=>{
     ];
 
     useEffect(()=>{
-      location.href="http://api.erp.com/v1/indent/pdd/gettoken";
+      //location.href="http://api.erp.com/v1/indent/pdd/gettoken";
     },[])
 
 
@@ -51,14 +48,16 @@ const Page=(props)=>{
         <div> 
 
 
-            <Tree   
+            <ATree   
                 treeData={treeData}
                 defaultExpandedKeys={["0-0-0-1"]}   
             />
 
-  
-          <ArrowUp style={{fontSize:24}}/>
-          <ArrowDown style={{fontSize:24}}/>
+            <Tree 
+              treeData={treeData}
+            />
+
+   
         </div>
     )
 }
