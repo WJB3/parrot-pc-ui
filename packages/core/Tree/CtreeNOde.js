@@ -16,7 +16,7 @@ class InternalTreeNode extends React.Component {
     dragNodeHighlight: false,
   };
 
-   selectHandle: HTMLSpanElement;
+   selectHandle;
 
   // Isomorphic needn't load data in server side
   componentDidMount() {

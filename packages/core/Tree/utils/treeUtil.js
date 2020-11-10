@@ -12,6 +12,21 @@ export function getKey(key,pos){
     return pos;
 }
 
+export function getTreeNodeProps(
+    key,
+    {
+        keyEntities
+    }
+){
+    const entity=keyEntities[key];
+
+    const treeNodeProps={
+        eventKey:key,
+    }
+
+    return treeNodeProps;
+}
+
 export function convertTreeToData(rootNodes){
 
     function dig(node){
