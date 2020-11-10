@@ -1,8 +1,9 @@
 
 
-import React ,{ useState } from 'react';
+import React ,{ useEffect, useState } from 'react';
 import Switch from '@packages/core/Switch'; 
 import { Tree } from 'antd';  
+import axios from 'axios';
 import 'antd/dist/antd.css';
 
 const Page=(props)=>{
@@ -35,6 +36,11 @@ const Page=(props)=>{
           ],
         }
     ];
+
+    useEffect(()=>{
+      location.href="http://api.erp.com/v1/indent/pdd/gettoken";
+    },[])
+
 
     return (
         <div> 
