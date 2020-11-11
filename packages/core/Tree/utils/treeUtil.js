@@ -37,8 +37,7 @@ export function convertTreeToData(rootNodes){
  
 }
 
-/**
- * 
+/** 
  * @param {*} dataNodes 
  * 获取node、key、index、pos、parentPos、level
  *     const treeData = [
@@ -69,7 +68,53 @@ export function convertTreeToData(rootNodes){
         }
     ];
 */
- 
+
+  
+/**
+   * 
+   * @param {节点数据} node  
+   * @param {节点下标} index 
+   * @param {节点parent} parent 
+*/
+export function traverseDataNodes(dataNodes,callback){
+
+    function process(node,index,parent){
+        
+        const children=node?node.children:dataNodes;
+        const pos=node?getPosition(parent.pos,index):"0"; 
+
+        if(node){
+            const info={
+                key:getKey(node?.key,pos),
+                pos:pos,
+                level:parent.level+1,
+                node:node,
+                parentPos:parent.node?parent.pos:null,
+                index:index
+            }
+
+            callback?.(info);
+        }
+        
+
+        if(children){
+            children.forEach((subNode,subIndex)=>{
+                process(
+                    subNode,
+                    subIndex,
+                    {
+                        pos:pos,
+                        node:node,
+                        level:parent?parent.level+1:-1
+                    }
+                )
+            })
+        }
+
+    }
+
+    process(null);
+}
 
 
  
@@ -145,50 +190,4 @@ export function flattenTreeData(
     return flattenList;
 }
 
-//获取数据实体包含相关信息
-export function traverseDataNodes(
-    dataNodes,
-    callback
-){
-
-    /**
-   * 
-   * @param {节点数据} node  
-   * @param {节点下标} index 
-   * @param {节点parent} parent 
-   */
-    function processNode(
-        node,
-        index,
-        parent
-    ){
-        //第一次为null
-        const children=node ? node.children : dataNodes;
-        //第一次为“0”
-        const pos=node ? getPosition(parent.pos,index) : "0";
-
-        //处理非根节点
-        if(node){
-            const data={
-                node,
-                index,
-                pos,
-                parentPos:parent.node?parent.pos:null,
-                level:parent.level+1
-            }
-            callback(data);
-        }
-
-        if(children){
-            children.forEach((subNode,subIndex)=>{
-                processNode(subNode,subIndex,{
-                    node,
-                    pos,
-                    level:parent?parent.level+1:-1
-                });
-            });
-        }
-    }
-
-    processNode(null);
-}
+ 

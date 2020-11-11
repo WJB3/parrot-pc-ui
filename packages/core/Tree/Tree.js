@@ -65,7 +65,6 @@ const Tree=React.forwardRef((props,ref)=>{
 
             setTreeData(newTreeData);
             newEntitiesMap=convertDataToEntities(treeDataProp);
-            console.log(newEntitiesMap)
             setKeyEntities({...newEntitiesMap.keyEntities});
         }
 
@@ -83,7 +82,7 @@ const Tree=React.forwardRef((props,ref)=>{
                 newExpandedKeys
             ); 
             setFlattenNodes(newFlattenNodes);
-        }
+        } 
 
     },[treeDataProp,expandedKeys,expandParent]);
  

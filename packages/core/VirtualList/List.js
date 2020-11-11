@@ -35,6 +35,9 @@ const List=React.forwardRef((props,ref)=>{
     const isVirtual=height && itemHeight;
 
     const getKey=useCallback((item)=>{
+        if(typeof itemKey==="function"){
+            return itemKey(item);
+        }
         return item[itemKey];
     },[itemKey]);
 
