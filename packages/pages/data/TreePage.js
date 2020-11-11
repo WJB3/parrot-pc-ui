@@ -2,7 +2,7 @@
 
 import React ,{ useEffect, useState } from 'react';
 import Switch from '@packages/core/Switch'; 
-import { ArrowUp,ArrowDown } from '@packages/core/Icon'; 
+import { Copy,ArrowUp,ArrowDown } from '@packages/core/Icon'; 
 import Tree from '@packages/core/Tree'; 
 import { Tree as ATree} from 'antd';  
 import 'antd/dist/antd.css';
@@ -14,12 +14,11 @@ const Page=(props)=>{
     const treeData = [
         {
           title: 'parent 1',
-          key: '0-0',
+          key: '0-0', 
           children: [
             {
               title: 'parent 1-0',
-              key: '0-0-0', 
-              isLeaf:true,
+              key: '0-0-0',  
               children:[
                 {
                   title:"parent 1-0-0",
@@ -50,7 +49,10 @@ const Page=(props)=>{
 
             <ATree   
                 treeData={treeData}
-                defaultExpandedKeys={["0-0-0-1"]}   
+                defaultExpandedKeys={["0-0-0-1"]} 
+                defaultExpandParent={false}  
+               // autoExpandParent
+                 
             />
 
             <Tree 

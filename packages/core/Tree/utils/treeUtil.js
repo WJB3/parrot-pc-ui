@@ -15,13 +15,15 @@ export function getKey(key,pos){
 export function getTreeNodeProps(
     key,
     {
-        keyEntities
+        keyEntities,
+        expandedKeys
     }
 ){
     const entity=keyEntities[key];
 
     const treeNodeProps={
         eventKey:key,
+        expanded:expandedKeys.indexOf(key)!==-1
     }
 
     return treeNodeProps;
@@ -152,42 +154,44 @@ export function convertDataToEntities(
 
 
 export function flattenTreeData(
-    treeNodeList=[],
-    expandedKeys=[]
-){
-    
-    const expandedKeysSet=new Set(expandedKeys);
-    const flattenList=[];
-
-    function dig(list,parent=null){
-        return list.map((treeNode,index)=>{
-            const pos=getPosition(parent?parent.pos:"0",index);
-            const mergedKey=getKey(treeNode.key,pos);
-
-            const flattenNode={
-                ...treeNode,
-                parent,
-                pos,
-                children:null,
-                data:treeNode,
-                isStart:[...(parent?parent.isStart:[]),index===0],
-                isEnd:[...(parent?parent.isEnd:[]),index===list.length-1]
-            };
-
-            flattenList.push(flattenNode);
-
-            if(expandedKeysSet.has(mergedKey)){
-                flattenNode.children=dig(treeNode.children||[],flattenNode);
-            }else{
-                flattenNode.children=[];
-            }
-            return flattenNode;
-        });
+    treeNodeList= [],
+    expandedKeys= [],
+  ){
+    const expandedKeySet = new Set(expandedKeys === true ? [] : expandedKeys);
+    const flattenList= [];
+  
+    function dig(list, parent = null) {
+      return list.map((treeNode, index) => {
+        const pos = getPosition(parent ? parent.pos : '0', index);
+        const mergedKey = getKey(treeNode.key, pos);
+  
+        // Add FlattenDataNode into list
+        const flattenNode = {
+          ...treeNode,
+          parent,
+          pos,
+          children: null,
+          data: treeNode,
+          isStart: [...(parent ? parent.isStart : []), index === 0],
+          isEnd: [...(parent ? parent.isEnd : []), index === list.length - 1],
+        };
+  
+        flattenList.push(flattenNode);
+  
+        // Loop treeNode children
+        if (expandedKeySet.has(mergedKey)) {
+          flattenNode.children = dig(treeNode.children || [], flattenNode);
+        } else {
+          flattenNode.children = [];
+        }
+  
+        return flattenNode;
+      });
     }
-
+  
     dig(treeNodeList);
-
+  
     return flattenList;
-}
-
+  }
+  
  

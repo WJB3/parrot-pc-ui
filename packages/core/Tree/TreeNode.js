@@ -5,16 +5,12 @@ import { TreeContext } from './TreeContext';
 import classNames from '@packages/utils/classNames';
 import Checkbox from '@packages/core/Checkbox';
  
+const noop=()=>{};
 
-const TreeNode=(props)=>{
+const TreeNode=React.forwardRef((props,ref)=>{
 
-    const {
-        className, 
-        eventKey,
-        expanded,
-        title,
-        data:dataProp,
-        icon,
+    const { 
+        eventKey, 
     }=props;
 
     const {
@@ -22,24 +18,41 @@ const TreeNode=(props)=>{
         prefixCls,
         titleRender,
         showIcon,
-        switcherIcon
+        switcherIcon,
+        expandedKeys,
+        onNodeExpand
     }=useContext(TreeContext);
 
     const prefixClsTreeNode=`${prefixCls}-TreeNode`;
 
-    const { level }=keyEntities[eventKey];
+    const { level,node:{title},children }=keyEntities[eventKey]; 
+
+    const expanded=expandedKeys.indexOf(eventKey)>-1;
+
+    const onExpand=(e)=>{
+        onNodeExpand?.(e,{...keyEntities[eventKey],expanded,key:eventKey})
+    }
 
     const renderSwitcher=()=>{
+ 
+        let switchNode=null;
+
+        let hasChildren=(children||[]).length>0;
+
+        if(!hasChildren){
+            switchNode=null;
+        }else{
+            switchNode= typeof switcherIcon==="function"
+            ?switcherIcon(props)
+            :switcherIcon
+        }
+
         return (
             <span className={classNames(
                 `${prefixClsTreeNode}-Switcher`,
                 `${prefixClsTreeNode}-Switcher-${expanded?"Open":"Close"}`
-            )}>
-                {
-                    typeof switcherIcon==="function"
-                    ?switcherIcon(props)
-                    :switcherIcon
-                }
+            )} onClick={hasChildren?onExpand:noop}> 
+                {switchNode}
             </span>
         )
     }
@@ -69,8 +82,7 @@ const TreeNode=(props)=>{
         )
     }
 
-    const renderTitle=()=>{
-
+    const renderTitle=()=>{ 
         let titleNode;
         if(typeof title==="function"){
             titleNode=title(dataProp);
@@ -95,19 +107,18 @@ const TreeNode=(props)=>{
         <span 
             title={typeof title==="string"?title:""}
             className={
-                classNames(
-                    className,
+                classNames( 
                     prefixClsTreeNode
                 )
             }
         >
-            <Blank prefixCls={`${prefixCls}-TreeNode`} level={level} />
+            <Blank prefixCls={`${prefixClsTreeNode}`} level={level} />
             {renderSwitcher()}
             {renderCheckbox()}
             {renderSelector()}
         </span>
     )
 
-}
+});
 
 export default TreeNode;

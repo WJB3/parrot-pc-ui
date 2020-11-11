@@ -16,7 +16,7 @@ class InternalTreeNode extends React.Component {
     dragNodeHighlight: false,
   };
 
-   selectHandle;
+   selectHandle: HTMLSpanElement;
 
   // Isomorphic needn't load data in server side
   componentDidMount() {
@@ -278,7 +278,15 @@ class InternalTreeNode extends React.Component {
 
     const switcherIcon = switcherIconFromProps || switcherIconFromCtx;
 
-  
+    if (this.isLeaf()) {
+      return (
+        <span className={classNames(`${prefixCls}-switcher`, `${prefixCls}-switcher-noop`)}>
+          {typeof switcherIcon === 'function'
+            ? switcherIcon({ ...this.props, isLeaf: true })
+            : switcherIcon}
+        </span>
+      );
+    }
 
     const switcherCls = classNames(
       `${prefixCls}-switcher`,
@@ -344,7 +352,7 @@ class InternalTreeNode extends React.Component {
     const { dragNodeHighlight } = this.state;
     const { title, selected, icon, loading, data } = this.props;
     const {
-      context: { prefixCls, showIcon, icon: treeIcon, draggable, loadData },
+      context: { prefixCls, showIcon, icon: treeIcon, draggable, loadData, titleRender },
     } = this.props;
     const disabled = this.isDisabled();
     const mergedDraggable = typeof draggable === 'function' ? draggable(data) : draggable;
@@ -368,7 +376,17 @@ class InternalTreeNode extends React.Component {
       $icon = this.renderIcon();
     }
 
-    
+    // Title
+    let titleNode;
+    if (typeof title === 'function') {
+      titleNode = title(data);
+    } else if (titleRender) {
+      titleNode = titleRender(data);
+    } else {
+      titleNode = title;
+    }
+
+    const $title = <span className={`${prefixCls}-title`}>{titleNode}</span>;
 
     return (
       <span

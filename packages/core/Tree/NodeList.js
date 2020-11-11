@@ -17,21 +17,11 @@ const NodeList=React.forwardRef((props,ref)=>{
 
     const { 
         itemHeight,
-        data
+        data,
+        prefixCls
     }=props;
 
-    const {
-        keyEntities,
-        expandedKeys,
-        prefixCls
-    }=useContext(TreeContext);
-
-    const prefixClsNodeList=`${prefixCls}-NodeList`
-
-    const treeNodeRequiredProps={
-        keyEntities,
-        expandedKeys
-    }; 
+    const prefixClsNodeList=`${prefixCls}-NodeList`;
 
     return (
         <> 
@@ -44,20 +34,12 @@ const NodeList=React.forwardRef((props,ref)=>{
                 {
                     (treeNode)=>{
                         const {
-                            pos,
-                            data:{key,...restProps},
-                            isStart,
-                            isEnd
-                        }=treeNode;
-
-                        const mergedKey=getKey(key,pos);
-                        const treeNodeProps=getTreeNodeProps(mergedKey,treeNodeRequiredProps);
+                            key
+                        }=treeNode;  
 
                         return (
                             <TreeNode 
-                                {...restProps}
-                                {...treeNodeProps}
-                                data={treeNode.data}
+                                eventKey={key}
                             />
                         )
 
