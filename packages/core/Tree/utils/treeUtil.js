@@ -157,7 +157,7 @@ export function flattenTreeData(
     treeNodeList= [],
     expandedKeys= [],
   ){
-    const expandedKeySet = new Set(expandedKeys === true ? [] : expandedKeys);
+    const expandedKeySet = new Set(expandedKeys);
     const flattenList= [];
   
     function dig(list, parent = null) {

@@ -13,6 +13,8 @@ import {
 } from '@packages/core/Icon';
 import "./index.scss";
 
+//1.useState useRef的惰性加载
+
 function haveValue(name){
     //有值且不为空
     return (name || []).length>0;
@@ -46,15 +48,17 @@ const Tree=React.forwardRef((props,ref)=>{
 
     const [keyEntities,setKeyEntities]=useState({});
 
-    const [expandedKeys,setExpandedKeys]=useControlled({
-        controlled:expandedKeysProp,
-        default:defaultExpandedKeys
-    });
-
-    const [expandParent,setExpandParent]=useControlled({
+    const [expandParent]=useControlled({
         controlled:expandParentProp,
         default:defaultExpandParent
     });
+
+    const [expandedKeys,setExpandedKeys]=useControlled({
+        controlled:expandParent?expandedKeysProp:[],
+        default:expandParent?defaultExpandedKeys:[]
+    });
+
+    const [initExpandedKeys]=useState(expandedKeys);
 
     const onNodeExpand=(e,treeNode)=>{
 
@@ -73,31 +77,40 @@ const Tree=React.forwardRef((props,ref)=>{
     }
 
     useEffect(()=>{
+        //改变treeData的值以及keyEntity
         let newEntitiesMap={};//新的实体分类 
-        let newTreeData=[];//新的treeData
-        let newFlattenNodes=[];//新的平铺节点
+        let newTreeData=[];//新的treeData 
 
         if(haveValue(treeDataProp)){
             newTreeData=[...treeDataProp];
             setTreeData(newTreeData);
             newEntitiesMap=convertDataToEntities(treeDataProp);
             setKeyEntities({...newEntitiesMap.keyEntities});
-        }
-
-        if(haveValue(newTreeData)){
-            newFlattenNodes=flattenTreeData(
-                newTreeData,
-                expandedKeys
-            ); 
-            setFlattenNodes(newFlattenNodes);
         }  
 
-    },[treeDataProp,expandedKeys]);
+    },[treeDataProp]);
 
+    useEffect(()=>{    
+        if(haveValue(initExpandedKeys) || haveValue(keyEntities)){ 
+            setExpandedKeys(conductExpandParent(initExpandedKeys,keyEntities));
+        }
+    },[keyEntities,initExpandedKeys]);
+
+    useEffect(()=>{
+
+        if(haveValue(treeData)&&haveValue(expandedKeys)){
+            setFlattenNodes(flattenTreeData(
+                treeData,
+                expandedKeys
+            )); 
+        }   
+
+    },[treeData,expandedKeys]); 
+    
     return <TreeContext.Provider
         value={{
             keyEntities,
-            expandedKeys:conductExpandParent(expandedKeys,keyEntities),
+            expandedKeys:expandedKeys,
             prefixCls, 
             switcherIcon,
             onNodeExpand
