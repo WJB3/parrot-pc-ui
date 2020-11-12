@@ -63,16 +63,16 @@ const Page=(props)=>{
         <div> 
             <Tree 
                 treeData={treeData}
-                defaultExpandedKeys={["0-0-0-1"]} 
+                defaultExpandedKeys={["0-0"]} 
+                defaultExpandParent={true}
+                
             />
 
-
-            <button onClick={()=>setPropCount(propCount+1)}>propCount+1</button>
-            <button onClick={()=>setStateCount(stateCount+1)}>stateCount+1</button>
-   
-            <Demo 
-              stateCount={stateCount}
-              propCount={propCount}
+            <ATree 
+                treeData={treeData}
+                defaultExpandedKeys={["0-0"]} 
+                defaultExpandParent={true}
+                blockNode
             />
         </div>
     )

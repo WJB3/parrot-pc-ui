@@ -1,4 +1,4 @@
-import React ,{useContext,useEffect,useState} from 'react';
+import React ,{useContext,useEffect,useLayoutEffect,useState} from 'react';
 import classNames from '@packages/utils/classNames';
 import {
     ConfigContext
@@ -16,11 +16,20 @@ import "./index.scss";
 //1.useState useRef的惰性加载
 
 function haveValue(name){
+    if(Array.isArray(name)){
+        return (name || []).length>0;
+    }
+
+    if(typeof name==="object"||!Array.isArray(name) ){
+        return (Object.keys(name) || []).length>0;
+    }
     //有值且不为空
-    return (name || []).length>0;
+    
 }
 
 //惰性初始 state
+
+let noopArr=[];
 
 const Tree=React.forwardRef((props,ref)=>{
 
@@ -35,14 +44,12 @@ const Tree=React.forwardRef((props,ref)=>{
         expandParent:expandParentProp,
         //默认展开父节点
         defaultExpandParent=true,
-        treeData:treeDataProp=[],
-        switcherIcon=<ArrowDown />
+        treeData=[],
+        switcherIcon=<ArrowDown />,
+        checkable=false
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("Tree",customizePrefixCls);
-
-    //树形结构数据
-    const [treeData,setTreeData]=useState(treeDataProp);
     //平铺后的数据结构
     const [flattenNodes,setFlattenNodes]=useState([]);
 
@@ -54,11 +61,9 @@ const Tree=React.forwardRef((props,ref)=>{
     });
 
     const [expandedKeys,setExpandedKeys]=useControlled({
-        controlled:expandParent?expandedKeysProp:[],
+        controlled:expandParent?expandedKeysProp:noopArr,
         default:expandParent?defaultExpandedKeys:[]
-    });
-
-    const [initExpandedKeys]=useState(expandedKeys);
+    }); 
 
     const onNodeExpand=(e,treeNode)=>{
 
@@ -76,36 +81,36 @@ const Tree=React.forwardRef((props,ref)=>{
         setExpandedKeys(newExpandedKeys);
     }
 
-    useEffect(()=>{
-        //改变treeData的值以及keyEntity
+    useEffect(()=>{  
+        //改变keyEntity
         let newEntitiesMap={};//新的实体分类 
-        let newTreeData=[];//新的treeData 
 
-        if(haveValue(treeDataProp)){
-            newTreeData=[...treeDataProp];
-            setTreeData(newTreeData);
-            newEntitiesMap=convertDataToEntities(treeDataProp);
+        if(haveValue(treeData)){  
+
+            newEntitiesMap=convertDataToEntities(treeData);
+
             setKeyEntities({...newEntitiesMap.keyEntities});
         }  
 
-    },[treeDataProp]);
+    },[treeData]);
 
-    useEffect(()=>{    
-        if(haveValue(initExpandedKeys) || haveValue(keyEntities)){ 
-            setExpandedKeys(conductExpandParent(initExpandedKeys,keyEntities));
+    useEffect(()=>{  
+        if(haveValue(keyEntities)){  
+            setExpandedKeys(conductExpandParent(expandedKeys,keyEntities));
         }
-    },[keyEntities,initExpandedKeys]);
+    },[keyEntities]);
 
-    useEffect(()=>{
-
-        if(haveValue(treeData)&&haveValue(expandedKeys)){
+    useEffect(()=>{   
+        if(haveValue(expandedKeys)||haveValue(treeData)){
             setFlattenNodes(flattenTreeData(
                 treeData,
                 expandedKeys
             )); 
         }   
+    },[expandedKeys]); 
 
-    },[treeData,expandedKeys]); 
+    
+ 
     
     return <TreeContext.Provider
         value={{
@@ -113,6 +118,7 @@ const Tree=React.forwardRef((props,ref)=>{
             expandedKeys:expandedKeys,
             prefixCls, 
             switcherIcon,
+            checkable,
             onNodeExpand
         }}
     >
