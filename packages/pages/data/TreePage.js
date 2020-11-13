@@ -1,9 +1,9 @@
 
 
-import React ,{ useEffect, useState,useRef } from 'react';
-import Switch from '@packages/core/Switch'; 
-import { Copy,ArrowUp,ArrowDown } from '@packages/core/Icon'; 
+import React ,{ useEffect, useState,useRef } from 'react';  
+import Button from '@packages/core/Button'; 
 import Tree from '@packages/core/Tree'; 
+import Checkbox from '@packages/core/Checkbox'; 
 import { Tree as ATree} from 'antd';  
 import useControlled from '@packages/hooks/useControlled';
 import 'antd/dist/antd.css';
@@ -54,26 +54,35 @@ const treeData = [
   }
 ];
 
+ 
 const Page=(props)=>{ 
     
     const [ propCount,setPropCount ]=useState(0);
     const [ stateCount,setStateCount ]=useState(0);
 
+    const [expandedKeys,setExpandedKeys]=useState(["0-0-0"]);
+    const [checkedKeys,setCheckedKeys]=useState(["0-0-0-0"]);
+
     return (
         <div> 
             <Tree 
                 treeData={treeData}
-                defaultExpandedKeys={["0-0"]} 
-                defaultExpandParent={true}
-                
+                defaultExpandedKeys={expandedKeys}  
+                blockNode
+                checkable
+                defaultCheckedKeys={checkedKeys}
             />
 
             <ATree 
                 treeData={treeData}
-                defaultExpandedKeys={["0-0"]} 
-                defaultExpandParent={true}
+                defaultExpandedKeys={expandedKeys}  
                 blockNode
+                checkable
+                defaultCheckedKeys={checkedKeys}
             />
+ 
+
+            <Button onClick={()=>setExpandedKeys(["0-0"])}>点击切换</Button>
         </div>
     )
 }

@@ -17,7 +17,7 @@ $prefixCls:"#{$global-prefix}-Checkbox";
             color:$primary-color;
         }
  
-        &.#{$prefixCls}-Indeterminate{
+        .#{$prefixCls}-Indeterminate{
                 background-color: $primary-color;
         } 
     }
@@ -73,8 +73,8 @@ $prefixCls:"#{$global-prefix}-Checkbox";
             left:50%;
             top:50%;
             transform: translate(-50%,-50%); 
-            width:10px;
-            height:10px;
+            width:0.4em;
+            height:0.4em;
     } 
 
     &-labelWrapper{

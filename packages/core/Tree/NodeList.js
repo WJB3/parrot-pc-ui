@@ -2,7 +2,7 @@
 import React ,{ useContext } from 'react';
 import VirtualList from '@packages/core/VirtualList';
 import TreeNode from './TreeNode';
-import { getKey,getTreeNodeProps } from './utils/treeUtil';
+import { getKey } from './utils/treeUtil';
 import { TreeContext } from './TreeContext';
 
 function itemKey(item){

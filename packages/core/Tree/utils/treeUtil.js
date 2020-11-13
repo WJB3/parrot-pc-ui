@@ -28,16 +28,7 @@ export function getTreeNodeProps(
 
     return treeNodeProps;
 }
-
-export function convertTreeToData(rootNodes){
-
-    function dig(node){
-
-    }
-
-    return dig(rootNodes);
  
-}
 
 /** 
  * @param {*} dataNodes 
@@ -50,7 +41,6 @@ export function convertTreeToData(rootNodes){
             {
               title: 'parent 1-0',
               key: '0-0-0', 
-              isLeaf:true,
               children:[
                 {
                   title:"parent 1-0-0",
@@ -192,6 +182,6 @@ export function flattenTreeData(
     dig(treeNodeList);
   
     return flattenList;
-  }
+}
   
  

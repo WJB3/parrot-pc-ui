@@ -4,6 +4,7 @@
 $prefixCls:"#{$global-prefix}-Tree";
 $prefixClsIcon:"#{$global-prefix}-Icon";
 $prefixClsTreeNode:"#{$global-prefix}-Tree-TreeNode";
+$prefixClsCheckbox:"#{$global-prefix}-Checkbox";
 
 .#{$prefixCls}{
     
@@ -24,6 +25,7 @@ $prefixClsTreeNode:"#{$global-prefix}-Tree-TreeNode";
                 justify-content: center;
                 align-items:center;
                 transition: transform all .3s;
+                cursor: pointer;
     
                 &.#{$prefixClsTreeNode}-Switcher-Close{
                     transform: rotate(-90deg);
@@ -33,6 +35,27 @@ $prefixClsTreeNode:"#{$global-prefix}-Tree-TreeNode";
                     font-size: 24px;
                 }
     
+            }
+
+            &-Checkbox{
+                .#{$prefixClsCheckbox}-CheckboxBaseRipple{
+                    padding:2px;
+                }
+                .#{$prefixClsCheckbox}-InputWrapper{
+                    font-size:20px;
+                }
+            }
+
+            &-Selector{
+
+                &:hover{
+                    background-color: rgba(0,0,0,0.05);
+                }
+
+                &-BlockNode{
+                    display: block;
+                    flex:1;
+                }
             }
 
             &-Blank{

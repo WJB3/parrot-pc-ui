@@ -6,7 +6,7 @@ import {
 import useControlled from '@packages/hooks/useControlled';
 import { TreeContext } from './TreeContext';
 import { convertDataToEntities,flattenTreeData } from './utils/treeUtil';
-import { conductExpandParent,arrAdd,arrDel } from './utils/helper';
+import { conductCheckedKey,conductExpandParent,arrAdd,arrDel } from './utils/helper';
 import NodeList from './NodeList';
 import {
     ArrowDown
@@ -46,7 +46,11 @@ const Tree=React.forwardRef((props,ref)=>{
         defaultExpandParent=true,
         treeData=[],
         switcherIcon=<ArrowDown />,
-        checkable=false
+        checkable=false,
+        blockNode,
+        checkedKeys:checkedKeysProp,
+        defaultCheckedKeys,
+        checkStrictly=false
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("Tree",customizePrefixCls);
@@ -57,12 +61,23 @@ const Tree=React.forwardRef((props,ref)=>{
 
     const [expandParent]=useControlled({
         controlled:expandParentProp,
-        default:defaultExpandParent
+        default:defaultExpandParent,
     });
 
-    const [expandedKeys,setExpandedKeys]=useControlled({
-        controlled:expandParent?expandedKeysProp:noopArr,
+    const [controlledExpandKeys,setControlledExpandKeys]=useState(expandedKeysProp);
+
+    const [expandedKeys,setExpandedKeys,isExpandedKeysControlled]=useControlled({
+        controlled:expandParent?controlledExpandKeys:noopArr,
         default:expandParent?defaultExpandedKeys:[]
+    }); 
+
+    const [controlledCheckedKeys,setControllCheckedKeys]=useState(checkedKeysProp);
+
+    const [halfCheckedKeys,setHalfCheckedKeys]=useState([]);
+
+    const [checkedKeys,setCheckedKeys,isCheckedKeysControlled]=useControlled({
+        controlled:controlledCheckedKeys,
+        default:defaultCheckedKeys
     }); 
 
     const onNodeExpand=(e,treeNode)=>{
@@ -81,7 +96,7 @@ const Tree=React.forwardRef((props,ref)=>{
         setExpandedKeys(newExpandedKeys);
     }
 
-    useEffect(()=>{  
+    useLayoutEffect(()=>{  
         //改变keyEntity
         let newEntitiesMap={};//新的实体分类 
 
@@ -94,24 +109,36 @@ const Tree=React.forwardRef((props,ref)=>{
 
     },[treeData]);
 
-    useEffect(()=>{  
+    useLayoutEffect(()=>{  
         if(haveValue(keyEntities)){  
+            //针对defaultValue的情况
             setExpandedKeys(conductExpandParent(expandedKeys,keyEntities));
-        }
-    },[keyEntities]);
 
-    useEffect(()=>{   
+            //当expandedKey value 发生变化 
+            if(isExpandedKeysControlled && (conductExpandParent(expandedKeys,keyEntities).toString()!==expandedKeys.toString() || conductExpandParent(expandedKeysProp,keyEntities).toString()!==expandedKeys.toString())){
+                //如果是受控并且
+                setControlledExpandKeys(conductExpandParent(expandedKeysProp,keyEntities));
+            }
+        }
+    },[keyEntities,expandedKeysProp]);
+
+    useLayoutEffect(()=>{   
         if(haveValue(expandedKeys)||haveValue(treeData)){
             setFlattenNodes(flattenTreeData(
                 treeData,
                 expandedKeys
             )); 
         }   
-    },[expandedKeys]); 
+    },[expandedKeys]);
+    
+    useLayoutEffect(()=>{
+        if(haveValue(keyEntities)){  
+            //针对defaultValue的情况
 
-    
- 
-    
+
+        }
+    },[keyEntities,checkedKeysProp]);
+
     return <TreeContext.Provider
         value={{
             keyEntities,
@@ -119,6 +146,7 @@ const Tree=React.forwardRef((props,ref)=>{
             prefixCls, 
             switcherIcon,
             checkable,
+            blockNode,
             onNodeExpand
         }}
     >

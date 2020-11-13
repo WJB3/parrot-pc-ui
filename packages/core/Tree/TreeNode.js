@@ -21,9 +21,8 @@ const TreeNode=React.forwardRef((props,ref)=>{
         switcherIcon,
         expandedKeys,
         onNodeExpand,
-        checkable,
-        checkedKeys,
-        defaultCheckedKeys
+        checkable, 
+        blockNode
     }=useContext(TreeContext);
 
     const prefixClsTreeNode=`${prefixCls}-TreeNode`;
@@ -64,7 +63,11 @@ const TreeNode=React.forwardRef((props,ref)=>{
 
         if(!checkable) return null;
 
-        return (<Checkbox>
+        return (<Checkbox
+            className={classNames(
+                `${prefixClsTreeNode}-Checkbox`
+            )} 
+        >
 
         </Checkbox>)
     }
@@ -103,7 +106,9 @@ const TreeNode=React.forwardRef((props,ref)=>{
 
     const renderSelector=()=>{
 
-        return <span>
+        return <span className={classNames(`${prefixClsTreeNode}-Selector`,{
+            [`${prefixClsTreeNode}-Selector-BlockNode`]:blockNode
+        })}>
             {renderIcon()}
             {renderTitle()}
         </span>
