@@ -2,8 +2,7 @@
 import React ,{ useContext } from 'react';
 import VirtualList from '@packages/core/VirtualList';
 import TreeNode from './TreeNode';
-import { getKey } from './utils/treeUtil';
-import { TreeContext } from './TreeContext';
+import { getKey } from './utils/treeUtil'; 
 
 function itemKey(item){
     const {
@@ -18,7 +17,8 @@ const NodeList=React.forwardRef((props,ref)=>{
     const { 
         itemHeight,
         data,
-        prefixCls
+        prefixCls,
+        ...restProps
     }=props;
 
     const prefixClsNodeList=`${prefixCls}-NodeList`;
@@ -30,6 +30,7 @@ const NodeList=React.forwardRef((props,ref)=>{
                 itemHeight={itemHeight}
                 data={data}
                 itemKey={itemKey}
+                {...restProps}
             >
                 {
                     (treeNode)=>{

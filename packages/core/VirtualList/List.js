@@ -52,7 +52,7 @@ const List=React.forwardRef((props,ref)=>{
                 newTop=deltaY;
             }
 
-            const rangeValue=keepInRange(newTop); 
+            const rangeValue=keepInRange(newTop);  
 
             componentRef.current.scrollTop=rangeValue;  
 
@@ -88,7 +88,7 @@ const List=React.forwardRef((props,ref)=>{
 
         for(let i=0;i<originData.length;i++){
             let itemKey=getKey(originData[i]);  
-            let calcuHeight=heights.get(itemKey);
+            let calcuHeight=heights.get(itemKey);  
           
             let currentItemBottom=itemTop+(calcuHeight===undefined?itemHeight:calcuHeight);   
 
@@ -99,8 +99,7 @@ const List=React.forwardRef((props,ref)=>{
 
             if(currentItemBottom>=scrollTop+height  && endIndex===undefined ){
                 endIndex=i;
-            } 
-
+            }  
             itemTop=currentItemBottom;
         }
  
@@ -118,7 +117,7 @@ const List=React.forwardRef((props,ref)=>{
     //==============================Range=============================
     let maxScrollHeight=scrollHeight-height; 
     let maxScrollHeightRef=useRef(maxScrollHeight);
-    maxScrollHeightRef.current=maxScrollHeight;
+    maxScrollHeightRef.current=maxScrollHeight; 
     
     const keepInRange=(value)=>{    
         return Math.min(Math.max(value,0),maxScrollHeightRef.current);
@@ -130,8 +129,7 @@ const List=React.forwardRef((props,ref)=>{
         ()=>{
             return componentRef.current.removeEventListener("wheel",onRawWheel);
         }
-    },[]); 
-
+    },[]);  
     return <div className={prefixCls} style={{position:"relative"}}>
 
         <div className={`${prefixCls}-Container`} style={containerStyle} ref={componentRef}>

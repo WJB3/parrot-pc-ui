@@ -20,9 +20,9 @@ const ScrollBar=(props)=>{
         onScroll,
         scrollTimeout=2000
     }=props;
-
+ 
     //滚动条高度/可视区域=可视区域高度/滚动高度
-    const thumbWidth=Math.max((height/scrollHeight)*height,MIN_HEIGHT);
+    const thumbWidth=Math.max((height/scrollHeight)*height===Infinity?MIN_HEIGHT:(height/scrollHeight)*height,MIN_HEIGHT);
 
     const isInit=useInit();
 

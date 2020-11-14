@@ -32,7 +32,8 @@ const Item=(props)=>{
     }=props;
 
     const refFunc=useCallback((node)=>{ 
-        setRef(node)
+        console.log("refFunc");
+        setRef(node);
     },[]);
 
     return React.cloneElement(children,{

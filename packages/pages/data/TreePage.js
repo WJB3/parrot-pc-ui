@@ -44,18 +44,17 @@ const Page=(props)=>{
         <div> 
             <Tree 
                 treeData={treeData}
-                defaultExpandedKeys={expandedKeys}  
-                blockNode
-                checkable
-                defaultCheckedKeys={checkedKeys}
+                defaultExpandAll
+                defaultSelectedKeys={['0-0','0-0-0-0']} 
+                height={50}
             />
+
+            <div style={{height:200}}></div>
 
             <ATree 
                 treeData={treeData}
-                defaultExpandedKeys={expandedKeys}  
-                blockNode
-                checkable
-                defaultCheckedKeys={checkedKeys}
+                defaultExpandAll
+                filterTreeNode={(node)=>node.key=="0-0"}
             />
  
 

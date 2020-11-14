@@ -26,6 +26,9 @@ const TreeNode=React.forwardRef((props,ref)=>{
         onNodeCheck,
         checkable, 
         blockNode,
+        selectedKeys,
+        onNodeSelect,
+        filterTreeNode
     }=useContext(TreeContext);
 
     const prefixClsTreeNode=`${prefixCls}-TreeNode`;
@@ -35,6 +38,7 @@ const TreeNode=React.forwardRef((props,ref)=>{
     const expanded=expandedKeys.indexOf(eventKey)>-1;
     const checked=checkedKeys.indexOf(eventKey)>-1;
     const halfChecked=halfCheckedKeys.indexOf(eventKey)>-1;
+    const selected=selectedKeys.indexOf(eventKey)>-1;
 
     const onExpand=(e)=>{
         onNodeExpand?.(e,{...keyEntities[eventKey],expanded,key:eventKey})
@@ -43,6 +47,10 @@ const TreeNode=React.forwardRef((props,ref)=>{
     const onCheck=(flag)=>{
         onNodeCheck?.(flag,{key:eventKey});
     }   
+
+    const onSelect=(e)=>{
+        onNodeSelect?.(e,{key:eventKey});
+    }
 
     const renderSwitcher=()=>{
  
@@ -79,9 +87,7 @@ const TreeNode=React.forwardRef((props,ref)=>{
             checked={checked}
             indeterminate={halfChecked}
             onChange={onCheck}
-        >
-
-        </Checkbox>)
+        />)
     }
 
     const renderIcon=()=>{
@@ -119,8 +125,10 @@ const TreeNode=React.forwardRef((props,ref)=>{
     const renderSelector=()=>{
 
         return <span className={classNames(`${prefixClsTreeNode}-Selector`,{
-            [`${prefixClsTreeNode}-Selector-BlockNode`]:blockNode
-        })}>
+            [`${prefixClsTreeNode}-Selector-BlockNode`]:blockNode,
+            [`${prefixClsTreeNode}-Selector-Selected`]:selected,
+            [`${prefixClsTreeNode}-Selector-FilterNode`]:filterTreeNode && filterTreeNode({...props,key:eventKey})
+        })} onClick={onSelect}>
             {renderIcon()}
             {renderTitle()}
         </span>
@@ -134,6 +142,7 @@ const TreeNode=React.forwardRef((props,ref)=>{
                     prefixClsTreeNode
                 )
             }
+            ref={ref}
         >
             <Blank prefixCls={`${prefixClsTreeNode}`} level={level} />
             {renderSwitcher()}
