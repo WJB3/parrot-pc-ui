@@ -1,5 +1,5 @@
- 
-  
+
+
 // TODO: https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/treeview/treeview-2/treeview-2a.html
 // Fully accessibility support
 
@@ -9,7 +9,7 @@ import warning from 'rc-util/lib/warning';
 import classNames from 'classnames';
 
 import {
-  TreeContext, 
+  TreeContext,
 } from './contextTypes';
 import {
   getDataAndAria,
@@ -22,7 +22,7 @@ import {
   arrDel,
   posToArr,
 } from './util';
- 
+
 import {
   flattenTreeData,
   convertTreeToData,
@@ -35,9 +35,9 @@ import NodeList, { MOTION_KEY, MotionEntity, NodeListRef } from './NodeList';
 import TreeNode from './TreeNode';
 import { conductCheck } from './utils/conductUtil';
 import DropIndicator from './DropIndicator';
- 
 
-class Tree extends React.Component  {
+
+class Tree extends React.Component {
   static defaultProps = {
     prefixCls: 'rc-tree',
     showLine: false,
@@ -45,7 +45,7 @@ class Tree extends React.Component  {
     selectable: true,
     multiple: false,
     checkable: false,
-    disabled: false, 
+    disabled: false,
     draggable: false,
     defaultExpandParent: true,
     autoExpandParent: false,
@@ -61,7 +61,7 @@ class Tree extends React.Component  {
 
   destroyed = false;
 
-  delayedDragEnterLogic ;
+  delayedDragEnterLogic;
 
   state = {
     keyEntities: {},
@@ -175,7 +175,7 @@ class Tree extends React.Component  {
 
     // ================ flattenNodes =================
     if (treeData || newState.expandedKeys) {
-      const flattenNodes= flattenTreeData(
+      const flattenNodes = flattenTreeData(
         treeData || prevState.treeData,
         newState.expandedKeys || prevState.expandedKeys,
       );
@@ -386,7 +386,7 @@ class Tree extends React.Component  {
     }
   };
 
-  onNodeDragOver = (event , node) => {
+  onNodeDragOver = (event, node) => {
     const {
       dragChildrenKeys,
       flattenNodes,
@@ -509,7 +509,7 @@ class Tree extends React.Component  {
     this.dragNode = null;
   };
 
-  onNodeDrop = (event , node, outsideTree = false) => {
+  onNodeDrop = (event, node, outsideTree = false) => {
     const {
       dragChildrenKeys,
       dropPosition,
@@ -646,70 +646,59 @@ class Tree extends React.Component  {
 
     // Prepare trigger arguments
     let checkedObj;
-    const eventObj  = {
+    const eventObj = {
       event: 'check',
       node: treeNode,
       checked,
       nativeEvent: e.nativeEvent,
     };
 
-    if (checkStrictly) {
-      const checkedKeys = checked ? arrAdd(oriCheckedKeys, key) : arrDel(oriCheckedKeys, key);
-      const halfCheckedKeys = arrDel(oriHalfCheckedKeys, key);
-      checkedObj = { checked: checkedKeys, halfChecked: halfCheckedKeys };
 
-      eventObj.checkedNodes = checkedKeys
-        .map(checkedKey => keyEntities[checkedKey])
-        .filter(entity => entity)
-        .map(entity => entity.node);
+    // Always fill first
+    let { checkedKeys, halfCheckedKeys } = conductCheck(
+      [...oriCheckedKeys, key],
+      true,
+      keyEntities,
+    );
 
-      this.setUncontrolledState({ checkedKeys });
-    } else {
-      // Always fill first
-      let { checkedKeys, halfCheckedKeys } = conductCheck(
-        [...oriCheckedKeys, key],
-        true,
+    // If remove, we do it again to correction
+    if (!checked) {
+      const keySet = new Set(checkedKeys);
+      keySet.delete(key);
+      ({ checkedKeys, halfCheckedKeys } = conductCheck(
+        Array.from(keySet),
+        { checked: false, halfCheckedKeys },
         keyEntities,
-      );
-
-      // If remove, we do it again to correction
-      if (!checked) {
-        const keySet = new Set(checkedKeys);
-        keySet.delete(key);
-        ({ checkedKeys, halfCheckedKeys } = conductCheck(
-          Array.from(keySet),
-          { checked: false, halfCheckedKeys },
-          keyEntities,
-        ));
-      }
-
-      checkedObj = checkedKeys;
-
-      // [Legacy] This is used for `rc-tree-select`
-      eventObj.checkedNodes = [];
-      eventObj.checkedNodesPositions = [];
-      eventObj.halfCheckedKeys = halfCheckedKeys;
-
-      checkedKeys.forEach(checkedKey => {
-        const entity = keyEntities[checkedKey];
-        if (!entity) return;
-
-        const { node, pos } = entity;
-
-        eventObj.checkedNodes.push(node);
-        eventObj.checkedNodesPositions.push({ node, pos });
-      });
-
-      this.setUncontrolledState(
-        {
-          checkedKeys,
-        },
-        false,
-        {
-          halfCheckedKeys,
-        },
-      );
+      ));
     }
+
+    checkedObj = checkedKeys;
+
+    // [Legacy] This is used for `rc-tree-select`
+    eventObj.checkedNodes = [];
+    eventObj.checkedNodesPositions = [];
+    eventObj.halfCheckedKeys = halfCheckedKeys;
+
+    checkedKeys.forEach(checkedKey => {
+      const entity = keyEntities[checkedKey];
+      if (!entity) return;
+
+      const { node, pos } = entity;
+
+      eventObj.checkedNodes.push(node);
+      eventObj.checkedNodesPositions.push({ node, pos });
+    });
+
+    this.setUncontrolledState(
+      {
+        checkedKeys,
+      },
+      false,
+      {
+        halfCheckedKeys,
+      },
+    );
+
 
     if (onCheck) {
       onCheck(checkedObj, eventObj);
@@ -782,7 +771,7 @@ class Tree extends React.Component  {
     }
   };
 
-  onFocus  = (...args) => {
+  onFocus = (...args) => {
     const { onFocus } = this.props;
     this.setState({ focused: true });
 
@@ -791,7 +780,7 @@ class Tree extends React.Component  {
     }
   };
 
-  onBlur  = (...args) => {
+  onBlur = (...args) => {
     const { onBlur } = this.props;
     this.setState({ focused: false });
     this.onActiveChange(null);
@@ -828,10 +817,10 @@ class Tree extends React.Component  {
 
   // =========================== Expanded ===========================
   /** Set uncontrolled `expandedKeys`. This will also auto update `flattenNodes`. */
-  setExpandedKeys = (expandedKeys ) => {
+  setExpandedKeys = (expandedKeys) => {
     const { treeData } = this.state;
 
-    const flattenNodes  = flattenTreeData(treeData, expandedKeys);
+    const flattenNodes = flattenTreeData(treeData, expandedKeys);
     this.setUncontrolledState(
       {
         expandedKeys,
@@ -841,7 +830,7 @@ class Tree extends React.Component  {
     );
   };
 
-  onNodeExpand = (e , treeNode) => {
+  onNodeExpand = (e, treeNode) => {
     let { expandedKeys } = this.state;
     const { listChanging } = this.state;
     const { onExpand, loadData } = this.props;
@@ -953,7 +942,7 @@ class Tree extends React.Component  {
     }
   };
 
-  onKeyDown  = event => {
+  onKeyDown = event => {
     const { activeKey, expandedKeys, checkedKeys } = this.state;
     const { onKeyDown, checkable, selectable } = this.props;
 
@@ -989,7 +978,7 @@ class Tree extends React.Component  {
         case KeyCode.LEFT: {
           // Collapse if possible
           if (expandable && expandedKeys.includes(activeKey)) {
-            this.onNodeExpand({} , eventNode);
+            this.onNodeExpand({}, eventNode);
           } else if (activeItem.parent) {
             this.onActiveChange(activeItem.parent.data.key);
           }
@@ -999,7 +988,7 @@ class Tree extends React.Component  {
         case KeyCode.RIGHT: {
           // Expand if possible
           if (expandable && !expandedKeys.includes(activeKey)) {
-            this.onNodeExpand({}  , eventNode);
+            this.onNodeExpand({}, eventNode);
           } else if (activeItem.children && activeItem.children.length) {
             this.onActiveChange(activeItem.children[0].data.key);
           }
@@ -1027,7 +1016,7 @@ class Tree extends React.Component  {
             !eventNode.disabled &&
             eventNode.selectable !== false
           ) {
-            this.onNodeSelect({}  , eventNode);
+            this.onNodeSelect({}, eventNode);
           }
           break;
         }
@@ -1043,9 +1032,9 @@ class Tree extends React.Component  {
    * Only update the value which is not in props
    */
   setUncontrolledState = (
-    state ,
+    state,
     atomic = false,
-    forceState  = null,
+    forceState = null,
   ) => {
     if (this.destroyed) {
       return;
@@ -1103,7 +1092,7 @@ class Tree extends React.Component  {
       icon,
       switcherIcon,
       draggable,
-      checkable, 
+      checkable,
       disabled,
       motion,
       loadData,
@@ -1127,7 +1116,7 @@ class Tree extends React.Component  {
           icon,
           switcherIcon,
           draggable,
-          checkable, 
+          checkable,
           disabled,
           keyEntities,
           dropLevelOffset,
@@ -1202,4 +1191,4 @@ class Tree extends React.Component  {
 }
 
 export default Tree;
- 
+

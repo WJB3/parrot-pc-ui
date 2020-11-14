@@ -2,30 +2,10 @@
 
 import React ,{ useEffect, useState,useRef } from 'react';  
 import Button from '@packages/core/Button'; 
-import Tree from '@packages/core/Tree'; 
-import Checkbox from '@packages/core/Checkbox'; 
-import { Tree as ATree} from 'antd';  
-import useControlled from '@packages/hooks/useControlled';
+import Tree from '@packages/core/Tree';  
+import { Tree as ATree} from 'antd';   
 import 'antd/dist/antd.css';
-
-const Demo=(props)=>{
-
-  const [stateCount]=useControlled({
-    controlled:undefined,
-    default:props.stateCount
-  });
-
-  console.log(stateCount);
-
-  const [count,setCount]=useState(stateCount)
-
-  const propC=useRef(props.propCount);
-
-  return <div>
-    <p>{count}</p>
-    <p>{propC.current}</p>
-  </div>
-}
+ 
 
 const treeData = [
   {
@@ -55,10 +35,7 @@ const treeData = [
 ];
 
  
-const Page=(props)=>{ 
-    
-    const [ propCount,setPropCount ]=useState(0);
-    const [ stateCount,setStateCount ]=useState(0);
+const Page=(props)=>{  
 
     const [expandedKeys,setExpandedKeys]=useState(["0-0-0"]);
     const [checkedKeys,setCheckedKeys]=useState(["0-0-0-0"]);
@@ -82,7 +59,7 @@ const Page=(props)=>{
             />
  
 
-            <Button onClick={()=>setExpandedKeys(["0-0"])}>点击切换</Button>
+            <Button onClick={()=>setCheckedKeys(["0-0"])}>点击切换</Button>
         </div>
     )
 }

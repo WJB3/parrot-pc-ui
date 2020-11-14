@@ -19,10 +19,13 @@ const TreeNode=React.forwardRef((props,ref)=>{
         titleRender,
         showIcon,
         switcherIcon,
-        expandedKeys,
+        expandedKeys, 
+        checkedKeys,
+        halfCheckedKeys,
         onNodeExpand,
+        onNodeCheck,
         checkable, 
-        blockNode
+        blockNode,
     }=useContext(TreeContext);
 
     const prefixClsTreeNode=`${prefixCls}-TreeNode`;
@@ -30,10 +33,16 @@ const TreeNode=React.forwardRef((props,ref)=>{
     const { level,node:{title},children }=keyEntities[eventKey]; 
 
     const expanded=expandedKeys.indexOf(eventKey)>-1;
+    const checked=checkedKeys.indexOf(eventKey)>-1;
+    const halfChecked=halfCheckedKeys.indexOf(eventKey)>-1;
 
     const onExpand=(e)=>{
         onNodeExpand?.(e,{...keyEntities[eventKey],expanded,key:eventKey})
     }
+
+    const onCheck=(flag)=>{
+        onNodeCheck?.(flag,{key:eventKey});
+    }   
 
     const renderSwitcher=()=>{
  
@@ -67,6 +76,9 @@ const TreeNode=React.forwardRef((props,ref)=>{
             className={classNames(
                 `${prefixClsTreeNode}-Checkbox`
             )} 
+            checked={checked}
+            indeterminate={halfChecked}
+            onChange={onCheck}
         >
 
         </Checkbox>)

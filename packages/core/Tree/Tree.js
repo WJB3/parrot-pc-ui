@@ -96,6 +96,40 @@ const Tree=React.forwardRef((props,ref)=>{
         setExpandedKeys(newExpandedKeys);
     }
 
+    const onNodeCheck=(flag,treeNode)=>{
+
+        console.log("onNodeCLick")
+         
+        const { key }=treeNode;
+        let newCheckedKeys; 
+        let newHalfCheckedKeys;
+
+        const {checkedKeys:checkedKeysDestruction,halfCheckedKeys:halfCheckedKeysDestruction}=conductCheckedKey([...checkedKeys,key],keyEntities,true); 
+        newCheckedKeys=checkedKeysDestruction;
+        newHalfCheckedKeys=halfCheckedKeysDestruction;
+
+        if(!flag){
+            const keySet = new Set(checkedKeys);
+            keySet.delete(key);
+            const {checkedKeys:checkedKeysDestruction,halfCheckedKeys:halfCheckedKeysDestruction}=conductCheckedKey(
+                Array.from(keySet),
+                keyEntities,
+                {checked:false,halfCheckedKeys:newHalfCheckedKeys}
+            ); 
+
+            newCheckedKeys=checkedKeysDestruction;
+            newHalfCheckedKeys=halfCheckedKeysDestruction;
+        }
+
+        setCheckedKeys(newCheckedKeys);
+
+        if(!isCheckedKeysControlled){
+            setHalfCheckedKeys(newHalfCheckedKeys);
+        }
+        
+
+    }
+
     useLayoutEffect(()=>{  
         //改变keyEntity
         let newEntitiesMap={};//新的实体分类 
@@ -132,12 +166,28 @@ const Tree=React.forwardRef((props,ref)=>{
     },[expandedKeys]);
     
     useLayoutEffect(()=>{
+        console.log("a")
         if(haveValue(keyEntities)){  
             //针对defaultValue的情况
+            const {checkedKeys:checkedKeysDestruction,halfCheckedKeys:halfCheckedKeysDestruction}=conductCheckedKey(checkedKeys,keyEntities,true); 
+            setCheckedKeys(checkedKeysDestruction);
+            setHalfCheckedKeys(halfCheckedKeysDestruction);
 
+            //当expandedKey value 发生变化 
+            if(isCheckedKeysControlled){
+                const {checkedKeys:checkedKeysDestructionProp,halfCheckedKeys:halfCheckedKeysDestructionProp}=conductCheckedKey(checkedKeysProp,keyEntities,true); 
+
+                if(checkedKeysDestructionProp.toString()!==checkedKeysDestruction.toString()){
+                    setControllCheckedKeys(checkedKeysDestructionProp);
+                    setHalfCheckedKeys(halfCheckedKeysDestructionProp);
+                }
+            } 
 
         }
-    },[keyEntities,checkedKeysProp]);
+    },[keyEntities,checkedKeysProp]); 
+
+    console.log(checkedKeys);
+    console.log(halfCheckedKeys);
 
     return <TreeContext.Provider
         value={{
@@ -147,7 +197,10 @@ const Tree=React.forwardRef((props,ref)=>{
             switcherIcon,
             checkable,
             blockNode,
-            onNodeExpand
+            checkedKeys,
+            halfCheckedKeys,
+            onNodeExpand,
+            onNodeCheck
         }}
     >
         <div className={
