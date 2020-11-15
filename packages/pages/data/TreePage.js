@@ -46,7 +46,7 @@ const Page=(props)=>{
                 treeData={treeData}
                 defaultExpandAll
                 defaultSelectedKeys={['0-0','0-0-0-0']} 
-                height={50}
+                 
             />
 
             <div style={{height:200}}></div>

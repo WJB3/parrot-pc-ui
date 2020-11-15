@@ -54,6 +54,8 @@ const Tree=React.forwardRef((props,ref)=>{
         selectedKeys:selectedKeysProp,
         defaultSelectedKeys=[],
         filterTreeNode,
+        onExpand,
+        onSelect,
         ...restProps
     }=props;
 
@@ -103,11 +105,14 @@ const Tree=React.forwardRef((props,ref)=>{
         } 
 
         setExpandedKeys(newExpandedKeys);
+
+        onExpand?.(expanded,treeNode);
     }
 
     const onNodeSelect=(e,treeNode)=>{
         const { key }=treeNode;
         setSelectedKeys([key]);
+        onSelect?.(e.treeNode);
     }
 
     const onNodeCheck=(flag,treeNode)=>{x
