@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from '@packages/utils/classNames';
 import { TransitionGroup } from 'react-transition-group';
 import Ripple from './Ripple';
+import useEventCallback from '@packages/hooks/useEventCallback';
 import PropTypes from 'prop-types';
 
 const DURATION = 500;
@@ -26,7 +27,7 @@ const TouchRipple=React.forwardRef((props,ref)=>{
     const rippleCallback = React.useRef(null);
 
     const startCommit = React.useCallback(
-      params => {
+      params => { 
         const { pulsate, rippleX, rippleY, rippleSize, cb } = params;
   
         setRipples(oldRipples => [
@@ -45,9 +46,9 @@ const TouchRipple=React.forwardRef((props,ref)=>{
         rippleCallback.current = cb;
       },
       [],
-  );
+    );
 
-    const start=React.useCallback((event={},options = {}, cb)=>{
+    const start=React.useCallback((event={},options = {}, cb)=>{  
         const {
             pulsate = false,
             center = centerProp || options.pulsate,
@@ -144,7 +145,6 @@ const TouchRipple=React.forwardRef((props,ref)=>{
         }),
         [pulsate, start, stop],
     );     
- 
   
 
     return (

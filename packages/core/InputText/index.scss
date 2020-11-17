@@ -58,6 +58,7 @@ $prefixClsInput:"#{$prefixCls}-Input";
             background: none;
             flex:1;
             box-sizing: border-box;
+            width: 100%;
         }
 
         &-Prefix,&-Suffix{
@@ -75,15 +76,23 @@ $prefixClsInput:"#{$prefixCls}-Input";
             display: inline-flex;
             justify-content: center;
             align-items:center;
+            transform:rotate(0deg);
+            transition: transform .1s;
         } 
 
     }
 
     &-Focus{
         .#{$prefixClsInputWrapper}{
+
             &:after{
                 transform:scaleX(1);
             } 
+
+            &-FixRightBlock{
+                transform: rotate(180deg);
+               
+            }
         }
     }
  
@@ -140,4 +149,7 @@ $prefixClsInput:"#{$prefixCls}-Input";
         }
     }
      
+    &-AutoWidth{
+        
+    }
 }

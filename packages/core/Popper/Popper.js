@@ -58,7 +58,8 @@ const Popper = React.forwardRef(function(props,ref){
         transition=true,
         modifiers={},
         keepMounted=false,//是否一直挂载
-        style
+        style,
+        disabledPopper
     } = props;
 
     const [exited, setExited] = React.useState(true);//定义动画是否退出
@@ -81,7 +82,7 @@ const Popper = React.forwardRef(function(props,ref){
             locationRef.current.destroy();
         }
 
-        const popper=createPopper(getTarget(mountNode),popperRef.current,{
+        const popper=disabledPopper?null:createPopper(getTarget(mountNode),popperRef.current,{
             placement:transformPlacement(placement), 
             modifiers: modifiers
         });

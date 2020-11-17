@@ -11,9 +11,9 @@ const Page=(props)=>{
     return (
         <div style={{padding:200}}> 
             <Select>
-                <Select.Option>{"我"}</Select.Option>
-                <Select.Option>{"是"}</Select.Option>
-                <Select.Option>{"谁"}</Select.Option>
+                <Select.Option>{"Ten"}</Select.Option>
+                <Select.Option>{"Twenty"}</Select.Option>
+                <Select.Option>{"Thirty"}</Select.Option>
                 <Select.Option>{"啊"}</Select.Option>
             </Select>
             <SelectA>

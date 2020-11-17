@@ -1,4 +1,4 @@
-import React,{useContext,useState} from 'react';
+import React,{useContext,useState,useRef } from 'react';
 import classNames from '@packages/utils/classNames'; 
 import PropTypes from 'prop-types'; 
 import {
@@ -8,6 +8,7 @@ import {
 import useControlled from '@packages/hooks/useControlled';
 import capitalize from '@packages/utils/capitalize';
 import { Fade } from '@packages/core/Transition';
+import useForkRef from '@packages/hooks/useForkRef';
 import { CloseSquare } from '@packages/core/Icon';
 import "./index.scss"; 
 
@@ -36,10 +37,17 @@ const InputText=React.forwardRef(function(props,ref){
         textareaStyles={},
         renderNumber,
         onKeyUp,
-        fixRightBlock
+        fixRightBlock, 
+        
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("InputText",customizePrefixCls); 
+
+    const inputRef=useRef(null);
+
+    const inputComponentRef=useRef(null);
+
+    const handleRef=useForkRef(inputComponentRef,ref);
  
     const size=useContext(SizeContext)||customizeSize;
 
@@ -79,13 +87,17 @@ const InputText=React.forwardRef(function(props,ref){
         setValue("");
     } 
 
+    const handleSelect=(e)=>{
+        inputRef.current.focus();
+    }
+
     return (
-        <div style={style} className={classNames(
+        <div style={style} ref={handleRef} className={classNames(
             `${prefixCls}`,
             className,
             {
                 [`${prefixCls}-${capitalize(size)}`]:size,
-                [`${prefixCls}-Focus`]:active
+                [`${prefixCls}-Focus`]:active, 
             } 
         )}>
             <div className={classNames(
@@ -106,7 +118,7 @@ const InputText=React.forwardRef(function(props,ref){
                             `${prefixCls}-Input`
                         )
                     }
-                    ref={ref} 
+                    ref={inputRef} 
                     id={id}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
@@ -131,7 +143,7 @@ const InputText=React.forwardRef(function(props,ref){
                     </span>
                 }
 
-                <span className={classNames(`${prefixCls}-InputWrapper-FixRightBlock`)}>{fixRightBlock}</span>
+                <span className={classNames(`${prefixCls}-InputWrapper-FixRightBlock`)} onClick={handleSelect}>{fixRightBlock}</span>
             </div>
 
             {renderNumber}

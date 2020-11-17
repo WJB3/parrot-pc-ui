@@ -51,7 +51,9 @@ const Tooltip = React.forwardRef(function (props, ref) {
         color,
         shadow,
         externalNode,
-        style
+        style,
+        transitionComponentProps,
+        ...restProps
     } = props;
 
     const prefixCls = useContext(ConfigContext)?.getPrefixCls("Tooltip", customizePrefixCls);
@@ -239,11 +241,13 @@ const Tooltip = React.forwardRef(function (props, ref) {
                 keepMounted={!destroyTooltipOnHide}
                 target={getPopupContainer}
                 style={style}
+                {...restProps}
                 {...mergedPopperProps}
             >
                 {({placement:placementInner,TransitionProps})=>(
                     <ClickAwayListener onClickAway={handleClickAway} externalNode={trigger==="click"?externalNode:null}>  
                     <TransitionComponent
+                        {...transitionComponentProps}
                         {...TransitionProps}
                     >
                         

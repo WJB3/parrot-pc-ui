@@ -51,7 +51,7 @@ const Ripple=(props)=>{
         if (!inProp) { 
             setLeaving(true);
 
-            const timeoutId = setTimeout(onExited, 100000);
+            const timeoutId = setTimeout(onExited, timeout);
             return () => {
                 clearTimeout(timeoutId);
             };
