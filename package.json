@@ -55,6 +55,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "@popperjs/core": "^2.5.2",
     "antd": "^4.5.4",
     "async-validator": "^3.4.0",
