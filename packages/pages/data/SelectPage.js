@@ -11,10 +11,10 @@ const Page=(props)=>{
     return (
         <div style={{padding:200}}> 
             <Select>
-                <Select.Option>{"Ten"}</Select.Option>
-                <Select.Option>{"Twenty"}</Select.Option>
-                <Select.Option>{"Thirty"}</Select.Option>
-                <Select.Option>{"啊"}</Select.Option>
+                <Select.Option value={"Ten"}>{"Ten"}</Select.Option>
+                <Select.Option value={"Twenty"}>{"Twenty"}</Select.Option>
+                <Select.Option value={"Thirty"}>{"Thirty"}</Select.Option>
+                <Select.Option value={"啊"}>{"啊"}</Select.Option>
             </Select>
             <SelectA>
                 <MenuItem value={10}>Ten</MenuItem>

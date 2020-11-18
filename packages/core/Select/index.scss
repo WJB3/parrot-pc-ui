@@ -42,6 +42,7 @@ $prefixClsPopover:"#{$global-prefix}-Popover";
             min-height:32px;
             min-width: 50px;
             transition: top 1s;
+            white-space: nowrap;
 
             &.#{$prefixClsOption}-Selected{
                 background-color:$primary-color-opacity5;

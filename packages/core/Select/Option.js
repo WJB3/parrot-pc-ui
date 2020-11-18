@@ -16,15 +16,16 @@ const SelectOption=React.forwardRef((props,ref)=>{
         children,
         currentIndex,
         isSelected,
-        onSelect
+        onSelect,
+        value,
+        selectValue
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("SelectOption",customizePrefixCls);
 
     const handleClick=(e)=>{
-        onSelect?.(e,currentIndex)
-    }
-
+        onSelect?.(e,currentIndex,value)
+    } 
   
     return (
         <ButtonBase 
@@ -32,7 +33,7 @@ const SelectOption=React.forwardRef((props,ref)=>{
                 className,
                 prefixCls,
                 {
-                    [`${prefixCls}-Selected`]:isSelected
+                    [`${prefixCls}-Selected`]:selectValue===value
                 }
             )}
             component="button"

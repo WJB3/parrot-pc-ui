@@ -8,6 +8,24 @@ $prefixClsButton:"#{$global-prefix}-Button";
 
 .#{$prefixCls}{
 
+    display: flex;
+    align-items: center;
+
+    &-ShowTotal{
+        margin-right:6px;
+        white-space: nowrap;
+    }
+
+    &-ShowQuickJumper{
+        margin-left:6px;
+        display: inline-flex;
+        justify-content: center;
+        align-self: center;
+        white-space: nowrap;
+        line-height: 32px;
+
+    }
+
     &.#{$prefixCls}-Primary{
 
        

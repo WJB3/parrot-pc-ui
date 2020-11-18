@@ -9,8 +9,17 @@ import { Pagination as PaginationA } from 'antd';
 const Page=(props)=>{
     return (
         <div style={{padding:200}}>  
-            <Pagination defaultCurrent={1} total={100} />
-            {/* <PaginationM count={20} />  */}
+            <PaginationA total={60} showLessItems/>
+            <Pagination 
+                defaultCurrent={1} 
+                total={60} 
+                jumpNumber={10} 
+                defaultPageSize={2} 
+                pageSizeOptions={[2,4,6]} 
+                showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                showQuickJumper
+            />   
+
         </div>
     )
 }

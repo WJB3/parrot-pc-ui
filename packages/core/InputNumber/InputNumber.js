@@ -47,6 +47,7 @@ const InputNumber = React.forwardRef(function (props, ref) {
         formatter,
         decimalSeparator,
         step: stepProp = 1,
+        onBlur,
         ...restProps
     } = props;
 
@@ -252,6 +253,10 @@ const InputNumber = React.forwardRef(function (props, ref) {
         } 
     }
 
+    const handleBlur=(e)=>{
+        onBlur?.(getTransformValue(value),e)
+    }
+
     return (
         <InputText
             component={"input"}
@@ -263,6 +268,7 @@ const InputNumber = React.forwardRef(function (props, ref) {
             ref={handleRef}
             value={getTransformValue(value)}
             onChange={handleChange} 
+            onBlur={handleBlur}
             {...restProps}
         />
     )

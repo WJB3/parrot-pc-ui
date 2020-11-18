@@ -1,5 +1,5 @@
 
-import React,{useContext,useEffect,useState,useRef } from 'react';
+import React,{ useContext,useEffect,useState,useRef,useMemo  } from 'react';
 import InputText from '@packages/core/InputText';
 import {
     ConfigContext
@@ -10,19 +10,29 @@ import {
     ArrowDown 
 } from '@packages/core/Icon';
 import childrenToArray from '@packages/utils/childrenToArray';
+import useControlled from '@packages/hooks/useControlled';
 import Option from './Option';
 import "./index.scss";
 
-function collectOptions(childrenProp,selectIndex,onSelect){
+function collectOptions(childrenProp,selectIndex,onSelect,selectValue){
     let children=childrenToArray(childrenProp).filter((child)=>child.type===Option);
     return children.map((child,index)=>{
         return React.cloneElement(child,{
             currentIndex:index,
             key:index,
             isSelected:selectIndex===index,
-            onSelect:onSelect
+            onSelect:onSelect,
+            selectValue:selectValue
         })
     })
+}
+
+function collectKeyValue(childrenProp){
+    let children=childrenToArray(childrenProp).filter((child)=>child.type===Option); 
+    return children.map((item)=>({
+        children:item.props.children,
+        value:item.props.value
+    }))
 }
 
 const Select=React.forwardRef((props,ref)=>{
@@ -30,10 +40,22 @@ const Select=React.forwardRef((props,ref)=>{
         prefixCls:customizePrefixCls,
         className,
         children:childrenProp,
-        autoWidth=true
+        autoWidth=false,
+        value:valueProp,
+        defaultValue,
+        onChange:onChangeProp,
+        onSelect:onSelectProp,
+        inputWidth
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("Select",customizePrefixCls);
+
+    const keyValue=collectKeyValue(childrenProp); 
+
+    const [value,setValue,isControlled]=useControlled({
+        controlled:valueProp,
+        default:defaultValue
+    }); 
 
     const [selectIndex,setSelectIndex]=useState(-1);
 
@@ -47,14 +69,16 @@ const Select=React.forwardRef((props,ref)=>{
 
     const handleFocus=(e)=>{
         setVisible(true);
-    }
+    } 
 
     const handleBlur=(e)=>{
         setVisible(false);
     }
 
-    const onSelect=(e,index)=>{ 
+    const onSelect=(e,index,value)=>{  
         setSelectIndex(index);
+        setValue(value);
+        onSelectProp?.(value);
     }
 
     useEffect(()=>{
@@ -65,9 +89,18 @@ const Select=React.forwardRef((props,ref)=>{
         })
     },[content,selectIndex]);
 
+    const inputTextValue=useMemo(()=>{
+        const findValue=keyValue.find(item=>item.value===value);
+        return findValue?.children;
+    },[value]);
+ 
+    useEffect(()=>{
+        onChangeProp?.(value);
+    },[value]);
+
     useEffect(()=>{ 
-        setContent(collectOptions(childrenProp,selectIndex,onSelect));
-    },[childrenProp,selectIndex])
+        setContent(collectOptions(childrenProp,selectIndex,onSelect,value));
+    },[childrenProp,selectIndex,value])
 
     return <Popover
         content={content}
@@ -91,8 +124,9 @@ const Select=React.forwardRef((props,ref)=>{
                     }
                    
                 )} 
+                value={inputTextValue}
                 fixRightBlock={<ArrowDown />}
-                style={{width:100}} 
+                style={{width:inputWidth}} 
                 ref={inputTextRef}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
