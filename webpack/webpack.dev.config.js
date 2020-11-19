@@ -5,6 +5,45 @@ const { merge }=require('webpack-merge');
 const baseWebpackConfig=require('./webpack.base.config.js');
 //引入基础webpack设置
 const HtmlWebpackPlugin=require('html-webpack-plugin');
+const os = require('os'); 
+
+const myHost = getIPAdress();
+
+const isVmNetwork = mac => {
+    // 常见的虚拟网卡MAC地址和厂商
+    let vmNetwork = [
+        "00:05:69", //vmware1
+        "00:0C:29", //vmware2
+        "00:50:56", //vmware3
+        "00:1C:42", //parallels1
+        "00:03:FF", //microsoft virtual pc
+        "00:0F:4B", //virtual iron 4
+        "00:16:3E", //red hat xen , oracle vm , xen source, novell xen
+        "08:00:27", //virtualbox
+        "00:00:00", // VPN
+    ]
+    for (let i = 0; i < vmNetwork.length; i++) {
+        let mac_per = vmNetwork[i];
+        if (mac.startsWith(mac_per)) {
+            return true
+        }
+    }
+    return false;
+}
+
+function getIPAdress() {
+    var interfaces = os.networkInterfaces();
+    for (var devName in interfaces) {
+        var iface = interfaces[devName];
+        for (var i = 0; i < iface.length; i++) {
+            var alias = iface[i];
+            let isvim=isVmNetwork(alias.mac);
+            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal && !isvim) {
+                return alias.address;
+            }
+        }
+    }
+}
 const derServerPort=5000;
 //基本作用就是生成html文件
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
@@ -69,7 +108,7 @@ module.exports=merge(baseWebpackConfig,{
         new webpack.HotModuleReplacementPlugin(),
         new FriendlyErrorsWebpackPlugin({
             compilationSuccessInfo: {
-                messages: [`You application is running here http://localhost:${derServerPort}`],
+                messages: [`You application is running here http://${myHost}:${derServerPort}`],
                 notes: ['Some additionnal notes to be displayed unpon successful compilation']
             },
             onErrors: function (severity, errors) {},
