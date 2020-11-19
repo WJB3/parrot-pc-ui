@@ -53,14 +53,8 @@ function Table(props) {
     sortDirections,
     locale,
     showSorterTooltip = true,
-  } = props;
-
-  devWarning(
-    !(typeof rowKey === 'function' && rowKey.length > 1),
-    'Table',
-    '`index` parameter of `rowKey` function is deprecated. There is no guarantee that it will work as expected.',
-  );
-
+  } = props; 
+  
   const screens = useBreakpoint();
   const mergedColumns = React.useMemo(() => {
     const matched = new Set(Object.keys(screens).filter((m) => screens[m]));

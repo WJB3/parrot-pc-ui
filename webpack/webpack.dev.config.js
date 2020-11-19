@@ -7,8 +7,6 @@ const baseWebpackConfig=require('./webpack.base.config.js');
 const HtmlWebpackPlugin=require('html-webpack-plugin');
 const os = require('os'); 
 
-const myHost = getIPAdress();
-
 const isVmNetwork = mac => {
     // 常见的虚拟网卡MAC地址和厂商
     let vmNetwork = [
@@ -30,6 +28,10 @@ const isVmNetwork = mac => {
     }
     return false;
 }
+
+const myHost = getIPAdress();
+
+
 
 function getIPAdress() {
     var interfaces = os.networkInterfaces();

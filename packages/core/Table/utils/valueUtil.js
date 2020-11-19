@@ -1,8 +1,12 @@
 
-
-const INTERNAL_KEY_PREFIX="PARROT_TABLE_KEY";
+ 
 import toArray from '@packages/utils/toArray';
 
+/**
+ * 取路径深处的值
+ * @param {*} record 
+ * @param {*} path 
+ */
 export function getPathValue(
     record,
     path
