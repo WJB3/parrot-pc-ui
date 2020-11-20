@@ -10,10 +10,11 @@ import validateValue from '@packages/utils/validateValue';
 import useSticky from './hooks/useSticky';
 import mergeObject from '@packages/utils/mergeObject';
 import { getPathValue } from './utils/valueUtil';
+import useBreakpoint from '@packages/hooks/useBreakpoint';
 
 import "./index.scss";
 
-const EMPTY_LIST=[];
+const EMPTY_DATA=[];
 
 const MemoTableContent=React.memo(
     ({children})=>children
@@ -34,6 +35,9 @@ const Table=React.forwardRef((props,ref)=>{
         showHeader=true,
         onChange
     }=props;
+ 
+    const mergedData=dataSource||EMPTY_DATA;
+    const hasData=!!mergedData.length;
 
     let groupTableNode;
     let scrollXStyle;
@@ -98,7 +102,9 @@ const Table=React.forwardRef((props,ref)=>{
     const fixHeader=scroll && validateValue(scroll.y);
 
     const bodyTable=(
-
+        <Body 
+            
+        />
     );
 
     if(fixHeader || isSticky){

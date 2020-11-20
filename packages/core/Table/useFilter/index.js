@@ -1,6 +1,7 @@
 
 
 import React from 'react';
+import { getColumnPos } from '../utils/columnsUtil';
 
 
 function collectFilterStates(
@@ -11,7 +12,16 @@ function collectFilterStates(
     let filterStates=[];
 
     (columns||[]).forEach((column,index)=>{
-        
+        const columnPos = getColumnPos(index, pos);
+
+        if("children" in column){
+            filterStates=[...filterStates,...collectFilterStates(column.children,init,columnPos)]
+        }else if(column.filters || "filterDropdown" in column || "onFilter" in column){
+            if("filteredValue" in column){
+
+            }
+        }
+
     })
 }
 
@@ -23,5 +33,7 @@ function useFilter({
     getPopupContainer,
     locale: tableLocale
 }){
+    
 
+    return [transformColumns,,getFilters];
 }

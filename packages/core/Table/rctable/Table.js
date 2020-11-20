@@ -101,7 +101,6 @@ function Table(props) {
 
     // Internal
     internalHooks,
-    transformColumns,
     internalRefs,
 
     sticky,

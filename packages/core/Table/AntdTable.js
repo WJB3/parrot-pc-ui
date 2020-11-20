@@ -35,35 +35,19 @@ function Table(props) {
     bordered,
     dropdownPrefixCls: customizeDropdownPrefixCls,
     dataSource,
-    pagination,
-    rowSelection,
+    pagination, 
     rowKey,
     rowClassName,
-    columns,
-    children,
-    childrenColumnName: legacyChildrenColumnName,
+    columns,  
     onChange,
-    getPopupContainer, 
-    expandIcon,
-    expandable,
-    expandedRowRender,
-    expandIconColumnIndex,
-    indentSize,
+    getPopupContainer,    
     scroll,
     sortDirections,
     locale,
     showSorterTooltip = true,
   } = props; 
-  
-  const screens = useBreakpoint();
-  const mergedColumns = React.useMemo(() => {
-    const matched = new Set(Object.keys(screens).filter((m) => screens[m]));
-
-    return (columns || convertChildrenToColumns(children)).filter(
-      (c) =>
-        !c.responsive || c.responsive.some((r) => matched.has(r)),
-    );
-  }, [children, columns, screens]);
+   
+  const mergedColumns = columns;
 
   const tableProps = omit(props, ['className', 'style', 'columns']);
 
@@ -78,22 +62,13 @@ function Table(props) {
   const { getPrefixCls } = React.useContext(ConfigContext);
   const prefixCls = getPrefixCls('table', customizePrefixCls);
   const dropdownPrefixCls = getPrefixCls('dropdown', customizeDropdownPrefixCls);
-
-  const mergedExpandable  = {
-    childrenColumnName: legacyChildrenColumnName,
-    expandIconColumnIndex,
-    ...expandable,
-  };
-  const { childrenColumnName = 'children' } = mergedExpandable;
-
+ 
+ 
   const expandType = React.useMemo(() => {
-    if (rawData.some(item => (item)?.[childrenColumnName])) {
+    if (rawData.some(item => (item))) {
       return 'nest';
     }
-
-    if (expandedRowRender || (expandable && expandable.expandedRowRender)) {
-      return 'row';
-    }
+ 
 
     return null;
   }, [rawData]);
@@ -111,7 +86,7 @@ function Table(props) {
     return (record) => (record)?.[rowKey];
   }, [rowKey]);
 
-  const [getRecordByKey] = useLazyKVMap(rawData, childrenColumnName, getRowKey);
+  const [getRecordByKey] = useLazyKVMap(rawData,  , getRowKey);
 
   // ============================ Events =============================
   const changeEventInfo = {};
@@ -149,7 +124,7 @@ function Table(props) {
     if (onChange) {
       onChange(changeInfo.pagination, changeInfo.filters, changeInfo.sorter, {
         currentDataSource: getFilterData(
-          getSortData(rawData, changeInfo.sorterStates, childrenColumnName),
+          getSortData(rawData, changeInfo.sorterStates),
           changeInfo.filterStates,
         ),
         action,
@@ -186,7 +161,7 @@ function Table(props) {
     tableLocale,
     showSorterTooltip,
   });
-  const sortedData = React.useMemo(() => getSortData(rawData, sortStates, childrenColumnName), [
+  const sortedData = React.useMemo(() => getSortData(rawData, sortStates), [
     rawData,
     sortStates,
   ]);
@@ -283,16 +258,14 @@ function Table(props) {
   ]);
 
   // ========================== Selections ==========================
-  const [transformSelectionColumns, selectedKeySet] = useSelection(rowSelection, {
+  const [transformSelectionColumns, selectedKeySet] = useSelection(, {
     prefixCls,
     data: mergedData,
     pageData,
     getRowKey,
     getRecordByKey,
     expandType,
-    childrenColumnName,
-    locale: tableLocale,
-    expandIconColumnIndex: mergedExpandable.expandIconColumnIndex,
+    locale: tableLocale, 
     getPopupContainer,
   });
 
@@ -312,36 +285,8 @@ function Table(props) {
     );
   };
 
-  // ========================== Expandable ==========================
-
-  // Pass origin render status into `rc-table`, this can be removed when refactor with `rc-table`
-  (mergedExpandable).__PARENT_RENDER_ICON__ = mergedExpandable.expandIcon;
-
-  // Customize expandable icon
-  mergedExpandable.expandIcon =
-    mergedExpandable.expandIcon || expandIcon || renderExpandIcon(tableLocale);
-
-  // Adjust expand icon index, no overwrite expandIconColumnIndex if set.
-  if (expandType === 'nest' && mergedExpandable.expandIconColumnIndex === undefined) {
-    mergedExpandable.expandIconColumnIndex = rowSelection ? 1 : 0;
-  } else if (mergedExpandable.expandIconColumnIndex > 0 && rowSelection) {
-    mergedExpandable.expandIconColumnIndex -= 1;
-  }
-
-  // Indent size
-  if (typeof mergedExpandable.indentSize !== 'number') {
-    mergedExpandable.indentSize = typeof indentSize === 'number' ? indentSize : 15;
-  }
-
-  // ============================ Render ============================
-  const transformColumns = React.useCallback(
-    (innerColumns) => {
-      return transformTitleColumns(
-        transformSelectionColumns(transformFilterColumns(transformSorterColumns(innerColumns))),
-      );
-    },
-    [transformSorterColumns, transformFilterColumns, transformSelectionColumns],
-  );
+ 
+   
 
   let topPaginationNode;
   let bottomPaginationNode;
@@ -393,8 +338,7 @@ function Table(props) {
         <RcTable 
           {...tableProps}
           columns={mergedColumns}
-          direction={direction}
-          expandable={mergedExpandable}
+          direction={direction} 
           prefixCls={prefixCls}
           className={classNames({
             [`${prefixCls}-middle`]: mergedSize === 'middle',
@@ -408,8 +352,7 @@ function Table(props) {
           emptyText={(locale && locale.emptyText) || renderEmpty('Table')}
           // Internal
           internalHooks={INTERNAL_HOOKS}
-          internalRefs={internalRefs}
-          transformColumns={transformColumns}
+          internalRefs={internalRefs} 
         />
         {bottomPaginationNode} 
     </div>

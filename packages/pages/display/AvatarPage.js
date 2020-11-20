@@ -9,8 +9,8 @@ import {
 
 const Page = React.forwardRef((props, ref) => {
   return <div style={{padding:200}}>
-    <Space size="large">
-      
+    <Space size="large" >
+        
           <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /> 
    
     </Space>
