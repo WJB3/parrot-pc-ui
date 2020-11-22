@@ -33,15 +33,15 @@ const Table=React.forwardRef((props,ref)=>{
         components,
         //是否显示表头
         showHeader=true,
-        onChange
+        onChange,
+        rowKey
     }=props;
  
     const mergedData=dataSource||EMPTY_DATA;
     const hasData=!!mergedData.length;
 
     let groupTableNode;
-    let scrollXStyle;
-    let scrollYStyle;
+  
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("Table",customizePrefixCls);
 
@@ -73,6 +73,8 @@ const Table=React.forwardRef((props,ref)=>{
     //========================Sorter=================================
 
 
+
+
     //=========================Customize=============================
     const mergedComponents=useMemo(
         ()=>mergeObject(components),
@@ -83,7 +85,17 @@ const Table=React.forwardRef((props,ref)=>{
         (path,defaultComponent)=>
             getPathValue(mergedComponents,path)||defaultComponent,
         [mergedComponents]
-    )
+    );
+
+    const getRowKey=React.useMemo(()=>{
+        if(typeof rowKey==="function"){
+            return rowKey;
+        }
+        return (record)=>{
+            const key=record && record[rowKey];
+            return key;
+        }
+    },[rowKey]);
 
     //==========================Data=================================
     const rawData=dataSource || EMPTY_LIST;
@@ -100,10 +112,27 @@ const Table=React.forwardRef((props,ref)=>{
     const { isSticky }=useSticky(sticky,prefixCls);
 
     const fixHeader=scroll && validateValue(scroll.y);
+    const horizonScroll=scroll && validateValue(scroll.x);
+
+    let scrollXStyle;
+    let scrollYStyle;
+
+    if(fixHeader){
+        scrollYStyle={
+            overflowY:"scroll",
+            maxHeight:scroll.y
+        }
+    }
+
+    if(horizonScroll){
+        scrollXStyle={overflowX:"auto"};
+    }
 
     const bodyTable=(
         <Body 
-            
+            data={mergedData}
+            getRowKey={getRowKey}
+            measureColumnWidth={fixHeader || horizonScroll || isSticky}
         />
     );
 

@@ -3,8 +3,7 @@ import classNames from 'classnames';
 import Cell from '../Cell';
 import TableContext from '../context/TableContext';
 import BodyContext from '../context/BodyContext';
-import { getColumnsKey } from '../utils/valueUtil';
-import { ColumnType, CustomizeComponent, GetComponentProps, Key, GetRowKey } from '../interface';
+import { getColumnsKey } from '../utils/valueUtil'; 
 import ExpandedRow from './ExpandedRow';
 function BodyRow(props) {
   const {
