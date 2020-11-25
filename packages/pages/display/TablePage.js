@@ -53,7 +53,7 @@ const Page = React.forwardRef((props, ref) => {
   const buttonRef = useRef(null);
  
   return <div>
-    <Table showHeader={true} columns={columns} dataSource={data} scroll={{ y: 100 }} />
+    <Table  columns={columns} dataSource={data} pagination={false} />
   </div>
 });
 

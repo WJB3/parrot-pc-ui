@@ -4,14 +4,11 @@ import PropTypes from 'prop-types';
 import {
     ConfigContext
 } from '@packages/core/ConfigProvider';
-import classNames from '@packages/utils/classNames';
 import "./index.scss";
 import useHeights from './hooks/useHeights';
 import useChildren from './hooks/useChildren';
 import useFrameWheel from './hooks/useFrameWheel';
 import ScrollBar from './ScrollBar';
-
- 
 
 const MIN_HEIGHT=20;
 
@@ -115,6 +112,7 @@ const List=React.forwardRef((props,ref)=>{
     const viewChildren=useChildren(originData,startIndex,endIndex,setInstanceRef,children,getKey);
 
     //==============================Range=============================
+    //采用ref为了获取到最新的值
     let maxScrollHeight=scrollHeight-height; 
     let maxScrollHeightRef=useRef(maxScrollHeight);
     maxScrollHeightRef.current=maxScrollHeight; 

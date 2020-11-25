@@ -7,6 +7,7 @@ import "./index.scss";
 //import SelectPage from '@packages/pages/data/SelectPage';
 // import PaginationPage from '@packages/pages/common/PaginationPage'; 
 import TablePage from '@packages/pages/display/TablePage';
+import Demo from '@packages/pages/Demo';
 
 
 ReactDOM.render((<HashRouter>

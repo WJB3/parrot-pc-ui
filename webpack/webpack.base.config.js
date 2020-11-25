@@ -4,7 +4,7 @@ const PACKAGE_PATH=path.resolve(__dirname,"../packages");
 
 module.exports={
     entry:{
-        main:"./src/index"
+        main:["./src/index"]
     },
     resolve:{
         extensions:['.js','.jsx'],
