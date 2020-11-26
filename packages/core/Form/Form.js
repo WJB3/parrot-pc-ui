@@ -96,7 +96,6 @@ const Form=React.forwardRef((props,ref)=>{
                 onSubmit={(event) => { 
                     event.preventDefault();
                     event.stopPropagation(); 
-
                     formInstance.submit();
                 }}
                 className={classNames(

@@ -3,12 +3,13 @@
 import React ,{useContext} from 'react';
 import TableContext from '../context/TableContext';
 import BodyContext from '../context/BodyContext';
-import ResizeContext from '../context/ResizeContext';
+import ResizeContext from '../context/ResizeContext'; 
 
 const Body=(props)=>{
 
     const {
-        data
+        data,
+        getRowKey
     }=props;
 
     const { getComponent }=useContext(TableContext);
@@ -20,6 +21,14 @@ const Body=(props)=>{
         const tdComponent=getComponent(['body','cell'],'td');
 
         let rows;
+
+        if(data.length){
+            rows=data.map((record,index)=>{
+
+                const key=getRowKey(record,index);
+                
+            })
+        }
         
     })
 

@@ -136,13 +136,7 @@ function Table(props) {
     return (record) => {
       const key = record && record[rowKey];
 
-      if (process.env.NODE_ENV !== 'production') {
-        warning(
-          key !== undefined,
-          'Each record in table should have a unique `key` prop, or set `rowKey` to an unique primary key.',
-        );
-      }
-
+      
       return key;
     };
   }, [rowKey]);
@@ -238,18 +232,10 @@ function Table(props) {
 
   const [columns, flattenColumns] = useColumns(
     {
-      ...props,
-      ...expandableConfig,
-      expandable: !!expandedRowRender,
-      expandedKeys: mergedExpandedKeys,
-      getRowKey,
-      // https://github.com/ant-design/ant-design/issues/23894
-      onTriggerExpand,
-      expandIcon: mergedExpandIcon,
-      expandIconColumnIndex,
+      ...props,  
+      getRowKey, 
       direction,
-    },
-    internalHooks === INTERNAL_HOOKS ? transformColumns : null,
+    },null,
   );
 
   const columnContext = React.useMemo(

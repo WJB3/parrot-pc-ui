@@ -2,73 +2,91 @@ import * as React from 'react';
 import classNames from 'classnames';
 import omit from 'omit.js';
 import RcTable, { Summary } from 'rc-table';
-import { INTERNAL_HOOKS } from 'rc-table/lib/Table';
-import { convertChildrenToColumns } from 'rc-table/lib/hooks/useColumns'; 
-import Pagination from '../pagination';
+import { TableProps as RcTableProps, INTERNAL_HOOKS } from 'rc-table/lib/Table';
+import { convertChildrenToColumns } from 'rc-table/lib/hooks/useColumns';
+import Spin, { SpinProps } from '../spin'; 
 import { ConfigContext } from '../config-provider/context';
 import usePagination, { DEFAULT_PAGE_SIZE, getPaginationParam } from './hooks/usePagination';
 import useLazyKVMap from './hooks/useLazyKVMap'; 
- 
+import { 
+  ColumnsType, 
+  TablePaginationConfig, 
+} from './interface';
 import useSelection, { SELECTION_ALL, SELECTION_INVERT } from './hooks/useSelection';
-import useSorter, { getSortData } from './hooks/useSorter';
-import useFilter, { getFilterData } from './hooks/useFilter';
+import useSorter, { getSortData, SortState } from './hooks/useSorter';
+import useFilter, { getFilterData, FilterState } from './hooks/useFilter';
 import useTitleColumns from './hooks/useTitleColumns';
 import renderExpandIcon from './ExpandIcon';
 import scrollTo from '../_util/scrollTo';
 import defaultLocale from '../locale/en_US';
-import SizeContext from '../config-provider/SizeContext';
+import SizeContext, { SizeType } from '../config-provider/SizeContext';
 import Column from './Column';
 import ColumnGroup from './ColumnGroup';
 import devWarning from '../_util/devWarning';
 import useBreakpoint from '../grid/hooks/useBreakpoint';
- 
 
-const EMPTY_LIST  = [];
- 
+export { ColumnsType, TablePaginationConfig };
+
+const EMPTY_LIST = [];
+
+  
 
 function Table(props) {
   const {
-    prefixCls: customizePrefixCls,
-    className,
-    style,
-    size: customizeSize,
-    bordered,
-    dropdownPrefixCls: customizeDropdownPrefixCls,
-    dataSource,
-    pagination, 
-    rowKey,
-    rowClassName,
-    columns,  
+    prefixCls: customizePrefixCls,    
+    dataSource,    
+    columns, 
+    childrenColumnName: legacyChildrenColumnName,
     onChange,
-    getPopupContainer,    
+    getPopupContainer,
+    loading,
+    expandIcon,
+    expandable,
+    expandedRowRender,
+    expandIconColumnIndex,
+    indentSize,
     scroll,
     sortDirections,
     locale,
     showSorterTooltip = true,
   } = props; 
-   
-  const mergedColumns = columns;
 
-  const tableProps = omit(props, ['className', 'style', 'columns']);
+  const screens = useBreakpoint();
+  const mergedColumns = React.useMemo(() => {
+    const matched = new Set(Object.keys(screens).filter((m) => screens[m]));
 
-  const size = React.useContext(SizeContext);
+    return (columns || []).filter(
+      (c) =>
+        !c.responsive || c.responsive.some((r) => matched.has(r)),
+    );
+  }, [columns, screens]);
+
+  const tableProps = omit(props, ['columns']);
+ 
   const { locale: contextLocale = defaultLocale, renderEmpty, direction } = React.useContext(
     ConfigContext,
-  );
-  const mergedSize = customizeSize || size;
-  const tableLocale = { ...contextLocale.Table, ...locale } ;
+  ); 
+  const tableLocale = { ...contextLocale.Table, ...locale };
   const rawData  = dataSource || EMPTY_LIST;
 
   const { getPrefixCls } = React.useContext(ConfigContext);
-  const prefixCls = getPrefixCls('table', customizePrefixCls);
-  const dropdownPrefixCls = getPrefixCls('dropdown', customizeDropdownPrefixCls);
- 
- 
+  const prefixCls = getPrefixCls('table', customizePrefixCls); 
+
+  const mergedExpandable  = {
+    childrenColumnName: legacyChildrenColumnName,
+    expandIconColumnIndex,
+    ...expandable,
+  };
+  const { childrenColumnName = 'children' } = mergedExpandable;
+
   const expandType = React.useMemo(() => {
-    if (rawData.some(item => (item))) {
+    if (rawData.some(item => (item)?.[childrenColumnName])) {
       return 'nest';
     }
- 
+
+    if (expandedRowRender || (expandable && expandable.expandedRowRender)) {
+      return 'row';
+    }
 
     return null;
   }, [rawData]);
@@ -77,16 +95,9 @@ function Table(props) {
     body: React.useRef(),
   };
 
-  // ============================ RowKey ============================
-  const getRowKey = React.useMemo(() => {
-    if (typeof rowKey === 'function') {
-      return rowKey;
-    }
+ 
 
-    return (record) => (record)?.[rowKey];
-  }, [rowKey]);
-
-  const [getRecordByKey] = useLazyKVMap(rawData,  , getRowKey);
+  const [getRecordByKey] = useLazyKVMap(rawData, childrenColumnName);
 
   // ============================ Events =============================
   const changeEventInfo = {};
@@ -104,15 +115,8 @@ function Table(props) {
     if (reset) {
       changeEventInfo.resetPagination();
 
-      // Reset event param
-      if (changeInfo.pagination.current) {
-        changeInfo.pagination.current = 1;
-      }
-
-      // Trigger pagination events
-      if (pagination && pagination.onChange) {
-        pagination.onChange(1, changeInfo.pagination.pageSize);
-      }
+      
+      
     }
 
     if (scroll && scroll.scrollToFirstRowOnChange !== false && internalRefs.body.current) {
@@ -124,7 +128,7 @@ function Table(props) {
     if (onChange) {
       onChange(changeInfo.pagination, changeInfo.filters, changeInfo.sorter, {
         currentDataSource: getFilterData(
-          getSortData(rawData, changeInfo.sorterStates),
+          getSortData(rawData, changeInfo.sorterStates, childrenColumnName),
           changeInfo.filterStates,
         ),
         action,
@@ -142,7 +146,7 @@ function Table(props) {
   // ============================ Sorter =============================
   const onSorterChange = (
     sorter,
-    sorterStates,
+    sorterStates ,
   ) => {
     triggerOnChange(
       {
@@ -161,7 +165,7 @@ function Table(props) {
     tableLocale,
     showSorterTooltip,
   });
-  const sortedData = React.useMemo(() => getSortData(rawData, sortStates), [
+  const sortedData = React.useMemo(() => getSortData(rawData, sortStates, childrenColumnName), [
     rawData,
     sortStates,
   ]);
@@ -171,8 +175,8 @@ function Table(props) {
 
   // ============================ Filter ============================
   const onFilterChange = (
-    filters,
-    filterStates,
+    filters ,
+    filterStates ,
   ) => {
     triggerOnChange(
       {
@@ -187,7 +191,7 @@ function Table(props) {
   const [transformFilterColumns, filterStates, getFilters] = useFilter({
     prefixCls,
     locale: tableLocale,
-    dropdownPrefixCls,
+    prefixCls,
     mergedColumns,
     onFilterChange,
     getPopupContainer,
@@ -217,8 +221,7 @@ function Table(props) {
   };
 
   const [mergedPagination, resetPagination] = usePagination(
-    mergedData.length,
-    pagination,
+    mergedData.length, 
     onPaginationChange,
   );
 
@@ -257,112 +260,85 @@ function Table(props) {
     mergedPagination && mergedPagination.total,
   ]);
 
-  // ========================== Selections ==========================
-  const [transformSelectionColumns, selectedKeySet] = useSelection(, {
-    prefixCls,
-    data: mergedData,
-    pageData,
-    getRowKey,
-    getRecordByKey,
-    expandType,
-    locale: tableLocale, 
-    getPopupContainer,
-  });
-
-  const internalRowClassName = (record, index, indent) => {
-    let mergedRowClassName;
-    if (typeof rowClassName === 'function') {
-      mergedRowClassName = classNames(rowClassName(record, index, indent));
-    } else {
-      mergedRowClassName = classNames(rowClassName);
-    }
-
-    return classNames(
-      {
-        [`${prefixCls}-row-selected`]: selectedKeySet.has(getRowKey(record, index)),
-      },
-      mergedRowClassName,
-    );
-  };
-
+  
  
-   
+  // ========================== Expandable ==========================
+
+  // Pass origin render status into `rc-table`, this can be removed when refactor with `rc-table`
+  (mergedExpandable as any).__PARENT_RENDER_ICON__ = mergedExpandable.expandIcon;
+
+  // Customize expandable icon
+  mergedExpandable.expandIcon =
+    mergedExpandable.expandIcon || expandIcon || renderExpandIcon(tableLocale);
+
+  // Adjust expand icon index, no overwrite expandIconColumnIndex if set.
+  if (expandType === 'nest' && mergedExpandable.expandIconColumnIndex === undefined) {
+    mergedExpandable.expandIconColumnIndex =  0;
+  }  
+  if (typeof mergedExpandable.indentSize !== 'number') {
+    mergedExpandable.indentSize = typeof indentSize === 'number' ? indentSize : 15;
+  }
+
+  // ============================ Render ============================
+  const transformColumns = React.useCallback(
+    (innerColumns )  => {
+      return transformTitleColumns(
+        transformSelectionColumns(transformFilterColumns(transformSorterColumns(innerColumns))),
+      );
+    },
+    [transformSorterColumns, transformFilterColumns, transformSelectionColumns],
+  );
 
   let topPaginationNode;
   let bottomPaginationNode;
-  if (pagination !== false && mergedPagination?.total) {
-    let paginationSize;
-    if (mergedPagination.size) {
-      paginationSize = mergedPagination.size;
-    } else {
-      paginationSize = mergedSize === 'small' || mergedSize === 'middle' ? 'small' : undefined;
-    }
-
-    const renderPagination = (position) => (
-      <Pagination
-        className={`${prefixCls}-pagination ${prefixCls}-pagination-${position}`}
-        {...mergedPagination}
-        size={paginationSize}
-      />
-    );
-    const defaultPosition = direction === 'rtl' ? 'left' : 'right';
-    if (mergedPagination.position !== null && Array.isArray(mergedPagination.position)) {
-      const topPos = mergedPagination.position.find(p => p.indexOf('top') !== -1);
-      const bottomPos = mergedPagination.position.find(p => p.indexOf('bottom') !== -1);
-      if (!topPos && !bottomPos) {
-        bottomPaginationNode = renderPagination(defaultPosition);
-      } else {
-        if (topPos) {
-          topPaginationNode = renderPagination(topPos.toLowerCase().replace('top', ''));
-        }
-        if (bottomPos) {
-          bottomPaginationNode = renderPagination(bottomPos.toLowerCase().replace('bottom', ''));
-        }
-      }
-    } else {
-      bottomPaginationNode = renderPagination(defaultPosition);
-    }
-  }
  
+
+  // >>>>>>>>> Spinning
+  let spinProps ;
+  if (typeof loading === 'boolean') {
+    spinProps = {
+      spinning: loading,
+    };
+  } else if (typeof loading === 'object') {
+    spinProps = {
+      spinning: true,
+      ...loading,
+    };
+  }
 
   const wrapperClassNames = classNames(
     `${prefixCls}-wrapper`,
     {
       [`${prefixCls}-wrapper-rtl`]: direction === 'rtl',
-    },
-    className,
+    }
   );
   return (
-    <div className={wrapperClassNames} style={style}>
+    <div className={wrapperClassNames}>
+      <Spin spinning={false} {...spinProps}>
         {topPaginationNode}
         <RcTable 
           {...tableProps}
           columns={mergedColumns}
-          direction={direction} 
+          direction={direction}
+          expandable={mergedExpandable}
           prefixCls={prefixCls}
-          className={classNames({
-            [`${prefixCls}-middle`]: mergedSize === 'middle',
-            [`${prefixCls}-small`]: mergedSize === 'small',
-            [`${prefixCls}-bordered`]: bordered,
+          className={classNames({  
             [`${prefixCls}-empty`]: rawData.length === 0,
           })}
-          data={pageData}
-          rowKey={getRowKey}
-          rowClassName={internalRowClassName}
+          data={pageData}  
           emptyText={(locale && locale.emptyText) || renderEmpty('Table')}
           // Internal
           internalHooks={INTERNAL_HOOKS}
-          internalRefs={internalRefs} 
+          internalRefs={internalRefs as any}
+          transformColumns={transformColumns}
         />
-        {bottomPaginationNode} 
+        {bottomPaginationNode}
+      </Spin>
     </div>
   );
 }
 
-Table.defaultProps = {
-  rowKey: 'key',
-};
-
+ 
 Table.SELECTION_ALL = SELECTION_ALL;
 Table.SELECTION_INVERT = SELECTION_INVERT;
 Table.Column = Column;

@@ -13,9 +13,8 @@ import 'antd/dist/antd.css';
 const Page=(props)=>{
  
     useEffect(()=>{
-         
-    },[])
- 
+        
+    },[]) 
     
     return (
         <>     
