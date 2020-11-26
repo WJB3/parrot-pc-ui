@@ -1,12 +1,9 @@
 
 
-import React ,{ useEffect, useState,useRef } from 'react';  
-import Button from '@packages/core/Button'; 
-import Tree from '@packages/core/Tree';  
-import { Tree as ATree} from 'antd';   
+import React ,{ useEffect, useState,useRef } from 'react';   
+import Tree from '@packages/core/Tree';   
 import 'antd/dist/antd.css';
- 
-
+  
 const treeData = [
   {
     title: 'parent 1',
@@ -32,37 +29,17 @@ const treeData = [
       },
     ],
   }
-];
-
+]; 
  
-const Page=(props)=>{  
-
-    const [expandedKeys,setExpandedKeys]=useState(["0-0-0"]);
-    const [checkedKeys,setCheckedKeys]=useState(["0-0-0-0"]);
-
+const Page=(props)=>{   
     return (
         <div> 
             <Tree 
-                treeData={treeData}
-                defaultExpandAll
-                defaultSelectedKeys={['0-0','0-0-0-0']} 
-                 
-            />
-
-            <div style={{height:200}}></div>
-
-            <ATree 
-                treeData={treeData}
-                defaultExpandAll
-                filterTreeNode={(node)=>node.key=="0-0"}
-            />
- 
-
-            <Button onClick={()=>setCheckedKeys(["0-0"])}>点击切换</Button>
+              treeData={treeData}  
+            />  
         </div>
     )
 }
-
  
 
 export default Page;        

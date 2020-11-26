@@ -1,8 +1,7 @@
 
 
 import React, { useLayoutEffect, useEffect,useRef, useCallback,useState } from 'react';
-import List from 'rc-virtual-list';
-import VirtualList2 from '@packages/core/VirtualList2';
+import List from 'rc-virtual-list'; 
 import VirtualList from '@packages/core/VirtualList';
 //import useChildren from '@packages/core/VirtualList/hooks/useChildren';
 import axios from 'axios';

@@ -31,8 +31,7 @@ const Item=(props)=>{
         setRef
     }=props;
 
-    const refFunc=useCallback((node)=>{ 
-        console.log("refFunc");
+    const refFunc=useCallback((node)=>{  
         setRef(node);
     },[]);
 

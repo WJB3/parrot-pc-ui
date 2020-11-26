@@ -80,8 +80,7 @@ const Checkbox = React.forwardRef((props, ref) => {
                 <Component
                     className={
                         classNames(
-                            `${prefixCls}-InputWrapper`,
-
+                            `${prefixCls}-InputWrapper`, 
                         )
                     }
                 >
@@ -92,10 +91,11 @@ const Checkbox = React.forwardRef((props, ref) => {
                                 `${prefixCls}-Input`
                             )
                         }
-                        onChange={(e) => handleChange(e)}
+                        onChange={handleChange}
                         checked={checked}
                         ref={ref}
                         value={value}
+                        onClick={()=>console.log("onclick")}
                     />
 
                     {checked ? <Zoom in={checked}>{selectIcon}</Zoom> : unselectIcon}
@@ -105,6 +105,7 @@ const Checkbox = React.forwardRef((props, ref) => {
                 </Component>
 
             </ButtonBase>
+
             {children && <Component
                 className={
                     classNames(

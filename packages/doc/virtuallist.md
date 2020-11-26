@@ -51,7 +51,7 @@
 
 ## 原理解析
 
-<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
     虚拟列表本质上是按需渲染。按需渲染是指根据容器元素的高度以及列表项元素的高度来渲染数据。<br >
     <img src="./assets/virtuallist/yuanli.jpg"><br />
     如上图所示，假设容器元素的高度是500px,而列表项元素的height是50px,那么容器元素内此时最多可以显示10个元素项，也就是说当元素初始化的时候，实际上我们只需要渲染十条数据，而不是1000个数据项。<br />
@@ -86,7 +86,7 @@ const wantData = originalData.slice(from, to)
 </blockquote> 
 
 
-# 三、Virtual-List组件设计核心要素
+# 三、Virtual-List组件设计大概流程
 
 ## 1.组件框架结构大体简述
 
@@ -103,7 +103,7 @@ const wantData = originalData.slice(from, to)
     Container是我们前章节中提到一个高度容器，这里我们设置一个固定高度：<i>height:props.height</i>,因为这里的滚动条我们自己实现，所以我们使用<i>overflow:hidden</i>来隐藏滚动条。
     <br />
     <br />
-    ScrollContainer是一个高度为所有元素总高度的一个容器：这里我们需要设置一个<i>height:item.length*item.width</i>,同时为了实现元素向上移动，向下移动时有那种平移的效果，我们需要设置<i>transform:translateY(srollTop px)</i>
+    ScrollContainer是一个高度为所有元素总高度的一个容器：这里我们需要设置一个<i>height:item.length*item.height</i>,同时为了实现元素向上移动，向下移动时有那种平移的效果，我们需要设置<i>transform:translateY(srollTop px)</i>
     <br />
     <br />
     WantDataChildNode则是我们实际需要在页面渲染的节点，每次滚动条滚动都需要重新渲染新的节点。

@@ -14,161 +14,54 @@
 ## 1.组件概述
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1;'>
-    多选框。
+    复选框是一种可同时选中多项的基础表单控件。
 </blockquote>
 
 ## 2.为什么需要这个组件
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    1.在一组可选项中进行多项选择时；<br />
-    2.单独使用可以表示两种状态之间的切换，和 switch 类似。区别在于切换 switch 会直接触发状态改变，而 checkbox 一般用于状态标记，需要和提交操作配合。
+    复选框是一个非常基础的表单控件元素，作为一个完整的组件库，一定是必不可少的，它可以选中多个（单个选项一般更适用于单选框组件）选项，配合表单提交按钮进行表单提交。
 </blockquote>
 
 # 二、Checkbox组件设计
-  
-
+   
 ## 原理解析
 
-![哈哈](./assets/checkbox/yuanli.jpg)
+![哈哈](./assets/checkbox/checkbox-demo.jpg)
 
-<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1。5;'>
-    一个最常用的表单元素组件之一，checkbox组件分为2个部分。一个是左边的真正checkbox部分，右边部分是子元素。
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+   如上，我们可以选择我爱中国、我爱安徽、我爱合肥，而并不选择我爱美国。
 </blockquote> 
-
-# 三、Checkbox组件实战
-
-## 1、代码实战
-
-```js
-import React, { useContext } from 'react';
-import classNames from '@packages/utils/classNames';
-import {
-    ConfigContext
-} from '@packages/core/ConfigProvider';
-import ButtonBase from '@packages/core/ButtonBase';
-import { CheckboxSelected, CheckboxUnSelected } from '@packages/core/Icon';
-import useControlled from '@packages/hooks/useControlled';
-import capitalize from '@packages/utils/capitalize'; 
-import CheckGroupContext from './CheckboxGroupContext';
-import createChainedFunction from '@packages/utils/createChainedFunction';
-import "./index.scss";
-
-const Checkbox = React.forwardRef((props, ref) => {
-    const {
-        prefixCls: customizePrefixCls,
-        component: Component = "span",
-        className,
-        checked: checkedProp,
-        defaultChecked,
-        onChange:onChangeProp,
-        color = "primary",
-        selectIcon = <CheckboxSelected />,
-        unselectIcon = <CheckboxUnSelected />,
-        indeterminate,
-        children,
-        value
-    } = props;
-
-    const prefixCls = useContext(ConfigContext)?.getPrefixCls("Checkbox", customizePrefixCls);
-
-    const checkboxGroup=useContext(CheckGroupContext);
-
-    let ischecked=checkedProp;
-
-    if(checkboxGroup){
-        if(typeof ischecked==='undefined'){
-            ischecked=checkboxGroup.value?checkboxGroup.value.indexOf(value)>-1?true:false:false;
-        }
-    }
-
-    const [checked, setChecked] = useControlled({
-        controlled: ischecked,
-        default: Boolean(defaultChecked)
-    });
-
-    const onChange=createChainedFunction(onChangeProp,checkboxGroup && checkboxGroup.onChange);
-
-    const handleChange = (e) => {
-        setChecked(e.target.checked);
-        onChange?.(e.target.checked, e,value); 
-    } 
-
-    return (
-        <label
-            className={
-                classNames(
-                    prefixCls,
-                    className, 
-                )
-            }
-        >
-            <ButtonBase
-                component="span"
-                className={
-                    classNames(
-                        `${prefixCls}-CheckboxBaseRipple`,
-                        {
-                            [`${prefixCls}-Checked`]: checked,
-                            [`${prefixCls}-${capitalize(color)}`]: color
-                        }
-                    )
-                }
-                centerRipple
-                square
-            >
-                <Component
-                    className={
-                        classNames(
-                            `${prefixCls}-InputWrapper`,
-
-                        )
-                    }
-                >
-                    <input
-                        type="checkbox"
-                        className={
-                            classNames(
-                                `${prefixCls}-Input`
-                            )
-                        }
-                        onChange={(e) => handleChange(e)}
-                        checked={checked}
-                        ref={ref}
-                        value={value}
-                    />
-
-                    {checked ? selectIcon : unselectIcon}
-
-                    {indeterminate && !checked && <span className={classNames(`${prefixCls}-Indeterminate`)}></span>}
-
-                </Component>
-
-            </ButtonBase>
-            {children && <Component
-                className={
-                    classNames(
-                        `${prefixCls}-labelWrapper`
-                    )
-                }
-            >
-                {children}
-            </Component>}
-        </label>
-    )
-});
-
-export default Checkbox;
+ 
+```js 
+<Checkbox >{"我爱中国"}</Checkbox>
+<Checkbox >{"我爱安徽"}</Checkbox>
+<Checkbox >{"我爱合肥"}</Checkbox>
+<Checkbox >{"我爱美国"}</Checkbox> 
 ``` 
 
-## 2、Checkbox组件的目录结构
+# 三、Checkbox组件设计大概流程
+## 1.组件框架结构大体简述
 
-```js
-|-Checkbox.js
-|-CheckGroup.js
-|-CheckGroupContext.js
-|-index.js
-|-index.scss
-```
+![哈哈](./assets/checkbox/yuanli.jpg)
+  
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+    在这里我们要设计这个组件分为2个部分：一个是Input框即元素的可选框部分，一个是可选框文字部分。
+    <br />
+    <br />
+    在我们的最外层Checkbox部分，我们使用label元素包裹元素，这个时候你可能会有疑问，为什么不使用div或者span来包裹呢？
+    <br />
+    <br />
+    label标签主要是方便鼠标点击使用，增强用用户操作体验。在传统的checkbox中，html的原生checkbox框非常的小，每次选择时需要点击到checkbox框，会很难点击。在包裹了label后，当点击复选框文字部分时也可以选中input框。
+    <br />
+    <br />
+    这里我们使用input框，通过onChange来改变复选框的选中/未选中状态，checked元素来控制复选框的选中/未选中状态并且改变相应的样式，即这里我们的input属于受控元素，我们并没有借助如文字的点击事件等来切换选中的状态，即采用原生的input框的change事件来切换。
+    <br />
+    <br />
+    一般我们的label部分即labelWrapper组件为组件传过来的children属性。
+ 
+</blockquote>  
 
 # 四、Checkbox组件设计核心要素
 

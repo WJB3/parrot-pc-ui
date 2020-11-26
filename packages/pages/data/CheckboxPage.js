@@ -16,6 +16,9 @@ const Page=(props)=>{
             <Checkbox indeterminate  /> 
             <Checkbox selectIcon={<Favorite />} unselectIcon={<FavoriteOutline />} /> 
             <Checkbox >{"我爱中国"}</Checkbox>
+            <Checkbox >{"我爱安徽"}</Checkbox>
+            <Checkbox >{"我爱合肥"}</Checkbox>
+            <Checkbox >{"我爱美国"}</Checkbox>
             <Checkbox.Group defaultValue={["a","b"]}>
                 <Checkbox value={"a"}>A</Checkbox>
                 <Checkbox value={"b"}>B</Checkbox>

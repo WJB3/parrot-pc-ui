@@ -208,6 +208,8 @@ const Tree=React.forwardRef((props,ref)=>{
         }
     },[keyEntities,checkedKeysProp]);  
 
+    console.log(keyEntities);
+
     return <TreeContext.Provider
         value={{
             keyEntities,

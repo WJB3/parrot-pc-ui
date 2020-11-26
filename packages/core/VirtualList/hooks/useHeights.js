@@ -35,10 +35,8 @@ export default function useHeights(getKey){
 
 
 
-    function setInstanceRef(item,instance){
-        console.log("setInstanceRef")
-        const itemKey=getKey(item);
-        console.log(itemKey)
+    function setInstanceRef(item,instance){ 
+        const itemKey=getKey(item); 
         if(instance){
             instanceRef.current.set(itemKey,instance);
             collectHeight();
