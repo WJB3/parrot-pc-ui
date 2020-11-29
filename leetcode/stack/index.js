@@ -58,3 +58,17 @@ function decimalToAnybase(n,binary){
     } 
     return stack.reverse().join("");
 }
+
+function greeting(){
+    console.log("greetring starting...");
+    sayHi()
+    console.log("greetring ending...")
+}
+
+function sayHi(){
+    console.log("sayHi...")
+}
+
+greeting();
+
+console.log("ending....")
