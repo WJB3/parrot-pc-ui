@@ -233,7 +233,7 @@ console.log("ending....")
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
 <h5>解题思路一：</h5>
 
-1.新建一个栈。<br />
+1.用栈来存储最终返回的字符串。<br />
 2.从左向右扫描字符串，如果遇到了左括号，就推进栈中，如果遇到右括号，就判断是否与栈顶元素相同，如果相同就将栈顶元素弹出栈，如果不相同直接返回false。<br />
 3.最后判断栈是否为空，如果是空的，即为合法的字符串，如果非空，即不合法。
 
@@ -243,19 +243,17 @@ console.log("ending....")
 
 ```js
 function isValid(s){
-    //如果是奇数,肯定是非法字符串
-    if(s % 2===1) return false;
-    const stack=[];
-    for(let i=0;i<s.length;i++){
-        const item=s[i];
-        if(item==="("||item==="["||item==="{"){
-            stack.push(item);
+    //如果是奇数直接返回false
+    if(s.length % 2!==0) return false;
+    let stack=[];
+    for(let char of s){
+        if(char==="("||char==="["||char==="{"){
+            stack.push(char);
         }else{
-            let top=stack[stack.length-1];
             if(
-                item===")"&&top==="(" ||
-                item==="]"&&top==="[" ||
-                item==="}"&&top==="{"
+                char===")"&&stack[stack.length-1]==="("||
+                char==="]"&&stack[stack.length-1]==="["||
+                char==="}"&&stack[stack.length-1]==="{"
             ){
                 stack.pop();
             }else{
@@ -268,15 +266,11 @@ function isValid(s){
 ```
 
 <ul>
-我们分析下这个函数的时间复杂度和空间复杂度
+我们分析下这个函数的时间复杂度
 
 <li>
-时间复杂度：全文中只有一个for循环，且函数体内的函数语句时间复杂度均为1，循环次数为s.length,所以该函数的时间复杂度为：O(s.length*1)=O(s.length)
-</li>
-<li>
-空间复杂度：全文中我们声明了一个stack临时变量，当在极端情况下，这个函数有可能会存s.length个左括号，所以该函数的空间复杂度也为O(s.length)
-</li>
-
+时间复杂度:已知此处只有一次for循环，且循环s.length次，所以时间复杂度是O(s.length)。
+</li> 
 </ul>
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
@@ -288,77 +282,20 @@ function isValid(s){
 
 ```js
 const isValid = function (s) {
-  const reg = /\[\]|\(\)|\{\}/
-
-  while (reg.test(s)) {
-    s = s.replace(reg, '')
-  }
-  return s.length === 0
+    const reg=/\[\]|\{\}|\(\)/;
+    while(reg.test(s)){
+        s=s.replace(reg,"");
+    }
+    return s.length===0;
 } 
 ```
 <ul>
-我们分析下这个函数的时间复杂度和空间复杂度
+我们分析下这个函数的时间复杂度
 
 <li>
-时间复杂度：O(n)，n 为字符串的长度。最坏的情况下，每次循环只能替换一对括号，比如 "(((((())))))"，需要循环 n/2 次。
-</li>
-<li>
-空间复杂度：空间复杂度：O(1)。
-</li>
-
-</ul>
-
-<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
-<h5>解题思路三：</h5>
-
-使用reduce优雅的实现类似进栈、出栈的操作:<br />
-1.使用字符串的split方法将其剪切成一个数组。<br />
-2.然后使用数组的reduce方法模拟出入栈，将reduce的第一个参数total当作是一个栈，这里值得注意的是，如果reduce不设置初始值，total的值就是数组的第一项，且reduce次数也会减少，打印下标即可发现初次循环下标为1。<br />
-3.当匹配到左括号时，进行出栈操作，也就是将值拼接进total上。<br />
-4.当匹配到右括号时，判断其与栈顶也就是total的最后一个字符串是否一致，一致的话就弹栈，即把最后一个字符串去除,不一致也将其推入栈中，虽然如果不一致肯定是非法的，但是这里我们并不通过返回false来判断是否非法。<br />
-5.最后判断total的值是否是空字符串，如果是空字符串，即是有效字符串
-</blockquote>
-
-通过这个思路，我们不难得出相对应的代码：
-
-```js
-const isValid=function(s){
-
-    let obj={
-        ")":"(",
-        "}":"{",
-        "]":"["
-    }
-
-    let str=s.split("").reduce((total,current)=>{
-        
-        if(obj[current]===total.substr(-1)){
-            return total.substr(0,total.length-1);
-        }
-
-        //如果是左括号或者与最后一个字符串不匹配的右括号就拼接
-        return total+current;
-
-    })
-
-    return str==="";
-
-}
-```
-
-<ul>
-我们分析下这个函数的时间复杂度和空间复杂度
-
-<li>
-时间复杂度：全文中只有一个reduce循环，所有我们这里的时间复杂度为O(s.length-1)
-</li>
-<li>
-空间复杂度：全文中我们声明了一个str变量，这里我们的空间复杂度为O(1)
-</li>
-
-</ul>
-
-
+时间复杂度:在极端情况下，假设每次只有一对括号被移除，所以时间复杂度是O(???)
+</li> 
+</ul> 
 
 ### 2.LeetCode第1021题-删除最外层的括号
 
@@ -424,10 +361,12 @@ const isValid=function(s){
 
 ```js
 var removeOuterParentheses=function(s){
-
-    let tempStack=[];//临时栈方便记录截取字符串的下标
-    let lastIndex=0;//方便记录最后一位下标
-    let arr=[];//存取字符串的下标
+    //临时栈
+    let tempStack=[];
+    //记录下标
+    let lastIndex=0;
+    //记录后值
+    let res=[];
 
     for(let i=0;i<s.length;i++){
         let char=s[i];
@@ -435,14 +374,13 @@ var removeOuterParentheses=function(s){
             tempStack.push(char);
         }else{
             tempStack.pop();
-            if(tempStack.length===0){
-                let push=i+1-lastIndex>2?s.substring(lastIndex+1,i):"";
-                arr.push(push);
+            if(!tempStack.length){
+                res.push(s.substring(lastIndex+1,i));
                 lastIndex=i+1;
             }
         }
     }
-    return arr.join("");
+    return res.join("")
 }
 
 ```
@@ -451,10 +389,7 @@ var removeOuterParentheses=function(s){
 
 <li>
 时间复杂度：全文中只有一个for循环，所以时间复杂度为O(s.length)
-</li>
-<li>
-空间复杂度：全文中只有一个for循环，所以空间复杂度为O(s.length)
-</li>
+</li> 
 
 </ul>
 
@@ -468,18 +403,21 @@ var removeOuterParentheses=function(s){
 
 ```js
 var removeOuterParentheses=function(s){
-    let stack=[];
     let res="";
+    let stack=[];
     for(let char of s){
+
         if(char===")"){
             stack.pop();
         }
+
         if(stack.length!==0){
-            res+=char
+            res+=char;
         }
+
         if(char==="("){
             stack.push(char);
-        } 
+        }
     }
     return res;
 }
@@ -489,11 +427,7 @@ var removeOuterParentheses=function(s){
 
 <li>
 时间复杂度：全文中只有一个for循环，所以时间复杂度为O(s.length)
-</li>
-<li>
-空间复杂度：全文中只有一个for循环，所以空间复杂度为O(s.length)
-</li>
-
+</li> 
 </ul>
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
@@ -522,10 +456,7 @@ var removeOuterParentheses = function(S) {
 
 <li>
 时间复杂度：全文中只有一个for循环，所以时间复杂度为O(s.length)
-</li>
-<li>
-空间复杂度：全文中只有一个res和opened变量，所以空间复杂度为O(1)
-</li>
+</li> 
 
 </ul>
 
@@ -577,11 +508,7 @@ var removeDuplicates = function(S) {
 
 <li>
 时间复杂度：全文中只有一个for循环，所以时间复杂度为O(S.length)
-</li>
-<li>
-空间复杂度：全文中只有一个res变量，所以空间复杂度为O(1)
-</li>
-
+</li> 
 </ul>
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
@@ -610,10 +537,7 @@ var removeDuplicates = function(S) {
 
 <li>
 时间复杂度：全文中只有一个while循环，所以时间复杂度为O(logN)
-</li>
-<li>
-空间复杂度：全文中只有一个reg变量，所以空间复杂度为O(1)
-</li>
+</li> 
 
 </ul>
 
@@ -665,10 +589,7 @@ var calPoints = function(ops) {
 
 <li>
 时间复杂度：全文中只有一个for循环，所以时间复杂度为O(ops.length)
-</li>
-<li>
-空间复杂度：全文中只有一个reg变量，所以空间复杂度为O(ops.length)
-</li>
+</li> 
 
 </ul>
 
@@ -717,10 +638,7 @@ var minOperations = function(logs) {
 
 <li>
 时间复杂度：全文中只有一个for循环，所以时间复杂度为O(logs.length)
-</li>
-<li>
-空间复杂度：全文中只有一个reg变量，所以空间复杂度为O(1)
-</li>
+</li> 
 
 </ul>
 
@@ -793,10 +711,7 @@ var nextGreaterElement = function(nums1, nums2) {
 
 <li>
 时间复杂度：全文中有2个for循环，所以时间复杂度为O(nums1.length*nums2.length)
-</li>
-<li>
-空间复杂度：全文中最多会存nums1个数组，占用了nums1个内存单元，所以空间复杂度为O(nums1)
-</li>
+</li> 
 
 </ul>
 
@@ -815,11 +730,7 @@ var nextGreaterElement = function(nums1, nums2) {
 
 <li>
 时间复杂度：全文中有2个for循环，所以时间复杂度为O(nums1.length*nums2.length)
-</li>
-<li>
-空间复杂度：全文中最多会存nums1个数组，占用了nums1个内存单元，所以空间复杂度为O(nums1)
-</li>
-
+</li> 
 </ul>
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
@@ -833,23 +744,10 @@ var nextGreaterElement = function(nums1, nums2) {
 var nextGreaterElement = function(nums1, nums2) {
     let map=new Map();
     let stack=[];
-    let res=[];
-    for(let i=0;i<nums2.length;i++){
 
-        while(stack.length && nums2[i]>stack[stack.length-1]){
-            map.set(stack.pop(),nums2[i])
-        }
-        //将nums2所有元素都入栈
-        stack.push(nums2[i])
-    }
-    //栈内还有元素，说明后面没有比自己大的了
-    while(stack.length){
-        map.set(stack.pop(),-1);
-    }
-    nums1.forEach(num=>{
-        res.push(map.get(num));
+    nums2.forEach((nums,i)=>{
+        
     })
-    return res;
 }
 ```
 
@@ -857,11 +755,8 @@ var nextGreaterElement = function(nums1, nums2) {
 我们分析下这个函数的时间复杂度和空间复杂度
 
 <li>
-时间复杂度：全文中有2个for循环，所以时间复杂度为O(nums2.length)
-</li>
-<li>
-空间复杂度：全文中最多会存nums1个数组，占用了nums2.length个内存单元，所以空间复杂度为O(nums2.length)
-</li>
+时间复杂度：全文中有1个for循环，所以时间复杂度为O(nums2.length)
+</li> 
 
 </ul>
 
@@ -1368,7 +1263,7 @@ var dailyTemperatures = function(T) {
 };
 ```
 
-### 3.LeetCode第739题-每日温度
+### 3.LeetCode第739题-去除重复字母 ( * 理解不够深刻)
 
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
@@ -1389,34 +1284,51 @@ var dailyTemperatures = function(T) {
 ```
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
-这下子好像懂了，就是去除重复字母并且字母的顺序不能打乱。
+其实看了看例子更加没法看懂了，经过我的深思熟虑，我决定直接看答案！
+</blockquote>
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(247, 31, 85,1); background: rgb(239, 235, 233);line-height:1.5;'>
+要理解这道题，首先我们需要知道什么是字典序，在数学中，字典或词典顺序（也称为词汇顺序，字典顺序，字母顺序或词典顺序）是基于字母顺序排列的单词按字母顺序排列的方法。<br />
+文中要求返回最小的字典序，可知<i>axxxxxxx</i>总是比<i>bxxxxxxx</i>的字典序要小，也就是能字母序能往前排就往前排！
+</blockquote>
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'> 
+我在这里给大家解释一下把！我们以上面的第二个例子为例：<br />
+1.新建一个栈stack=[],当扫描第一个字符串c时，此时栈为空，将c推入栈中，此时栈为stack=['c']。<br />
+2.扫描到第二个字符串b时，首先查看后面剩余字符串中是否还有栈顶c，发现有，而且b的字典序比c小，则移除栈顶c，将b压入栈中，此时栈为stack=['b']。<br />
+3.扫描到第三个字符串a时，首先查看后面剩余字符串中是否还有栈顶b,发现有，而且a的字典序比b小，则移除栈顶b，将a压入栈中，此时栈为stack=['a']。<br />
+4.扫描到第四个字符串c时，首先查看后面剩余字符串中是否还有栈顶a,发现没有，直接将c压入栈中，此时栈为stack=['a','c']。<br />
+5.扫描到第五个字符串d时，首先查看后面剩余字符串中是否还有栈顶c,发现有，但是d的字典序比c要大，所以直接将d压入栈中，此时栈为stack=['a','c','d']。<br />
+6.扫描到第六个字符串c时，首先查看后面剩余字符串中是否还有栈顶c,发现没有，而且原栈中已经存在c了，所以直接进行下一次循环，此时栈为stack=['a','c','d']。<br />
+7.扫描到第七个字符串b时，首先查看后面剩余字符串中是否含有栈顶元素d,发现没有，并且栈中也没有b,则直接将b压入栈中，此时栈为stack=['a','c','d','b']。<br />
+8.扫描到第八个字符串c时，首先查看后面剩余字符串是否含有栈顶元素b，发现没有，而且栈中已经存在c了，所以直接跳过，至此结束循环，最后栈为stack=['a','c','d','b']。
 </blockquote>
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
 <h5>解题思路一：</h5>   
-1.新建一个栈。<br />
-2.扫描字符串，遇到栈中没有的字符，push进栈中。<br />
-3.如果遇到栈中有的字符，判断是否大于栈顶元素，如果大于则去除原字符，push进栈中否则不操作。
+1.用栈来存储最终返回的字符串，并维持字符串的最小字典序。<br />
+2.每遇到一个字符，如果这个字符不存在于栈中，就需要将该字符压入栈中。如果已经存在，直接进入下一次循环。<br />
+3.但在压入之前，需要先将之后还会出现，并且字典序比当前字符大的栈顶字符移除，然后再将当前字符压入。
 </blockquote>
 
 ```js
-//charCodeAt()返回对应的unicode值
 var removeDuplicateLetters = function(s) {
-    let stack=[];
-    for(let char of s){
-        let index=stack.indexOf(char);
-        if(index===-1){
-            stack.push(char)
-        }else{
-            if(char.charCodeAt()>stack[stack.length-1].charCodeAt()){
-                stack.splice(index,1);
-                stack.push(char);
-            }
+    let stack="";
+    for(let i=0;i<s.length;i++){ 
+        let char=s[i];
+
+        if(stack.indexOf(char)>-1) continue; 
+
+        while(stack.length && s.indexOf(stack.substring(stack.length-1),i)>i && stack.substring(stack.length-1)>char){
+            stack=stack.substring(0,stack.length-1);
         }
+
+        stack+=char;
     }
-    return stack.join("");
-};
+    return stack;
+}; 
 ```
+
 
 
 
