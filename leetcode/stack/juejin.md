@@ -735,19 +735,27 @@ var nextGreaterElement = function(nums1, nums2) {
 
 <blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
 <h5>解题思路三：</h5>   
-1.将nums2中所有元素入栈，如果遇到比栈顶大的元素就是第一个比自己小的了。<br >
-2.那么用key表示当前的数，nums2[i]表示比key大的第一个数。<br />
-3.枚举nums1找出存在key的value值即可。
+1.我们可以忽略数组 nums1，先对将 nums2 中的每一个元素，求出其下一个更大的元素。随后对于将这些答案放入哈希映射（HashMap）中，再遍历数组 nums1，并直接找出答案。对于 nums2，我们可以使用单调栈来解决这个问题。<br />
+2.我们首先把第一个元素 nums2[1] 放入栈，随后对于第二个元素 nums2[2]，如果 nums2[2] > nums2[1]，那么我们就找到了 nums2[1] 的下一个更大元素 nums2[2]，此时就可以把 nums2[1] 出栈并把 nums2[2] 入栈；如果 nums2[2] <= nums2[1]，我们就仅把 nums2[2] 入栈。对于第三个元素 nums2[3]，此时栈中有若干个元素，那么所有比 nums2[3] 小的元素都找到了下一个更大元素（即 nums2[3]），因此可以出栈，在这之后，我们将 nums2[3] 入栈，以此类推。<br />
+3.可以发现，我们维护了一个单调栈，栈中的元素从栈顶到栈底是单调不降的。当我们遇到一个新的元素 nums2[i] 时，我们判断栈顶元素是否小于 nums2[i]，如果是，那么栈顶元素的下一个更大元素即为 nums2[i]，我们将栈顶元素出栈。重复这一操作，直到栈为空或者栈顶元素大于 nums2[i]。此时我们将 nums2[i] 入栈，保持栈的单调性，并对接下来的 nums2[i + 1], nums2[i + 2] ... 执行同样的操作。
 </blockquote>
 
 ```js
 var nextGreaterElement = function(nums1, nums2) {
     let map=new Map();
     let stack=[];
+    nums2.forEach((num)=>{
+        while(stack.length && num>stack[stack.length-1]){
+            map.set(stack[stack.length-1],num);
+            stack.pop();
+        }
 
-    nums2.forEach((nums,i)=>{
-        
-    })
+        stack.push(num)
+    });
+    while(stack.length){
+        map.set(stack.pop(),-1)
+    }
+    return nums1.map(num=>map.get(num))
 }
 ```
 
@@ -1217,24 +1225,21 @@ var dailyTemperatures = function(T) {
 
 ```js
 //[73,74,75,71,69,72,76,73]
+//[1, 1, 4, 2, 1, 1, 0, 0]
 var dailyTemperatures = function(T) {
     let stack=[];
     let res=[];
-    T.forEach((t,i)=>{
-        while(stack.length){
-            if(T[stack[stack.length-1]]<T[i]){
-                let pop=stack.pop();
-                res[pop]=i-pop;
-            }else{
-                break
-            }
-        } 
+    for(let i=0;i<T.length;i++){
+
+        while(stack.length && T[i]>T[stack[stack.length-1]]){
+            res[stack[stack.length-1]]=i-stack[stack.length-1];
+            stack.pop();
+        }
+
         stack.push(i);
-    })
-    //说明这些stack没有匹配到
+    }
     while(stack.length){
-        let j=stack.pop();
-        res[j]=0;
+        res[stack.pop()]=0;
     }
     return res;
 }
