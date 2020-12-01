@@ -1334,6 +1334,211 @@ var removeDuplicateLetters = function(s) {
 }; 
 ```
 
+### 4.LeetCode第71题-简化路径
 
 
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+ 
+以 Unix 风格给出一个文件的绝对路径，你需要简化它。或者换句话说，将其转换为规范路径。<br />
+在 Unix 风格的文件系统中，一个点（.）表示当前目录本身；此外，两个点 （..） 表示将目录切换到上一级（指向父目录）；两者都可以是复杂相对路径的组成部分。 <br />
+请注意，返回的规范路径必须始终以斜杠 / 开头，并且两个目录名之间必须只有一个斜杠 /。最后一个目录名（如果存在）不能以 / 结尾。此外，规范路径必须是表示绝对路径的最短字符串。 
+</blockquote>
 
+* 实例1
+```js
+输入："/home/"
+输出："/home"
+解释：注意，最后一个目录名后面没有斜杠。
+```
+
+* 实例2
+```js
+输入：" "
+输出："/"
+解释：从根目录向上一级是不可行的，因为根是你可以到达的最高级。
+```
+
+* 实例3
+```js
+输入："/home//foo/"
+输出："/home/foo"
+解释：在规范路径中，多个连续斜杠需要用一个斜杠替换。
+```
+
+* 实例4
+```js
+输入："/a/./b/../../c/"
+输出："/c"
+```
+
+* 实例5
+```js
+输入："/a/../../b/../c//.//"
+输出："/c"
+```
+
+* 实例6
+```js
+输入："/a//b////c/d//././/.."
+输出："/a/b/c"
+```
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+大家可能看了实例1、实例2、实例3都比较好理解，我们一起来解释解释下4、5、6吧！<br />
+对于实例4：<br />
+1.当遇到a时，表示目录为/a。<br />
+2.当遇到.时，表示当级目录，此时目录不变为/a。<br />
+3.当遇到b时，表示目录为/a/b。<br />
+4.当遇到..时，表示上级目录，此时目录为/a。<br />
+5.当遇到..时，表示上级目录，此时目录为/根目录。<br />
+6.当遇到c时，表示上级目录，此时目录为/c。<br />
+对于实例5：<br />
+1.当遇到a时，表示目录为/a。<br />
+2.当遇到..时，表示上级目录，此时目录为/根目录。<br />
+3.当遇到..时，表示上级目录，此时目录为/根目录。<br />
+4.当遇到b时，表示目录为/b。<br />
+5.当遇到..时，表示上级目录，此时目录为/根目录。<br />
+6.当遇到c时，表示/c目录。<br />
+7.遇到空格，表示非法字符，直接跳过。<br />
+8.遇到.，表示当前目录，所以最终目录为/c。<br />
+对于实例6：<br />
+1.当遇到a时，表示目录为/a。<br />
+2.当遇到空格时，直接跳过。<br />
+3.当遇到B时，表示目录为/b,此时目录为/a/b。<br />
+4.当遇到c时，表示目录为/c,此时目录为/a/b/c。<br />
+5.当遇到d时，表示目录为/d,此时目录为/a/b/c/d。<br />
+6.当遇到.时，也可以直接跳过，不变。<br />
+7.当遇到..时，表示上级目录，此时目录为/a/b/c。<br />
+</blockquote>
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+通过以上例子我们可以发现，当是空格或者.时，都可以直接跳过，只有在..时，需要将栈顶弹出。
+</blockquote>
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+<h5>解题思路一：</h5>   
+1.使用split切割/，可以将.和""直接移除，因为这些并不影响结果。<br />
+2.新建一个栈，如果是字母，就直接push进栈中，如果遇到..就弹出栈顶。
+</blockquote>
+
+由以上代码可以直接写出代码，当你把题目读懂时，这道题的难度可能直接降到了简单。
+
+```js
+var simplifyPath = function(path) { 
+    const realArr=path.split("/").filter(p=>p && p!==".");
+    const stack=[];
+    for(let char of realArr){
+        if(char===".."){
+            stack.pop(char);
+        }else{
+            stack.push(char);
+        }
+    }
+    return stack.join("/")[0]!=="/"?"/"+stack.join("/"):stack.join("/");
+};
+```
+
+### 5.LeetCode第735题-行星碰撞
+
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+给定一个整数数组 asteroids，表示在同一行的行星。<br />
+对于数组中的每一个元素，其绝对值表示行星的大小，正负表示行星的移动方向（正表示向右移动，负表示向左移动）。每一颗行星以相同的速度移动。<br />
+找出碰撞后剩下的所有行星。碰撞规则：两个行星相互碰撞，较小的行星会爆炸。如果两颗行星大小相同，则两颗行星都会爆炸。两颗移动方向相同的行星，永远不会发生碰撞。<br />
+</blockquote>
+
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+其实这道题我也是看了很久都没有看明白。我们一起来看例子吧。
+</blockquote>
+
+* 实例1
+```js
+输入: 
+asteroids = [5, 10, -5]
+输出: [5, 10]
+解释: 
+10 和 -5 碰撞后只剩下 10。 5 和 10 永远不会发生碰撞。 
+```
+
+* 实例2
+```js
+输入: 
+asteroids = [8, -8]
+输出: []
+解释: 
+8 和 -8 碰撞后，两者都发生爆炸。
+```
+
+* 实例3
+```js
+输入: 
+asteroids = [10, 2, -5]
+输出: [10]
+解释: 
+2 和 -5 发生碰撞后剩下 -5。10 和 -5 发生碰撞后剩下 10。 
+```
+
+* 实例4
+```js
+输入: 
+asteroids = [-2, -1, 1, 2]
+输出: [-2, -1, 1, 2]
+解释: 
+-2 和 -1 向左移动，而 1 和 2 向右移动。
+由于移动方向相同的行星不会发生碰撞，所以最终没有行星发生碰撞。 
+```
+
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+首先我们脑子里面回想一下，如果行星都向一个方向移动，是永远不会相撞的，当行星一个向左移动，下一个向右移动，其实也不会相撞，当一个行星向右移动，而下一个行星向左相撞，那么就会发生碰撞。
+</blockquote>
+
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+<h5>解题思路一：</h5>   
+1.新建一个栈存放没有碰撞的行星。<br />
+2.当栈为空时，直接将行星推进栈中。<br />
+3.当栈不为空时，首先判断新的行星是否与栈顶元素正负值一致，如果一致，则不会发生碰撞，直接加上栈中，如果新的行星与栈顶元素不一致，首先判断新元素是向右还是向左，如果是向右，无法发生碰撞，可以直接加入栈中，如果是向左，则会发生碰撞，判断绝对值大小，如果新行星的大小大于栈顶行星大小，则直接将栈顶移出，将新元素加入栈中，如果是相等的，则直接将栈顶移出，且不添加新行星进栈中。
+</blockquote>
+
+```js
+var asteroidCollision = function(asteroids) {
+    let stack=[];
+    
+    function isFit(a,b){
+        //判断方向是否一致
+        if(a>0 && b>0) return true;
+        if(a>0 && b<0) return false;
+        if(a<0 && b<0) return true;
+        if(a<0 && b>0) return false;
+
+        if(!b){
+            return true;
+        }
+    }
+
+    for(let char of asteroids){
+
+        if(stack.length===0 || isFit(char,stack[stack.length-1]) || char>0 ) { stack.push(char); continue;}
+
+        while(stack.length && !isFit(char,stack[stack.length-1]) && char<0){
+          
+            if(Math.abs(char)===Math.abs(stack[stack.length-1])){
+                stack.pop();
+                break;
+            }else if(Math.abs(char)>Math.abs(stack[stack.length-1])){
+                stack.pop(); 
+                if(isFit(char,stack[stack.length-1])){ 
+                    stack.push(char)
+                }
+                continue;
+            }else{ 
+                break;
+            }
+        }
+        
+    }
+    return stack;
+};
+```
