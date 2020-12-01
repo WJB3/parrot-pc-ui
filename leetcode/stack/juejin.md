@@ -1542,3 +1542,87 @@ var asteroidCollision = function(asteroids) {
     return stack;
 };
 ```
+
+### 6.LeetCode第227题-基本计算器 II
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+实现一个基本的计算器来计算一个简单的字符串表达式的值。<br />
+字符串表达式仅包含非负整数，+， - ，*，/ 四种运算符和空格  。 整数除法仅保留整数部分。
+</blockquote>
+
+光看题目看不出来啥，我们还是先看例子吧。
+
+* 实例1
+```js
+输入: "3+2*2"
+输出: 7
+```
+
+* 实例2
+```js
+输入: " 3/2 "
+输出: 1
+```
+
+* 实例3
+```js
+输入: " 3+5 / 2 "
+输出: 5
+```
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+分析题目，这是一个非常典型的出栈入栈的题目。
+</blockquote>
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+<h5>解题思路一：</h5>   
+1.新建一个值存放当前的值、一个栈来存储最后的结果。<br />
+2.从左向右遍历字符串，首先忽略空格，当遇到数字时，记录当前数组。当遇到+ - * c时，使用对应的加减乘除来计算。当遇到+号时，将当前值推进栈中，当遇到-号时，将当前值的相反数推入栈中，当遇到*号时，先将栈顶移除，然后再将当前值与刚移除的栈顶相乘的结果推入栈中，如果遇到/号，先将栈顶移除，然后再将当前值与刚移除的栈顶相处的结果推入栈中。<br />
+3.将栈中的数据进行相加便可以得处最终结果。<br />
+4.在匹配到下一个符号时，刚好可以记录上一次的值和符号并进行相应的出入栈操作。这里最关键的就是在这里，当遇到下一个符号时，刚好可以记录上一次的完整的值，在此时将值进行push，而且因为循环到最后一位时，我们这个时候是无法写入下一个符号的，也就无法将最后一个push进数组，这个时候我们巧用||，因为||的优先级小于< 的优先级，所以我们当n有值的时候,进入循环将最后一个值也push进去。
+</blockquote>
+
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(247, 31, 85,1); background: rgb(239, 235, 233);line-height:1.5;'>
+1.||的优先级小于< 的优先级，故当n有值时，可以再次进入循环。<br />
+2.｜ 0 可以替代Math.floor进行取整。
+</blockquote>
+
+通过上面的思路，不难写出下面的代码。
+
+```js
+var calculate = function(s) {
+    //f记录上一次的符号。
+    //记录上一次的值。
+    let f='+',stack=[],n="";
+    //"3+2*2"
+    for(let i=0;i<s.length || n;i++){
+        let char=s[i];
+        if(char===' ') continue;
+        // \D匹配除数字外的任意字符
+        if(/\D/.test(char)){
+            switch(f){
+                case "+":
+                    stack.push(n);
+                    break;
+                case "-":
+                    stack.push(-n);
+                    break;
+                case "*":
+                    stack.push(stack.pop()*n);
+                    break;
+                case "/":
+                    stack.push(stack.pop()/n | 0);
+                    break;  
+            }
+            f=char,n=""
+        }else{
+            n+=char;
+        }
+    }
+
+    return stack.reduce((total,current)=>total+Number(current),0);
+};
+```
+
+
