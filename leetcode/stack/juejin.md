@@ -1625,4 +1625,105 @@ var calculate = function(s) {
 };
 ```
 
+### 7.LeetCode第880题-索引处的解码字符串
 
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+给定一个编码字符串 S。请你找出 解码字符串 并将其写入磁带。解码时，从编码字符串中 每次读取一个字符 ，并采取以下步骤：<br />
+<li>如果所读的字符是字母，则将该字母写在磁带上。</li>
+<li>如果所读的字符是数字（例如 d），则整个当前磁带总共会被重复写 d-1 次。</li>
+现在，对于给定的编码字符串 S 和索引 K，查找并返回解码字符串中的第 K 个字母。
+</blockquote>
+
+让我们看看实例!
+* 实例1
+```js
+输入：S = "leet2code3", K = 10
+输出："o"
+解释：
+解码后的字符串为 "leetleetcodeleetleetcodeleetleetcode"。
+字符串中的第 10 个字母是 "o"。 
+``` 
+* 实例2
+```js
+输入：S = "ha22", K = 5
+输出："h"
+解释：
+解码后的字符串为 "hahahaha"。第 5 个字母是 "h"。
+```
+
+* 实例3
+```js
+输入：S = "a2345678999999999999999", K = 1
+输出："a"
+解释：
+解码后的字符串为 "a" 重复 8301530446056247680 次。第 1 个字母是 "a"。 
+```
+
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+一开始看到这个题目，这么简单，确定是中等难度的题目？然后准备跟随题意准备使用暴力破解法。<br />
+<h5>解题思路一：暴力破解法（错误示范）</h5>   
+1.新建一个栈，扫描字符串，如果是字母就直接推入数组。<br />
+2.如果是数字n，遍历数组，循环n-1次，然后将原栈中的每个数再push进栈中。
+</blockquote>
+
+```js
+var decodeAtIndex = function(S, K) {
+    let stack=[];
+    for(let char of S){
+        let orginStack=[...stack];
+        if(/\d/.test(char)){
+            for(let i=0;i<char-1;i++){
+                orginStack.forEach(o=>stack.push(o))
+            }
+        }else{
+            stack.push(char);
+        }
+    }
+    return stack[K-1];
+}
+```
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+<h5>解题思路二：反向思维法（官方解释）</h5>
+如果有一个像appleappleapple这样的解码字符串和一个像K=14这样的索引，那么如果K=4，答案是相同的。<br />
+一般来说，当解码的字符串等于某个长度为 size 的单词重复某些次数（例如 apple 与 size=5 组合重复3次）时，索引 K 的答案与索引 K % size 的答案相同。 <br />
+我们可以通过逆向工作，跟踪解码字符串的大小来使用这种洞察力。每当解码的字符串等于某些单词 word 重复 d 次时，我们就可以将 k 减少到 K % (Word.Length)。 
+
+1.首先算出解码字符串的长度。<br />
+2.逆向遍历S，如果遍历的是字符类型，判断此时索引K和size是否相等，如果相等直接返回字符，否则size--。<br />
+3.如果遍历的是数字类型，可以通过size/现在的数组得出单词重复的大小length，即可将K缩小至K%length。<br />
+</blockquote>
+
+```js
+var decodeAtIndex = function(S, K) {
+    let size = 0
+    const reg = new RegExp("^[a-z]")
+    for(let i = 0; i < S.length; i++) {
+        if(reg.test(S[i])) {
+            size++
+        } else {
+            size *= S[i]
+        }
+        // 在size >= K时就可以去掉后面的字符了
+        if(size >= K) {
+            S = S.substr(0, i + 1)
+            break
+        }
+    }
+    if(K > size) return null
+    for(let j = S.length - 1; j >= 0; j--) {
+        if(K === 0 && reg.test(S[j])) return S[j]
+        if(!reg.test(S[j])) {
+            size /= S[j]
+            K %= size
+        } else {
+            if(K === size) {
+                return S[j] 
+            } else {
+                size--
+            }
+        }
+    }
+}; 
+```
