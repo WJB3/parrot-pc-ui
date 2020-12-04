@@ -606,3 +606,92 @@ const bos=(root)=>{
 }
 //bos就是非递归版本的实现了后序遍历，复制到浏览器打印出的顺序为1->3->2->7->8->5
 ```
+
+# 5.Leetcode分类刷题-树
+
+## 1.简单难度
+
+### 1.Leetcode第104题-二叉树的最大深度
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+给定一个二叉树，找出其最大深度。<br />
+二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。<br />
+说明: 叶子节点是指没有子节点的节点。
+</blockquote>
+
+我们先看示例把！
+
+示例：
+给定二叉树 [3,9,20,null,null,15,7]
+
+```js
+     3
+    / \
+   9   20
+       / \  
+      15  7
+```
+
+返回它的最大深度 3 。
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+根据前文我们学习的JS表示的二叉树结构，我们可以很快地得出该题的数据结构如下：
+</blockquote>
+
+```js
+var binaryTree={
+    val:3,
+    left:{
+        val:9,
+        left:null,
+        right:null
+    },
+    right:{
+        val:20,
+        left:{
+            val:15,
+            left:null,
+            right:null
+        },
+        right:{
+            val:7,
+            left:null,
+            right:null
+        }
+    }
+}
+```
+
+<blockquote style='padding: 10px; font-size: 1em; margin: 1em 0px; color: rgb(0, 0, 0); border-left: 5px solid rgba(0,189,170,1); background: rgb(239, 235, 233);line-height:1.5;'>
+解题思路：<br />题目中求它的最大深度，这里我们考虑前文学到的深度优先遍历，因为深度优先遍历是尽可能深的访问我们的节点，这和我们的题目不谋而合。计算最大深度其实也就是求二叉树的最大层级，在深度优先遍历的过程中，记录每个节点所在的层级，找出最大的层级即可。<br />
+解题步骤：<br />
+1.新建一个变量，记录最大深度。<br />
+2.深度优先遍历整颗树，并记录每个节点的层级，同时不断刷新最大深度这个变量。<br />
+3.遍历结束返回最大深度这个变量。
+</blockquote>
+
+```js
+var maxDepth = function(root) {
+    let max=0;
+
+    const dfs=(root,level)=>{
+        if(!root) return ;
+        console.log(root.val);
+        //深度优先遍历第一步访问根节点
+        //只有在到达叶子节点才刷新最大深度这个变量
+        if(!root.left && !root.right){
+            max=Math.max(level,max);
+        }
+        //深度优先遍历第二步对根节点的children挨个进行深度优先遍历。
+        //之前我们是对多叉树进行深度遍历，这里二叉树其实并没有children这个数组，而left和right就相当于我们的children
+        dfs(root.left,level+1);
+        dfs(root.right,level+1);
+    }
+
+    //初始时层级为第一层
+    dfs(root,1);
+
+    return max;
+    
+};
+```
