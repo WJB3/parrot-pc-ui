@@ -160,6 +160,17 @@ const Tree=React.forwardRef((props,ref)=>{
 
     },[treeData]);
 
+    useLayoutEffect(()=>{   
+        if(haveValue(expandedKeys)||haveValue(treeData)){
+            setFlattenNodes(flattenTreeData(
+                treeData,
+                expandedKeys
+            )); 
+        }   
+    },[expandedKeys]);
+
+   
+
     useLayoutEffect(()=>{  
         if(haveValue(keyEntities)){  
             //针对defaultValue的情况
@@ -179,14 +190,7 @@ const Tree=React.forwardRef((props,ref)=>{
         }
     },[keyEntities,expandedKeysProp,defaultExpandAll]);
 
-    useLayoutEffect(()=>{   
-        if(haveValue(expandedKeys)||haveValue(treeData)){
-            setFlattenNodes(flattenTreeData(
-                treeData,
-                expandedKeys
-            )); 
-        }   
-    },[expandedKeys]);
+  
     
     useLayoutEffect(()=>{ 
         if(haveValue(keyEntities)){  
@@ -207,8 +211,7 @@ const Tree=React.forwardRef((props,ref)=>{
 
         }
     },[keyEntities,checkedKeysProp]);  
-
-    console.log(keyEntities);
+ 
 
     return <TreeContext.Provider
         value={{
