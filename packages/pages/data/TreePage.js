@@ -1,7 +1,8 @@
 
 
 import React ,{ useEffect, useState,useRef } from 'react';   
-import Tree from '@packages/core/Tree';   
+import Tree from '@packages/core/Tree';  
+import { Button, message } from 'antd'; 
 import 'antd/dist/antd.css';
   
 const treeData = [
@@ -30,13 +31,26 @@ const treeData = [
     ],
   }
 ]; 
+
+const key = 'updatable';
  
 const Page=(props)=>{   
+
+    const openMessage = () => {
+      message.loading({ content: 'Loading...', key });
+      setTimeout(() => {
+        message.success({ content: 'Loaded!', key, duration: 2 });
+      }, 1000);
+    };
+
     return (
         <div> 
             <Tree 
               treeData={treeData}  
             />  
+             <Button type="primary" onClick={openMessage}>
+              Open the message box
+            </Button>
         </div>
     )
 }

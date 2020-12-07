@@ -4,6 +4,7 @@ import React ,{useContext} from 'react';
 import { ConfigContext } from '@packages/core/ConfigProvider';
 import {  } from '@packages/core/Tree';
 import classNames from '@packages/utils/classNames';
+import VirtualList from '@packages/core/VirtualList';
 
 const Tree=React.forwardRef(function(props,ref){
 
@@ -19,7 +20,9 @@ const Tree=React.forwardRef(function(props,ref){
         <div className={
             classNames(prefixCls)
         }>
-
+            <VirtualList>
+                
+            </VirtualList>
         </div>
     ) 
 
