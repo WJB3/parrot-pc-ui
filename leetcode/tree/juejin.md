@@ -677,8 +677,7 @@ var maxDepth = function(root) {
     let max=0;
 
     const dfs=(root,level)=>{
-        if(!root) return ;
-        console.log(root.val);
+        if(!root) return ; 
         //深度优先遍历第一步访问根节点
         //只有在到达叶子节点才刷新最大深度这个变量
         if(!root.left && !root.right){
