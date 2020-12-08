@@ -10,9 +10,23 @@ import {
 } from '@packages/utils/validateValue';
 import {
     convertDataToEntities,
-    flattenTreeData
+    flattenTreeData,
+    conductExpandParent,
+    getKey
 } from './utils/treeUtils';
+import {
+    ArrowDown
+} from '@packages/core/Icon';
+import TreeNode from './TreeNode';
+import "./index.scss";
 
+function itemKey(item){
+    const {
+        data: { key },
+        pos,
+    } = item;
+    return getKey(key,pos);
+}
 
 const Tree=React.forwardRef(function(props,ref){
 
@@ -25,63 +39,84 @@ const Tree=React.forwardRef(function(props,ref){
         //传过来的树形结构
         treeData=[],
         prefixCls:customizePrefixCls,
-        //默认展开的keys
+        //展开的keys(可控)
         expandedKeys:expandedKeysProp,
+        //默认展开的keys 
         defaultExpandedKeys,
-        className
+        //展开父节点
+        expandParent:expandParentProp,
+        //默认展开父节点
+        defaultExpandParent=true,
+        defaultExpandAll=false,
+        className,
+        switcherIcon=<ArrowDown />,
+        showIcon,
+        blockNode,
+        selectedKeys:selectedKeysProp,
+        defaultSelectedKeys=[],
+        filterTreeNode,
+        icon
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("Tree",customizePrefixCls);
 
+    const [expandParent]=useControlled({
+        controlled:expandParentProp,
+        default:defaultExpandParent
+    });
+
     const [flattenData,setFlattenData]=useState([]);
 
-    const [keyEntities,setKeyEntity]=useState([]);
+    const [keyEntities,setKeyEntities]=useState([]);
 
-    const [expandedKeys,setExpandedKeys]=useControlled({
-        controlled:expandedKeysProp,
+    //控制可控
+    const [controlledExpandKeys,setControlledExpandKeys]=useState(expandedKeysProp);
+
+    const [expandedKeys,setExpandedKeys,isExpandedKeysControlled]=useControlled({
+        controlled:controlledExpandKeys,
         default:defaultExpandedKeys
     });
 
+    //可选key
+    const [selectedKeys,setSelectedKeys]=useControlled({
+        controlled:selectedKeysProp,
+        default:defaultSelectedKeys
+    });
+ 
     useLayoutEffect(()=>{
-        if(haveValue(expandedKeys)||haveValue(treeData)){
-            setFlattenData(
-                flattenTreeData(
-                    treeData,
-                    expandedKeys
-                )
+        let newKeyEntities={};
+        let newExpandedKeys=[];
+        let newFlattenData=[];
+        //如果有treeData说明需要树有值则需要更改entity实体
+        if(haveValue(treeData)){
+            newKeyEntities=convertDataToEntities(treeData).keyEntities;
+        }
+        //如果存在新实体则自然存在treeData，故可以根据实体得到展开的expandkeys
+        if(haveValue(newKeyEntities)){
+            //如果不是默认展开，则将所有上级expandedKeys放进expandedKeys中
+            if(!defaultExpandAll){
+                newExpandedKeys=conductExpandParent(expandedKeys,newKeyEntities)
+            }else{//如果默认是展开全部的，将所有key放进expandedKeys
+                const cloneKeyEntities = { ...newKeyEntities };
+                const allExpandedKeys=Object.keys(cloneKeyEntities).map(key => cloneKeyEntities[key].key);
+                newExpandedKeys=allExpandedKeys;
+            }
+        }
+        if(haveValue(newExpandedKeys)||haveValue(treeData)){
+            newFlattenData=flattenTreeData(
+                treeData,
+                expandedKeys
             )
         }
-    },[expandedKeys]);
-
-    useLayoutEffect(()=>{
-        //生成keyEntities
-        let newEntitiesMap={};//新的实体分类
-        if(haveValue){
-            newEntitiesMap=convertDataToEntities(treeData);
-            setKeyEntity({...newEntitiesMap.keyEntities});
+        setKeyEntities(newKeyEntities);
+        if(isExpandedKeysControlled){
+            setControlledExpandKeys(newExpandedKeys)
+        }else{
+            setExpandedKeys(newExpandedKeys);
         }
-    },[treeData]);
-
-    const [a,setA]=useState(1);
-    const [b,setB]=useState(1);
-    const [c,setC]=useState(1);
-    const [d,setD]=useState(1);
-
-    useEffect(()=>{
-        setA(2)
-    },[])
-
-    useEffect(()=>{
-        setB(a+1)
-    },[a]);
-
-    useEffect(()=>{
-        setC(b+1)
-    },[b]);
-
-    useEffect(()=>{
-        setD(c+1)
-    },[c]);
+        setFlattenData(newFlattenData);
+        
+    },[]);
 
     return (
         <div className={
@@ -91,9 +126,31 @@ const Tree=React.forwardRef(function(props,ref){
             )
         }>
             <VirtualList
-                data={flattenData}    
+                prefixCls={`${prefixCls}-NodeList`}
+                data={flattenData}   
+                itemKey={itemKey} 
             >
-                
+                {
+                    (treeNodeData)=>{ 
+                        const {
+                            key
+                        }=treeNodeData;
+                        return (
+                            <TreeNode
+                                {...treeNodeData}
+                                className={`${prefixCls}-TreeNode`}
+                                icon={icon}
+                                showIcon={showIcon}
+                                switcherIcon={switcherIcon}
+                                filterTreeNode={filterTreeNode}
+                                blockNode={blockNode}
+                                expanded={expandedKeys.indexOf(key)>-1}
+                                selected={selectedKeys.indexOf(key)>-1}
+                            />
+                        )
+
+                    }
+                }
             </VirtualList>
         </div>
     ) 

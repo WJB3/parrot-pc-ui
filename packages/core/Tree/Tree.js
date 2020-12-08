@@ -115,7 +115,7 @@ const Tree=React.forwardRef((props,ref)=>{
         onSelect?.(e.treeNode);
     }
 
-    const onNodeCheck=(flag,treeNode)=>{x
+    const onNodeCheck=(flag,treeNode)=>{
          
         const { key }=treeNode;
         let newCheckedKeys; 

@@ -2,7 +2,8 @@
 
 import React ,{ useEffect, useState,useRef } from 'react';   
 import Tree from '@packages/core/Tree';  
-import { Button, message } from 'antd'; 
+import CTree from '@packages/core/CTree';  
+import { Button, message,Tree as TreeA } from 'antd'; 
 import 'antd/dist/antd.css';
   
 const treeData = [
@@ -47,6 +48,17 @@ const Page=(props)=>{
         <div> 
             <Tree 
               treeData={treeData}  
+              expandedKeys={['0-0-0-0']}
+              defaultExpandParent={false}
+            />  
+            <CTree
+              treeData={treeData}  
+              expandedKeys={['0-0-0-0']} 
+            />  
+            <TreeA
+              treeData={treeData}  
+              expandedKeys={['0-0-0-0']}
+              defaultExpandParent={false}
             />  
              <Button type="primary" onClick={openMessage}>
               Open the message box

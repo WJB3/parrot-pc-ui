@@ -1,0 +1,75 @@
+@import "../styles/variable.scss";
+
+$prefixCls:"#{$global-prefix}-Tree";
+$prefixClsIcon:"#{$global-prefix}-Icon";
+$prefixClsTreeNode:"#{$global-prefix}-Tree-TreeNode";
+$prefixClsCheckbox:"#{$global-prefix}-Checkbox";
+
+.#{$prefixCls}{
+    display:flex;
+    align-items: center;
+
+    &-TreeNode{
+
+        
+        .#{$prefixClsTreeNode}{
+
+            &-Switcher{
+
+                width:24px;
+                height: 24px;
+                display: flex;
+                justify-content: center;
+                align-items:center;
+                transition: transform all .3s;
+                cursor: pointer;
+    
+                &.#{$prefixClsTreeNode}-Switcher-Close{
+                    transform: rotate(-90deg);
+                }
+    
+                .#{$prefixClsIcon}{
+                    font-size: 24px;
+                }
+    
+            }
+
+            &-Selector{
+                padding:0 4px;
+                transition: background-color .1s;
+                cursor: pointer;
+
+                &:not(.#{$prefixClsTreeNode}-Selector-Selected):hover{
+                    background-color: rgba(0,0,0,0.05);
+                }
+
+                &-BlockNode{
+                    display: block;
+                    flex:1;
+                }
+
+                &-Selected{
+                    background-color: $primary-color-opacity5; 
+                }
+                
+                &-FilterNode{
+                    color:$danger-color;
+                    font-weight: 600;
+                }
+            }
+
+
+            &-Blank{
+
+                &-Unit{
+                    display: inline-block;
+                    width:24px;
+                }
+            }
+
+        }
+
+    }
+
+
+}
