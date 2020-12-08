@@ -1,6 +1,7 @@
 
 import React from 'react';
 import classNames from '@packages/utils/classNames';
+import Blank from './Blank';
 
 //外部遍历避免重复生成 
 const noop=()=>{};
@@ -8,17 +9,29 @@ const noop=()=>{};
 const TreeNode=React.forwardRef((props,ref)=>{
 
     const {
-        node:{title},
-        level,
-        className, 
-        children,
+        title, 
+        className,  
         switcherIcon,
         expanded,
         selected,
         showIcon,
-        icon
+        icon,
+        blockNode,
+        filterTreeNode,
+        onNodeSelect,
+        titleRender,
+        eventKey,
+        keyEntities,
+        onNodeExpand
     }=props;
+ 
 
+    const { children,level }=keyEntities[eventKey]; 
+
+    const onExpand=(e)=>{
+        onNodeExpand?.(e,{...keyEntities[eventKey],expanded,key:eventKey})
+    }
+ 
     const renderSwitcher=()=>{
  
         let switchNode=null;
@@ -32,13 +45,13 @@ const TreeNode=React.forwardRef((props,ref)=>{
             switchNode= typeof switcherIcon==="function"
             ?switcherIcon(props)
             :switcherIcon
-        }
+        } 
 
         return (
             <span className={classNames(
                 `${className}-Switcher`,
                 `${className}-Switcher-${expanded?"Open":"Close"}`
-            )} onClick={hasChildren?noop:noop}> 
+            )} onClick={hasChildren?onExpand:noop}> 
                 {switchNode}
             </span>
         )
@@ -62,6 +75,24 @@ const TreeNode=React.forwardRef((props,ref)=>{
             </span>
         )
     }
+
+    const renderTitle=()=>{ 
+        let titleNode;
+        if(typeof title==="function"){
+            titleNode=title(dataProp);
+        }else if(titleRender){
+            titleNode=titleRender(dataProp);
+        }else{
+            titleNode=title;
+        }
+
+        return <span className={`${className}-Title`}>{titleNode}</span>
+    }
+
+    const onSelect=(e)=>{
+        onNodeSelect?.(e,{...keyEntities[eventKey],key:eventKey,selected});
+    }
+
 
     const renderSelector=()=>{
 

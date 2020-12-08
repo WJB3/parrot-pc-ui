@@ -152,7 +152,7 @@ export function flattenTreeData(
 
       //loop treeNode children
       if(expandedKeySet.has(mergedKey)){
-        flattenNode.children=dig(treeNode.children||[],flattenNode);
+        flattenNode.children=dfs(treeNode.children||[],flattenNode);
       }else{
         flattenNode.children=[];
       }
@@ -195,4 +195,21 @@ export function conductExpandParent(keyList, keyEntities) {
   });
 
   return [...expandedKeys];
+}
+
+export function arrAdd(list, value) {
+  const clone = list.slice();
+  if (clone.indexOf(value) === -1) {
+    clone.push(value);
+  }
+  return clone;
+}
+
+export function arrDel(list, value) {
+  const clone = list.slice();
+  const index = clone.indexOf(value);
+  if (index >= 0) {
+    clone.splice(index, 1);
+  } 
+  return clone;
 }

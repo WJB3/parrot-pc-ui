@@ -11,7 +11,7 @@ export default function validateValue(value){
 
 export function haveValue(value){
     if(Array.isArray(value)){
-        return (value || []).value>0;
+        return (value || []).length>0;
     }
     if(typeof value==="object" || !Array.isArray(value)){
         return (Object.keys(value) || []).length>0;

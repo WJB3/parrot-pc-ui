@@ -5,9 +5,7 @@ $prefixClsIcon:"#{$global-prefix}-Icon";
 $prefixClsTreeNode:"#{$global-prefix}-Tree-TreeNode";
 $prefixClsCheckbox:"#{$global-prefix}-Checkbox";
 
-.#{$prefixCls}{
-    display:flex;
-    align-items: center;
+.#{$prefixCls}{ 
 
     &-TreeNode{
 
