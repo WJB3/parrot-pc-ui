@@ -44,9 +44,7 @@ const Page=(props)=>{
       }, 1000);
     };
 
-    const [auto,setAuto]=useState(false);
-
-    console.log(auto);
+    const [auto,setAuto]=useState(false); 
 
     return (
         <div> 
@@ -58,19 +56,20 @@ const Page=(props)=>{
             />  
             <CTree
               treeData={treeData}   
-              defaultExpandedKeys={['0-0-0']} 
+              defaultExpandedKeys={['0-0-0']}   
+              expandParent={auto}
               defaultExpandParent={false}
               blockNode
             />  
             <TreeA
               treeData={treeData}   
-              defaultExpandedKeys={['0-0-0']} 
-              autoExpandParent={auto}
-              defaultExpandParent={false}
+              defaultExpandedKeys={['0-0-0']}  
               
+              defaultExpandParent={false}
+              blockNode
             />  
             <Button type="primary" onClick={()=>setAuto(true)}>
-              Open the message box
+              切换expandParent
             </Button>
              <Button type="primary" onClick={openMessage}>
               Open the message box

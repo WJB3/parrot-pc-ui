@@ -1,30 +1,35 @@
-import React, { useState, useEffect,useLayoutEffect } from 'react';
-
+import React, { useState, useCallback,useEffect,useLayoutEffect } from 'react';
+import Button from '@packages/core/Button';
  
+const FuncDemo1=()=>{
+  console.log("funcdemo1")
+  return <div>FuncDemo1</div>
+}
+
+class ClassDemo extends React.Component{
+  constructor(props){
+    super(props)
+  }
+
+  render(){
+    console.log("props")
+    return <div>ClassDemo</div>
+  }
+}
 
 const App  = () => {
-
-  const [a,setA]=useState(0);
-  const [b,setB]=useState(0);
-  const [c,setC]=useState(0);
-
-  console.log("render");
-
-  useEffect(()=>{
-    setA(a+1);
-  },[]);
-
-  useEffect(()=>{
-    setB(b+1);
-  },[a]);
-
-  useEffect(()=>{
-    setC(c+1);
-  },[b]);
+    
+  const [count,setCount]=useState(1); 
  
   return (
-    <div className='App'>
+    <div className='App' >
+    
+      <Button onClick={()=>setCount(count+1)}>
+        setStateA
+      </Button>
       
+      <FuncDemo1></FuncDemo1>
+      <ClassDemo></ClassDemo>
     </div>
   );
 };

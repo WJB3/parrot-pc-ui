@@ -77,6 +77,7 @@ const Tree=React.forwardRef((props,ref)=>{
         default:expandParent?defaultExpandedKeys:[]
     }); 
 
+
     const [controlledCheckedKeys,setControllCheckedKeys]=useState(checkedKeysProp);
 
     const [halfCheckedKeys,setHalfCheckedKeys]=useState([]);
@@ -239,8 +240,7 @@ const Tree=React.forwardRef((props,ref)=>{
             <NodeList  
                 data={flattenNodes} 
                 prefixCls={prefixCls}
-                {...restProps}
-                
+                {...restProps} 
             />
         </div>
     </TreeContext.Provider>

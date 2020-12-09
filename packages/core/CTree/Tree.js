@@ -1,11 +1,11 @@
 
 
-import React ,{useContext, useEffect, useLayoutEffect, useState} from 'react';
+import React ,{useContext, useEffect, useLayoutEffect, useState,useRef } from 'react';
 import { ConfigContext } from '@packages/core/ConfigProvider'; 
 import classNames from '@packages/utils/classNames';
 import VirtualList from '@packages/core/VirtualList';
 import useControlled from '@packages/hooks/useControlled';
-import {
+import validateValue,{
     haveValue
 } from '@packages/utils/validateValue';
 import {
@@ -20,8 +20,10 @@ import {
     ArrowDown
 } from '@packages/core/Icon';
 import TreeNode from './TreeNode';
-import useInit from '@packages/hooks/useInit';
+import sequenceReturnOnlyArr from '@packages/utils/sequenceReturnOnlyArr';
 import "./index.scss";
+
+ 
 
 function itemKey(item){
     const {
@@ -47,7 +49,7 @@ const Tree=React.forwardRef(function(props,ref){
         //默认展开的keys 
         defaultExpandedKeys=[],
         //展开父节点
-        expandParent:expandParentProp,
+        expandParent=false,
         //默认展开父节点
         defaultExpandParent=true,
         defaultExpandAll=false,
@@ -61,17 +63,10 @@ const Tree=React.forwardRef(function(props,ref){
         icon,
         onSelect,
         titleRender,
-        onExpand
-    }=props;
+        onExpand,  
+    }=props; 
 
-    const isInit=useInit();
-
-    const prefixCls=useContext(ConfigContext)?.getPrefixCls("Tree",customizePrefixCls);
-
-    const [expandParent]=useControlled({
-        controlled:expandParentProp,
-        default:defaultExpandParent
-    });
+    const prefixCls=useContext(ConfigContext)?.getPrefixCls("Tree",customizePrefixCls); 
 
     const [flattenData,setFlattenData]=useState([]);
 
@@ -80,11 +75,11 @@ const Tree=React.forwardRef(function(props,ref){
     //控制可控
     const [controlledExpandKeys,setControlledExpandKeys]=useState(expandedKeysProp);
  
-
-    const [expandedKeys,setExpandedKeys,isExpandedKeysControlled]=useControlled({
+    //如果不存在expandParent ，就使expandedKey为空
+    const [expandedKeys,setExpandedKeys,isExpandedKeysControlled]=useControlled({ 
         controlled:controlledExpandKeys,
         default:defaultExpandedKeys
-    });
+    }); 
 
     //可选key
     const [selectedKeys,setSelectedKeys]=useControlled({
@@ -92,7 +87,7 @@ const Tree=React.forwardRef(function(props,ref){
         default:defaultSelectedKeys
     });
  
-    useLayoutEffect(()=>{
+    useLayoutEffect(()=>{ 
         let newKeyEntities={};
         let newExpandedKeys=[];
         let newFlattenData=[]; 
@@ -103,8 +98,10 @@ const Tree=React.forwardRef(function(props,ref){
         //如果存在新实体则自然存在treeData，故可以根据实体得到展开的expandkeys
         if(haveValue(newKeyEntities)){
             //如果不是默认展开，则将所有上级expandedKeys放进expandedKeys中
-            if(!defaultExpandAll){
+            if(!defaultExpandAll && (expandParent || defaultExpandParent)){//如果expandParent和defaultExpandParent有一项为true时，展开
                 newExpandedKeys=conductExpandParent(expandedKeys,newKeyEntities)
+            }else if(!expandParent && !defaultExpandParent){//如果expandParent和defaultExpandParent都为false时，即不展开
+                newExpandedKeys=[];
             }else{//如果默认是展开全部的，将所有key放进expandedKeys
                 const cloneKeyEntities = { ...newKeyEntities };
                 const allExpandedKeys=Object.keys(cloneKeyEntities).map(key => cloneKeyEntities[key].key);
@@ -123,8 +120,7 @@ const Tree=React.forwardRef(function(props,ref){
         }else{
             setExpandedKeys(newExpandedKeys);
         } 
-        setFlattenData(newFlattenData);
-        
+        setFlattenData(newFlattenData); 
     },[]); 
 
     //点击树节点标题部分
@@ -142,32 +138,42 @@ const Tree=React.forwardRef(function(props,ref){
     const onNodeExpand=(e,treeNode)=>{
         const { expanded,key} =treeNode;
         const targetExpanded=!expanded;
-        let newExpandedKeys;
+        let newExpandedKeys=expandedKeys;
         //没有展开点击展开 
-        if(targetExpanded){ 
-            newExpandedKeys=arrAdd(expandedKeys,key); 
-            console.log(newExpandedKeys)
-        }else{
-            newExpandedKeys=arrDel(expandedKeys,key);
-        }  
-        setExpandedKeys(newExpandedKeys);
-        onExpand?.(expanded,treeNode);
-    }
+        if(!validateValue(expandedKeysProp)){//如果是可控的
+            if(targetExpanded){ 
+                newExpandedKeys=arrAdd(expandedKeys,key);  
+            }else{
+                newExpandedKeys=arrDel(expandedKeys,key);
+            }  
+        } 
+        const newFlattenData=flattenTreeData(
+            treeData,
+            newExpandedKeys
+        );
 
-    useEffect(()=>{   
-            const newFlattenData=flattenTreeData(
-                treeData,
-                expandedKeys
-            );
-            //为了避免与第一次重复渲染 我们在这里判断如果flattenData数组不变 就无需渲染避免重复渲染
-            if(haveValue(expandedKeys)||haveValue(treeData)&&
-                flattenData.toString()!==newFlattenData.toString()
-            ){ 
-                setFlattenData(newFlattenData); 
-            }   
+        if(haveValue(expandedKeys)||haveValue(treeData)&&
+            flattenData.toString()!==newFlattenData.toString()
+        ){ 
+            setFlattenData(newFlattenData); 
+        }  
+
+        setExpandedKeys(newExpandedKeys);
+        
+        onExpand?.(expanded,treeNode);
+    } 
+
+    useEffect(()=>{
+        //expandParent实际上并不会阻碍节点的展开
+        if(!expandParent){
+            return ;
+        }   
+        let newExpandedKeys=conductExpandParent(sequenceReturnOnlyArr(expandedKeys,expandedKeysProp,defaultExpandedKeys),keyEntities)
       
-    },[expandedKeys]); 
+        setExpandedKeys(newExpandedKeys);
+    },[expandParent]);
  
+    console.log(flattenData)
 
     return (
         <div className={
@@ -175,12 +181,13 @@ const Tree=React.forwardRef(function(props,ref){
                 prefixCls,
                 className    
             )
-        }>
+        }> 
             <VirtualList
                 prefixCls={`${prefixCls}-NodeList`}
                 data={flattenData}   
                 itemKey={itemKey} 
             >
+                
                 {
                     (treeNodeData)=>{ 
                         const {
@@ -207,7 +214,7 @@ const Tree=React.forwardRef(function(props,ref){
                         )
 
                     }
-                }
+                } 
             </VirtualList>
         </div>
     ) 

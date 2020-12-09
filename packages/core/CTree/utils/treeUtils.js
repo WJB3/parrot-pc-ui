@@ -173,6 +173,7 @@ export function flattenTreeData(
  */
 
 export function conductExpandParent(keyList, keyEntities) {
+  
   const expandedKeys = new Set();
 
   function conductUp(key) {
