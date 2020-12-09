@@ -1,6 +1,7 @@
 
-import React from 'react';
+import React ,{useContext} from 'react';
 import classNames from '@packages/utils/classNames';
+import { TreeContext } from './TreeContext';
 import Blank from './Blank';
 
 //外部遍历避免重复生成 
@@ -9,21 +10,12 @@ const noop=()=>{};
 const TreeNode=React.forwardRef((props,ref)=>{
 
     const {
-        title, 
-        className,  
-        switcherIcon,
-        expanded,
-        selected,
-        showIcon,
-        icon,
-        blockNode,
-        filterTreeNode,
-        onNodeSelect,
-        titleRender,
-        eventKey,
-        keyEntities,
-        onNodeExpand
+        eventKey
     }=props;
+
+    const {
+        keyEntities
+    }=useContext(TreeContext);
  
 
     const { children,level }=keyEntities[eventKey]; 
@@ -105,6 +97,8 @@ const TreeNode=React.forwardRef((props,ref)=>{
             {renderTitle()}
         </span>
     }
+
+    console.log("renderTreeNode") 
      
 
     return (
@@ -122,4 +116,4 @@ const TreeNode=React.forwardRef((props,ref)=>{
 
 });
 
-export default TreeNode;
+export default React.memo(TreeNode);

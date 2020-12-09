@@ -48,7 +48,7 @@ const Page=(props)=>{
 
     return (
         <div> 
-            <Tree 
+            {/* <Tree 
               treeData={treeData}   
               defaultExpandedKeys={['0-0-0']} 
               defaultExpandParent={false}
@@ -60,11 +60,11 @@ const Page=(props)=>{
               expandParent={auto}
               defaultExpandParent={false}
               blockNode
-            />  
+            />   */}
             <TreeA
               treeData={treeData}   
               defaultExpandedKeys={['0-0-0']}  
-              
+              draggable
               defaultExpandParent={false}
               blockNode
             />  

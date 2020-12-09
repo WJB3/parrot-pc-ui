@@ -4,7 +4,7 @@ import React from 'react';
 
 
 //空格组件
-const Blank=({prefixCls,level})=>{
+const Blank=React.memo(({prefixCls,level})=>{
  
     const list=[];
     
@@ -17,12 +17,14 @@ const Blank=({prefixCls,level})=>{
         )
     }
 
+    console.log("renderBlank")
+
     return (
         <span className={`${prefixCls}-Blank`}>
             {list}
         </span>
     )
 
-}
+})
 
 export default Blank;
