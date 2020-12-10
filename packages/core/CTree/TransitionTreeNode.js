@@ -1,38 +1,44 @@
 
 
 import React from 'react';
-import { Collpase } from '@packages/core/Transition';
+import { Collapse } from '@packages/core/Transition';
 import TreeNode from './TreeNode';
 
 
-const TransitionTreeNode=(props)=>{
+const TransitionTreeNode=React.forwardRef((props,ref)=>{
 
     const {
-        transitionNodes
+        transitionNodes,
+        eventKey,
+        title
     }=props;
+ 
 
     if(transitionNodes){
         return (
-            <Collpase>
+            <Collapse>
                 {
                     transitionNodes.map((treeNode)=>{
                         const {
 
                         }=treeNode;
+                         
 
                         return (<TreeNode
                             data={treeNode.data}
+                            eventKey={eventKey}
                         />)
                     })
                 }
-            </Collpase>
+            </Collapse>
         )
     }
 
     return <TreeNode 
-        
+        eventKey={eventKey}
+        title={title}
     />
 
-}
+})
 
 export default TransitionTreeNode;

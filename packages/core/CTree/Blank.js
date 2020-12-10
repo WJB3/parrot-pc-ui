@@ -16,8 +16,7 @@ const Blank=React.memo(({prefixCls,level})=>{
             />
         )
     }
-
-    console.log("renderBlank")
+ 
 
     return (
         <span className={`${prefixCls}-Blank`}>

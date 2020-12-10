@@ -1,5 +1,5 @@
 
-import React ,{useContext} from 'react';
+import React ,{useContext, useMemo} from 'react';
 import classNames from '@packages/utils/classNames';
 import { TreeContext } from './TreeContext';
 import Blank from './Blank';
@@ -10,15 +10,35 @@ const noop=()=>{};
 const TreeNode=React.forwardRef((props,ref)=>{
 
     const {
-        eventKey
+        eventKey,
+        title
+        
     }=props;
 
     const {
-        keyEntities
+        keyEntities,
+        prefixCls:contextPrefixCls,
+        switcherIcon,
+        expandedKeys,
+        selectedKeys,
+        blockNode,
+        filterTreeNode,
+        showIcon,
+        titleRender,
+        onNodeSelect,
+        onNodeExpand 
     }=useContext(TreeContext);
- 
 
-    const { children,level }=keyEntities[eventKey]; 
+    const prefixCls=`${contextPrefixCls}-TreeNode`; 
+
+    const { expanded,selected }=useMemo(()=>{
+        return { 
+            expanded:expandedKeys.indexOf(eventKey)>-1,
+            selected:selectedKeys.indexOf(eventKey)>-1
+        }
+    },[expandedKeys,selectedKeys,eventKey]);
+
+    const { children,level  }=keyEntities[eventKey];  
 
     const onExpand=(e)=>{
         onNodeExpand?.(e,{...keyEntities[eventKey],expanded,key:eventKey})
@@ -41,8 +61,8 @@ const TreeNode=React.forwardRef((props,ref)=>{
 
         return (
             <span className={classNames(
-                `${className}-Switcher`,
-                `${className}-Switcher-${expanded?"Open":"Close"}`
+                `${prefixCls}-Switcher`,
+                `${prefixCls}-Switcher-${expanded?"Open":"Close"}`
             )} onClick={hasChildren?onExpand:noop}> 
                 {switchNode}
             </span>
@@ -62,7 +82,7 @@ const TreeNode=React.forwardRef((props,ref)=>{
         }
         
         return (
-            <span className={classNames(`${className}-IconEle`)}>
+            <span className={classNames(`${prefixCls}-IconEle`)}>
                 {iconNode}
             </span>
         )
@@ -78,7 +98,7 @@ const TreeNode=React.forwardRef((props,ref)=>{
             titleNode=title;
         }
 
-        return <span className={`${className}-Title`}>{titleNode}</span>
+        return <span className={`${prefixCls}-Title`}>{titleNode}</span>
     }
 
     const onSelect=(e)=>{
@@ -88,26 +108,24 @@ const TreeNode=React.forwardRef((props,ref)=>{
 
     const renderSelector=()=>{
 
-        return <span className={classNames(`${className}-Selector`,{
-            [`${className}-Selector-BlockNode`]:blockNode,
-            [`${className}-Selector-Selected`]:selected,
-            [`${className}-Selector-FilterNode`]:filterTreeNode && filterTreeNode({...props})
+        return <span className={classNames(`${prefixCls}-Selector`,{
+            [`${prefixCls}-Selector-BlockNode`]:blockNode,
+            [`${prefixCls}-Selector-Selected`]:selected,
+            [`${prefixCls}-Selector-FilterNode`]:filterTreeNode && filterTreeNode({...props})
         })} onClick={onSelect}>
             {renderIcon()}
             {renderTitle()}
         </span>
     }
-
-    console.log("renderTreeNode") 
-     
+ 
 
     return (
         <span 
             title={typeof title==="string"?title:""}
-            className={className}
+            className={prefixCls}
             ref={ref}
         >
-            <Blank prefixCls={className} level={level} />
+            <Blank prefixCls={prefixCls} level={level} />
             {renderSwitcher()}
             {renderSelector()}
         </span>

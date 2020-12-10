@@ -53,11 +53,10 @@ const Page=(props)=>{
               defaultExpandedKeys={['0-0-0']} 
               defaultExpandParent={false}
               blockNode
-            />  
-            <CTree
+            />   */}
+            {/* <CTree
               treeData={treeData}   
-              defaultExpandedKeys={['0-0-0']}   
-              expandParent={auto}
+              defaultExpandedKeys={['0-0-0']}    
               defaultExpandParent={false}
               blockNode
             />   */}

@@ -166,17 +166,25 @@ const Tree = React.forwardRef(function (props, ref) {
         return {
             expandedKeys,
             selectedKeys,
-            keyEntities
+            keyEntities, 
         }
     },[expandedKeys])
-
-    console.log(flattenData)
+ 
     
     return (
         <TreeContext.Provider 
             value={{
                 prefixCls:prefixCls,
                 keyEntities:keyEntities,
+                switcherIcon:switcherIcon,
+                expandedKeys:expandedKeys,
+                selectedKeys:selectedKeys,
+                blockNode:blockNode,
+                filterTreeNode:filterTreeNode,
+                showIcon:showIcon,
+                titleRender:titleRender,
+                onNodeSelect:onNodeSelect,
+                onNodeExpand:onNodeExpand
             }}
         >
             <div className={

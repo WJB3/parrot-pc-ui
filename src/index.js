@@ -12,5 +12,5 @@ import Demo from '@packages/pages/Demo';
 
 
 ReactDOM.render((<HashRouter>
-    <Route path="/" exact component={(props)=><TreePage {...props}/>} /> 
+    <Route path="/" exact component={(props)=><Demo {...props}/>} /> 
 </HashRouter>), document.getElementById("root"));

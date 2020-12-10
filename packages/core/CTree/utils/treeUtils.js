@@ -215,12 +215,16 @@ export function arrDel(list, value) {
   return clone;
 }
 
-export function findExpandedKeys(prev = [], next= []) {
+export function findExpandedKeys(prev , next = []) {
   const prevLen = prev.length;
   const nextLen = next.length;
- 
-  function find(shorter, longer) {
-    const cache = new Map();
+
+  if (Math.abs(prevLen - nextLen) !== 1) {
+    return { add: false, key: null };
+  }
+
+  function find(shorter , longer ) { 
+    const cache  = new Map();
     shorter.forEach(key => {
       cache.set(key, true);
     });
