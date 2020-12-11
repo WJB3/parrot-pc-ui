@@ -165,3 +165,22 @@ export function flattenTreeData(treeData=[],expandedKeys=[]){
 
     return flattenList;
 }
+
+//增加key到expandedKeys上
+export function arrAdd(expandedKeys,key){
+    console.log("arrAdd")
+    const newExpandedKeys=new Set(expandedKeys);
+    if(expandedKeys.indexOf(key)===-1){//如果没有key加key
+        newExpandedKeys.add(key);
+    }
+    return [...newExpandedKeys]
+}
+
+export function arrDel(expandedKeys,key){
+    const newExpandedKeys=new Set(expandedKeys);
+    if(expandedKeys.indexOf(key)>-1){//如果有key减key
+        newExpandedKeys.delete(key);
+    }
+    
+    return [...newExpandedKeys]
+}
