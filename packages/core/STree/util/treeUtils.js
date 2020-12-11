@@ -131,7 +131,7 @@ export function traverseSingleData(
  */
 
 export function flattenTreeData(treeData=[],expandedKeys=[]){
-    const expandedKeySet=new Set(expandedKeys);
+    const expandedKeySet=new Set(expandedKeys); 
     const flattenList=[];
 
     function dfs(list,parent=null){
@@ -162,13 +162,13 @@ export function flattenTreeData(treeData=[],expandedKeys=[]){
     }
 
     dfs(treeData);
+ 
 
     return flattenList;
 }
 
 //增加key到expandedKeys上
-export function arrAdd(expandedKeys,key){
-    console.log("arrAdd")
+export function arrAdd(expandedKeys,key){ 
     const newExpandedKeys=new Set(expandedKeys);
     if(expandedKeys.indexOf(key)===-1){//如果没有key加key
         newExpandedKeys.add(key);

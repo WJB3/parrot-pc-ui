@@ -6,20 +6,25 @@ import TreeNode from './TreeNode';
 const NodeList=React.forwardRef((props,ref)=>{
 
     const {
-        data
-    }=props;
+        data,
+        expandedKeys
+    }=props; 
 
+    //上一轮数据
     const [prevData,setPrevData]=useState(data);
+    const [prevExpandedKeys,setPrevExpandedKeys]=useState(expandedKeys);
 
     const { transitionData }=useMemo(()=>{
-        
+
+        const diffExpandedKeys=findExpandedKeys(prevExpandedKeys,expandedKeys);
+
         let transitionData=data;
 
         return {
             transitionData:transitionData
         }
 
-    },[data]);
+    },[expandedKeys,data]);
 
     return (
         <VirtualList

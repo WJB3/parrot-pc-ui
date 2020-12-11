@@ -47,7 +47,7 @@ const Tree=React.forwardRef((props,ref)=>{
         showIcon,//是否展示 TreeNode title 前的图标，没有默认样式，如设置为 true，需要自行定义图标相关样式
         onExpand,//展开/收起节点时触发
         onSelect,//	点击树节点触发
-        multiple,
+        multiple=false,
     }=props;
 
     //是否初始化
@@ -63,15 +63,18 @@ const Tree=React.forwardRef((props,ref)=>{
     const [ selectedKeys,setSelectedKeys  ]=useControlled({
         controlled:selectedKeysProp,
         default:defaultSelectedKeys
-    });
+    }); 
  
-    const { keyEntities,expandedKeys,flattenData }=useMemo(()=>{
-         
+    const { keyEntities,expandedKeys,flattenData }=useMemo(()=>{ 
+        //不可依赖isInit 否则在不改变expanded的情况下 会走进这个逻辑 造成渲染错误
+ 
         const keyEntities=convertDataToEntities(treeData)?.keyEntities;
         
-        let expandedKeys=initExpandedKeys.concat();
+        let expandedKeys=initExpandedKeys;  
 
         if(!isInit){//如果是初始化
+
+            expandedKeys=initExpandedKeys.concat();
             if(!defaultExpandAll && (expandParent || defaultExpandParent)){
                 expandedKeys= conductExpandParent(expandedKeys,keyEntities);
             //如果expandParent和defaultExpandParent都是空，则不栈展开节点
@@ -91,10 +94,9 @@ const Tree=React.forwardRef((props,ref)=>{
             expandedKeys,
             flattenData
         }
-    },[treeData,expandParent,expandedKeyProps,isInit,initExpandedKeys]);  
+    },[treeData,expandParent,expandedKeyProps,initExpandedKeys]);  
 
-    const onNodeExpand=useCallback((e,treeNode)=>{ 
-
+    const onNodeExpand=useCallback((e,treeNode)=>{  
         const { expanded,key }=treeNode; 
         const targetExpanded = !expanded; 
         let newExpandedKeys; 
@@ -112,14 +114,15 @@ const Tree=React.forwardRef((props,ref)=>{
         let newSelectedKeys;
         if(selected){
             newSelectedKeys= arrDel(selectedKeys,key);
+        }else if(!multiple){
+            newSelectedKeys=[key];
         }else{
             newSelectedKeys=arrAdd(selectedKeys,key);
         }
         setSelectedKeys(newSelectedKeys);
         onSelect?.(e)
     },[onSelect,selectedKeys])
- 
-    console.log(expandedKeys)
+   
 
     return (
         <TreeContext.Provider
@@ -140,6 +143,7 @@ const Tree=React.forwardRef((props,ref)=>{
             <div className={prefixCls}> 
                 <NodeList 
                     data={flattenData}
+                    expandedKeys={expandedKeys}
                 />
             </div>
         </TreeContext.Provider>

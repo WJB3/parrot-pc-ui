@@ -80,12 +80,12 @@ const Page=(props)=>{
             />   */}
             <STree 
               treeData={treeData}  
-              defaultExpandedKeys={['0-0-0-0','0-0-0-0']} 
-              defaultExpandParent={false}
+              defaultExpandedKeys={['0-0-0-0']} 
+              multiple  
             />
             <TreeA
               treeData={treeData}   
-              multiple 
+              defaultExpandedKeys={['0-0-0-0']} 
             />  
             <Button type="primary" onClick={()=>setAuto(true)}>
               切换expandParent
