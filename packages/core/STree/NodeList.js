@@ -1,46 +1,151 @@
 
-import React, { useMemo,useState  } from 'react';
+import React, { useEffect, useState } from 'react';
 import VirtualList from '@packages/core/VirtualList';
 import TreeNode from './TreeNode';
+import {
+    findExpandedKeys,
+    getExpandRange
+} from './util//diffUtils';
+import {
+    getKey
+} from './util/treeUtils';
+import {  Collapse,Fade,Grow } from '@packages/core/Transition';
 
-const NodeList=React.forwardRef((props,ref)=>{
+export const TRANSITION_KEY = `TRANSITION_KEY_${Math.random()}`;
+
+function itemKey(item) {
+    const {
+      data: { key },
+      pos,
+    } = item;
+    return getKey(key, pos);
+  }
+  
+
+const TransitionNode = {
+    key: TRANSITION_KEY,
+};
+
+const TransitionEntity = {
+    key: TRANSITION_KEY,
+    level: 0,
+    index: 0,
+    pos: '0',
+    node: TransitionNode,
+};
+
+
+const TransitionFlattenData = {
+    parent: null,
+    children: [],
+    pos: TransitionEntity.pos,
+    data: TransitionNode,
+    /** Hold empty list here since we do not use it */
+    isStart: [],
+    isEnd: [],  
+    
+}; 
+
+const NodeList = React.forwardRef((props, ref) => {
 
     const {
         data,
-        expandedKeys
-    }=props; 
+        expandedKeys,
+        transitionComponent: TransitionComponent = Collapse
+    } = props;
 
     //上一轮数据
-    const [prevData,setPrevData]=useState(data);
-    const [prevExpandedKeys,setPrevExpandedKeys]=useState(expandedKeys);
+    const [prevData, setPrevData] = useState(data);
+    const [prevExpandedKeys, setPrevExpandedKeys] = useState(expandedKeys);
+    const [transitionData, setTransitionData] = useState(data);
+    const [transitionRange, setTransitionRange] = React.useState([]);
+    const [transitionVisible,setTransitionVisible]=React.useState(false);
 
-    const { transitionData }=useMemo(()=>{
+    useEffect(() => {
+        setPrevExpandedKeys(expandedKeys);
 
-        const diffExpandedKeys=findExpandedKeys(prevExpandedKeys,expandedKeys);
+        const diffExpanded = findExpandedKeys(prevExpandedKeys, expandedKeys);
+        console.log(diffExpanded)
 
-        let transitionData=data;
-
-        return {
-            transitionData:transitionData
+        if (diffExpanded.key !== null) {
+            if (diffExpanded.add) {//如果是增加
+                const keyIndex = prevData.findIndex(({ data: { key } }) => key === diffExpanded.key);
+                const rangeNodes = getExpandRange(prevData, data, diffExpanded.key);
+                const newTransitionData = prevData.slice();
+                newTransitionData.splice(keyIndex + 1, 0, TransitionFlattenData);
+                setTransitionData(newTransitionData);
+                setTransitionRange(rangeNodes);
+                setTransitionVisible(true);
+            }else{
+                const keyIndex = data.findIndex(({ data: { key } }) => key === diffExpanded.key);
+                
+                const rangeNodes = getExpandRange(data, prevData, diffExpanded.key);  
+                const newTransitionData = data.slice();
+                newTransitionData.splice(keyIndex + 1, 0, TransitionFlattenData);
+                console.log(newTransitionData);
+                setTransitionData(newTransitionData);
+                setTransitionRange(rangeNodes);  
+                setTransitionVisible(false);
+            }
+        } else {
+            setPrevData(data);
+            setTransitionData(data);
         }
 
-    },[expandedKeys,data]);
+    }, [expandedKeys, data]); 
+
+    const handleTransitionEntered=()=>{ 
+        setPrevData(data);
+        setTransitionData(data);
+        setTransitionRange([]); 
+    } 
+
+    console.log(transitionRange)
+    console.log(transitionVisible)
 
     return (
         <VirtualList
             data={transitionData}
-            itemKey={"key"}
+            itemKey={itemKey}
         >
             {
-                (treeNode)=>{
- 
+                (treeNode) => {
+
+                    const {
+                        data: { key }
+                    } = treeNode;
+
+                    if (key === TRANSITION_KEY) { 
+                        return (
+                            <TransitionComponent 
+                                key={key} 
+                                in={transitionVisible}  
+                                timeout={30000}
+                                onEntered={handleTransitionEntered}
+                            >
+                                <div>
+                                    {
+                                        transitionRange.map(item=>{ 
+                                            return <TreeNode
+                                                {...treeNode}
+                                                key={item.key}
+                                                eventKey={item.key}
+                                                title={item.title} 
+                                            />
+                                        })
+                                    }
+                                </div>
+                            </TransitionComponent>
+                        )
+                    }
+
 
                     return (
-                        <TreeNode 
+                        <TreeNode
                             {...treeNode}
                             eventKey={treeNode.key}
                             key={treeNode.key}
-                            
+
                         />
                     )
                 }
@@ -50,4 +155,4 @@ const NodeList=React.forwardRef((props,ref)=>{
 
 });
 
-export default NodeList;
+export default React.memo(NodeList);

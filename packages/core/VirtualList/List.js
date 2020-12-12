@@ -107,7 +107,7 @@ const List=React.forwardRef((props,ref)=>{
             offsetHeight:startOffset
         }
 
-    },[isVirtual,scrollTop,originData,height,heightMarkedUpdate]);  
+    },[isVirtual,scrollTop,originData,height,heightMarkedUpdate]);    
  
     const viewChildren=useChildren(originData,startIndex,endIndex,setInstanceRef,children,getKey);
 
@@ -155,4 +155,4 @@ List.propTypes = {
     ])
 };
 
-export default List;
+export default React.memo(List);

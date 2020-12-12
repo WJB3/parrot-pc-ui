@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import usePrefixCls from '@packages/hooks/usePrefixCls'; 
 import { Transition } from 'react-transition-group';
 import { duration } from '@packages/core/styles/transitions';
+
 import "./index.scss"; 
 
 
@@ -57,6 +58,7 @@ const Collapse = React.forwardRef(function(props, ref) {
     };
 
     const handleExit = node => {
+        console.log("handleExit");
         const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0;
         node.style.height = `${wrapperHeight}px`;
         onExit?.(node)
@@ -82,10 +84,10 @@ const Collapse = React.forwardRef(function(props, ref) {
             onEntering={handleEntering}
             onExit={handleExit} 
             onExiting={handleExiting} 
-            timeout={timeout === 'auto' ? null : timeout}
+            timeout={timeout === 'auto' ? null : timeout} 
             {...other}
         >
-            {(state, childProps) => (
+            {(state, childProps) => {return (
                 <Component
                     className={classNames(
                         `${prefixCls}-Container`,
@@ -106,7 +108,7 @@ const Collapse = React.forwardRef(function(props, ref) {
                         <div className={`${prefixCls}-WrapperInner`}>{children}</div>
                     </div>
                 </Component>
-            )}
+            )}}
         </TransitionComponent>
     )
 });

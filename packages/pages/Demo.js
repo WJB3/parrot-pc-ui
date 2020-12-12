@@ -1,50 +1,81 @@
-import React, { useState, useCallback,useEffect,useLayoutEffect } from 'react';
-import Button from '@packages/core/Button';
-import useComponentWillMount from '@packages/hooks/useComponentWillMount';
- 
-const FuncDemo1=(props)=>{
+import React, { useState, useCallback } from 'react';
+import { Transition } from 'react-transition-group';
+import TransitionR from '@packages/core/ReactTransitionGroup/Transition';
 
-  const [ a,setA ]=useState(1)
-
-  useLayoutEffect(()=>{
-    setA(props.bb)
-  },[]);
-
-  console.log("logaFunc") 
-
-  return <div>FuncDemo1</div>
-}
-
-class ClassDemo extends React.Component{
+class Demo extends React.Component{
   constructor(props){
     super(props);
-    this.state={
-      a:1
-    }
   }
 
-  UNSAFE_componentWillMount(){ 
-    this.setState({
-      a:this.props.bb
-    })
+  static getDerivedStateFromProps(nextProps, prevState){
+    console.log("getDerivedStateFromProps")
+    console.log(prevState)
+    console.log(nextProps)
+    return null;
+  }
+  componentDidUpdate(preProps,preState){
+    console.log("componentDidUpdate")
+    console.log(preProps)
+    console.log(preState)
   }
 
   render(){
-    console.log("logaClass") 
-    return <div>ClassDemo</div>
+    return <div>{this.props.a}</div>
   }
+  
 }
 
-const App  = () => {
-     
+export default function App() {
+  const [visible, setVisible] = useState(false);
+  const [count2, setCount2] = useState(0);
+
+  const duration = 300;
+
+  const defaultStyle = {
+    transition: `opacity ${duration}ms ease-in-out`,
  
+  }
+
+  const transitionStyles = {
+    entering: { opacity: 1 },
+    entered: { opacity: 1 },
+    exiting: { opacity: 0 },
+    exited: { opacity: 0 },
+  };
+
+
+
   return (
-    <div className='App' > 
-      
-      <FuncDemo1 bb={2}></FuncDemo1>
-      <ClassDemo bb={2}></ClassDemo> 
+    <div>
+      <Transition in={visible}  >
+        {state => { 
+          console.log(state)
+          return (
+          <div style={{
+            ...defaultStyle,
+            ...transitionStyles[state]
+          }}>
+            I'm a fade Transition!
+          </div>
+        )}}
+      </Transition>
+      <TransitionR in={visible}  >
+        {state => { 
+          console.log(state)
+          return (
+          <div style={{
+            ...defaultStyle,
+            ...transitionStyles[state]
+          }}>
+            I'm a fade Transition!
+          </div>
+        )}}
+      </TransitionR>
+      <Demo a={count2}/>
+
+      <button onClick={()=>setVisible(!visible)}>aaaaaa</button>
+      <button onClick={()=>setCount2(count2+1)}>aaaaaa</button>
     </div>
   );
-};
+}
 
-export default App;

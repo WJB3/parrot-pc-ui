@@ -79,20 +79,14 @@ const Page=(props)=>{
               blockNode
             />   */}
             <STree 
-              treeData={treeData}  
-              defaultExpandedKeys={['0-0-0-0']} 
+              treeData={treeData}   
               multiple  
             />
             <TreeA
               treeData={treeData}   
               defaultExpandedKeys={['0-0-0-0']} 
             />  
-            <Button type="primary" onClick={()=>setAuto(true)}>
-              切换expandParent
-            </Button>
-             <Button type="primary" onClick={openMessage}>
-              Open the message box
-            </Button>
+            
         </div>
     )
 }

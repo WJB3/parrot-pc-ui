@@ -12,6 +12,7 @@ import {
 import {
     conductExpandParent
 } from './util/conductUtils';
+
 import useControlled from '@packages/hooks/useControlled';
 import NodeList from './NodeList';
 import {
@@ -48,6 +49,7 @@ const Tree=React.forwardRef((props,ref)=>{
         onExpand,//展开/收起节点时触发
         onSelect,//	点击树节点触发
         multiple=false,
+        
     }=props;
 
     //是否初始化

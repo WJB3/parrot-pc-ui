@@ -16,8 +16,8 @@ export default function useChildren(originData,startIndex,endIndex,setInstanceRe
     return originData.slice(startIndex,endIndex+1).map((item,index)=>{
         const elementIndex=startIndex+index;
         const node=renderFunc(item,elementIndex);
-        const key=getKey(item);
-
+        const key=getKey(item);   
+       
         return <Item key={key} setRef={(node)=>{setInstanceRef(item,node)}}>
             {node}
         </Item>

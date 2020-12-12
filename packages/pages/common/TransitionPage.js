@@ -1,14 +1,31 @@
-import React from 'react';
+import React ,{useState} from 'react';
 import { Fade,Zoom,Collapse,Slide,Grow } from '@packages/core/Transition';
 import Button from '@packages/core/Button';
 import Paper from '@packages/core/Paper';
  
 const Page= React.forwardRef((props,ref)=>{
 
-    const [visible,setVisible]=React.useState(false);
+    const [visible,setVisible]=React.useState(true);
+
+    const [arr,setArr]=useState([]); 
 
     return <React.Fragment>
         <Button onClick={()=>setVisible(!visible)}>测试</Button>
+        <Button onClick={()=>{setArr([{title:"aaa"}]);setVisible(false)}}>aa</Button>
+
+         
+        {!!arr.length && <Collapse visible={visible}>
+            {
+                arr.map((item)=>{
+                    return <div style={{width:500,height:500,background:"yellow"}}>{item.title}</div>
+                })
+            }
+        </Collapse>}
+
+
+        <Collapse visible={visible}>
+            <Paper shadow={6} style={{height:100,width:100,backgroundColor:'red'}}></Paper>
+        </Collapse>
 {/*        
         <Fade visible={visible}>
             <Paper shadow={6} style={{height:100,width:100,backgroundColor:'yellow'}}></Paper>
