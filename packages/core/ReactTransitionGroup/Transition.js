@@ -1,9 +1,10 @@
 
 
-import React,{useState,useMemo,useRef,useEffect} from 'react';
+import React,{useState,useMemo,useRef,useEffect,useCallback,useContext} from 'react';
 import TransitionGroupContext from './TransitionGroupContext';
 import useInit from '@packages/hooks/useInit';
- 
+import usePrevState from '@packages/hooks/usePrevState';
+import setRef from '@packages/utils/setRef';
 
 export const UNMOUNTED="unmounted";
 export const EXITED="exited";
@@ -13,17 +14,21 @@ export const EXITING="exiting";
 
 function noop() {}
 
-//1.默认visibleProp此时是组件正常是处于exited状态
+//1.当visible是false时组件正常是处于exited状态
+//2.当visible 由false变成true时 变成entering->entered
 const Transition=React.forwardRef((props,ref)=>{
 
     const {
         children,
         visible:visibleProp=false,
+        timeout,
         onEnter=noop,
         ...childProps
     }=props;
 
     const isInit=useInit();
+
+    let nodeRef=useRef(null);
 
     const { initialStatus }=useMemo(()=>{
 
@@ -32,7 +37,7 @@ const Transition=React.forwardRef((props,ref)=>{
         if(visibleProp){
             initialStatus=ENTERED
         }else{
-            //1.默认visibleProp此时是组件正常是处于exited状态
+            //1.当visible是false时组件正常是处于exited状态
             initialStatus=EXITED
         }
 
@@ -42,20 +47,49 @@ const Transition=React.forwardRef((props,ref)=>{
 
     },[]);
 
+    const getTimeouts=useCallback(()=>{
+        let exit, enter, appear;
+        exit = enter = appear = timeout;
+
+        if (timeout != null && typeof timeout !== 'number') {
+            exit = timeout.exit
+            enter = timeout.enter
+            // TODO: remove fallback for next major
+            appear = timeout.appear !== undefined ? timeout.appear : enter
+        }
+        return { exit, enter, appear };
+    },[timeout]);
+
+    const handleRef=useCallback((node)=>{
+        setRef(nodeRef,node);
+    },[])
+
     const nextCallback=useRef(null);
 
     const appearStatus=useRef(null);
 
     const [ status,setStatus ]=useState(initialStatus);
 
+    const prevStatus=usePrevState(status);
+
     useEffect(()=>{ 
-
         updateStatus(true,appearStatus.current);
-
         ()=>{
             cancelNextCallback();
         }
-    },[])
+    },[]);
+
+    useEffect(()=>{
+        if(isInit){
+            let nextStatus = null;
+            if(visibleProp){
+                if (status !== ENTERING && status !== ENTERED) {
+                    nextStatus = ENTERING
+                }
+            }
+            updateStatus(false, nextStatus)
+        }
+    },[visibleProp,isInit]);
 
     const cancelNextCallback=()=>{
         if(nextCallback.current!==null){
@@ -66,10 +100,20 @@ const Transition=React.forwardRef((props,ref)=>{
 
     const updateStatus=(mounting=false,nextStatus)=>{
         if(nextStatus=null){
-
+            // nextStatus will always be ENTERING or EXITING.
+            cancelNextCallback()
+            if (nextStatus === ENTERING) {
+                performEnter(mounting)
+            }
         }else{
 
         }
+    }
+
+    const performEnter=(mounting)=>{
+        const appearing=mounting;
+
+        onEnter?.(maybeNode, appearing);
     }
     
 
@@ -78,13 +122,23 @@ const Transition=React.forwardRef((props,ref)=>{
         return null;
     }
 
+    const { TransitionComponent }=useMemo(()=>{
+        let Component;
+        if(typeof children==="function"){
+            Component=children(status,childProps);
+        }else{
+            Component=React.cloneElement(React.Children.only(children),childProps);
+        }
+        return {
+            TransitionComponent:Component
+        }
+    },[status,childProps,children]);
+
     return (
         <TransitionGroupContext.Provider value={null}>
-            {
-                typeof children==="function"
-                ?children(status,childProps)
-                :React.cloneElement(React.Children.only(children), childProps)
-            }
+            <TransitionComponent 
+                ref={handleRef}
+            />
         </TransitionGroupContext.Provider>
     )
 });
