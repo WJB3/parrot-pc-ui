@@ -1,12 +1,13 @@
 import React from 'react';
 import classNames from '@packages/utils/classNames';
 import PropTypes from 'prop-types';
-import usePrefixCls from '@packages/hooks/usePrefixCls'; 
-import { Transition } from 'react-transition-group';
+import usePrefixCls from '@packages/hooks/usePrefixCls';  
+import Transition from '@packages/core/ReactTransitionGroup/Transition';
 import { duration } from '@packages/core/styles/transitions';
 
 import "./index.scss"; 
 
+function noop() {}
 
 const Collapse = React.forwardRef(function(props, ref) {
     const {
@@ -20,7 +21,7 @@ const Collapse = React.forwardRef(function(props, ref) {
         onEntered,
         onEntering,
         onExit,
-        onExited,
+        onExited=noop,
         onExiting,
         collapsedHeight: collapsedHeightProp = '0px',
         timeout = duration.standard,
@@ -57,8 +58,7 @@ const Collapse = React.forwardRef(function(props, ref) {
         onEntered?.(node, isAppearing)
     };
 
-    const handleExit = node => {
-        console.log("handleExit");
+    const handleExit = node => { 
         const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0;
         node.style.height = `${wrapperHeight}px`;
         onExit?.(node)
@@ -76,14 +76,15 @@ const Collapse = React.forwardRef(function(props, ref) {
     };
 
     return (
-        <TransitionComponent
+        <TransitionComponent 
             appear
-            in={visibleProp}
+            visible={visibleProp}
             onEnter={handleEnter}
             onEntered={handleEntered}
             onEntering={handleEntering}
             onExit={handleExit} 
             onExiting={handleExiting} 
+            onExited={onExited}
             timeout={timeout === 'auto' ? null : timeout} 
             {...other}
         >

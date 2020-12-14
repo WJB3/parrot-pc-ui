@@ -64,25 +64,22 @@ const NodeList = React.forwardRef((props, ref) => {
     useEffect(() => {
         setPrevExpandedKeys(expandedKeys);
 
-        const diffExpanded = findExpandedKeys(prevExpandedKeys, expandedKeys);
-        console.log(diffExpanded)
+        const diffExpanded = findExpandedKeys(prevExpandedKeys, expandedKeys); 
 
         if (diffExpanded.key !== null) {
             if (diffExpanded.add) {//如果是增加
                 const keyIndex = prevData.findIndex(({ data: { key } }) => key === diffExpanded.key);
                 const rangeNodes = getExpandRange(prevData, data, diffExpanded.key);
                 const newTransitionData = prevData.slice();
-                newTransitionData.splice(keyIndex + 1, 0, TransitionFlattenData);
+                newTransitionData.splice(keyIndex + 1, 0, TransitionFlattenData); 
                 setTransitionData(newTransitionData);
                 setTransitionRange(rangeNodes);
                 setTransitionVisible(true);
             }else{
                 const keyIndex = data.findIndex(({ data: { key } }) => key === diffExpanded.key);
-                
                 const rangeNodes = getExpandRange(data, prevData, diffExpanded.key);  
                 const newTransitionData = data.slice();
-                newTransitionData.splice(keyIndex + 1, 0, TransitionFlattenData);
-                console.log(newTransitionData);
+                newTransitionData.splice(keyIndex + 1, 0, TransitionFlattenData);  
                 setTransitionData(newTransitionData);
                 setTransitionRange(rangeNodes);  
                 setTransitionVisible(false);
@@ -100,8 +97,12 @@ const NodeList = React.forwardRef((props, ref) => {
         setTransitionRange([]); 
     } 
 
-    console.log(transitionRange)
-    console.log(transitionVisible)
+    const handleTransitionExited=()=>{
+        setPrevData(data);
+        setTransitionData(data);
+        setTransitionRange([]); 
+    }
+ 
 
     return (
         <VirtualList
@@ -119,9 +120,11 @@ const NodeList = React.forwardRef((props, ref) => {
                         return (
                             <TransitionComponent 
                                 key={key} 
-                                in={transitionVisible}  
-                                timeout={30000}
+                                visible={transitionVisible}  
+                                timeout={300}
+                                disappear
                                 onEntered={handleTransitionEntered}
+                                onExited={handleTransitionExited}
                             >
                                 <div>
                                     {

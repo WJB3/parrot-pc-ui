@@ -11,13 +11,13 @@ import "./index.scss";
 import TablePage from '@packages/pages/display/TablePage';
 import Demo from '@packages/pages/Demo';
 
-if (process.env.NODE_ENV === 'development') {
-    const whyDidYouRender = require('@welldone-software/why-did-you-render');
-    whyDidYouRender(React, {
-      trackAllPureComponents: true,
-    });
-}
+// if (process.env.NODE_ENV === 'development') {
+//     const whyDidYouRender = require('@welldone-software/why-did-you-render');
+//     whyDidYouRender(React, {
+//       trackAllPureComponents: true,
+//     });
+// }
 
 ReactDOM.render((<HashRouter>
-    <Route path="/" exact component={(props)=><Demo {...props} />} /> 
+    <Route path="/" exact component={(props)=><TreePage {...props} />} /> 
 </HashRouter>), document.getElementById("root"));

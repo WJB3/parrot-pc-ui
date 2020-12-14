@@ -15,7 +15,8 @@ export default function useStateCallback(initial){
             }
         }
 
-        asyncCallback.current=typeof next==='function'?next:null;
+        asyncCallback.current=typeof next==='function'?next:null; 
+     
         setState(nextState);
     }
 
