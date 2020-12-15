@@ -1,10 +1,14 @@
 
 
-import React,{useContext,useMemo } from 'react';
+import React,{useContext,useMemo ,useState} from 'react';
 import TreeContext from './TreeContext';
 import Blank from './Blank';
 import classNames from '@packages/utils/classNames';
 import Loading from '@packages/core/Loading';
+import {
+    convertNodePropsToEventData
+} from './util/treeUtils';
+import { Expand,Shrink,File } from '@packages/core/Icon';
 
 const noop=()=>{}
 
@@ -15,7 +19,8 @@ const TreeNode=React.forwardRef((props,ref)=>{
         title,
         selectable=true,
         //是否是叶子节点
-        isLeaf=false
+        isLeaf=false,
+        data
     }=props;
 
     const {
@@ -32,8 +37,22 @@ const TreeNode=React.forwardRef((props,ref)=>{
         onNodeSelect,
         loadData,
         loadingKeys,
-        loadedKeys
+        loadedKeys,
+        showLine,
+        draggable:contextDraggable,
+        onNodeContextMenu,
+        onNodeDoubleClick,
+        onNodeDragStart
     }=useContext(TreeContext);  
+
+    const { draggable }=useMemo(()=>{
+        let isGragge=typeof contextDraggable==="function"?contextDraggable(data):contextDraggable;
+        return {
+            draggable:isGragge
+        }
+    },[contextDraggable,data]);
+
+    const [dragNodeHighlight,setDragNodeHighlight]=useState(false);
 
     const { expanded,selected,level,children,prefixCls,loading,loaded }=useMemo(()=>{
    
@@ -72,23 +91,35 @@ const TreeNode=React.forwardRef((props,ref)=>{
  
  
 
-    const renderSwitcher=()=>{
+    const renderSwitcher=()=>{ 
  
         let switchNode=null;  
 
         //如果是叶子节点，前面就没有切换图标
-        if(!haveSwitcher){
+        if(!haveSwitcher && showLine){ 
+            switchNode=<File style={{fontSize:20}}/>;
+        }else if(!haveSwitcher){
             switchNode=null;
         }else{
-            switchNode= loading?<Loading size={16}/>:typeof switcherIcon==="function"
-            ?switcherIcon(props)
-            :switcherIcon
+            if(loading){
+                switchNode=<Loading size={16}/>
+            }else if(showLine){
+                if(expanded){
+                    switchNode=<Shrink style={{fontSize:18}}/>
+                }else{
+                    switchNode=<Expand style={{fontSize:18}}/>
+                }
+            }else{
+                switchNode=typeof switcherIcon==="function" ?switcherIcon(props)
+                :switcherIcon
+            } 
+           
         } 
 
         return (
             <span className={classNames(
                 `${prefixCls}-Switcher`,
-                `${prefixCls}-Switcher-${expanded?"Open":"Close"}`
+                `${prefixCls}-Switcher-${showLine?"":expanded?"Open":"Close"}`
             )} onClick={haveSwitcher?onExpand:noop}> 
                 {switchNode}
             </span>
@@ -134,18 +165,40 @@ const TreeNode=React.forwardRef((props,ref)=>{
     const onSelect=(e)=>{
         onNodeSelect?.(e,{...keyEntities[eventKey],key:eventKey,selected});
     }
+    
+    const onContextMenu = (e) => {//响应右击事件
+        onNodeContextMenu(e, convertNodePropsToEventData(props));
+    };
 
+    const onDoubleClick=(e)=>{
+        onNodeDoubleClick(e,convertNodePropsToEventData(props));
+    }
+
+    const onDragStart=(e)=>{
+        e.stopPropagation();
+        setDragNodeHighlight(true);
+        onNodeDragStart(e,convertNodePropsToEventData(props))
+    }
 
     const renderSelector=()=>{
 
-        return <span className={classNames(`${prefixCls}-Selector`,{
-            [`${prefixCls}-Selector-BlockNode`]:blockNode,
-            [`${prefixCls}-Selector-Selected`]:selected,
-            [`${prefixCls}-Selector-FilterNode`]:filterTreeNode && filterTreeNode({...props})
-        })} onClick={selectable?onSelect:noop}>
-            {renderIcon()}
-            {renderTitle()}
-        </span>
+        return (
+            <span 
+                className={classNames(`${prefixCls}-Selector`,{
+                    [`${prefixCls}-Selector-BlockNode`]:blockNode,
+                    [`${prefixCls}-Selector-Selected`]:selected,
+                    [`${prefixCls}-Selector-FilterNode`]:(filterTreeNode && filterTreeNode({...props}))||dragNodeHighlight 
+                })} 
+                onClick={selectable?onSelect:noop}
+                draggable={draggable||undefined}
+                onContextMenu={onContextMenu}
+                onDoubleClick={onDoubleClick}
+                onDragStart={onDragStart}
+            >
+                {renderIcon()}
+                {renderTitle()}
+            </span>
+        )
     }
  
 
@@ -155,7 +208,7 @@ const TreeNode=React.forwardRef((props,ref)=>{
             className={prefixCls}
             ref={ref}
         >
-            <Blank prefixCls={prefixCls} level={level} />
+            <Blank prefixCls={prefixCls} level={level} showLine={showLine} />
             {renderSwitcher()}
             {renderSelector()}
         </span>
@@ -164,4 +217,4 @@ const TreeNode=React.forwardRef((props,ref)=>{
 
 });
 
-export default TreeNode;
+export default React.memo(TreeNode);

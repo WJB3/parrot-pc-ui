@@ -72,10 +72,29 @@ $prefixClsCheckbox:"#{$global-prefix}-Checkbox";
 
             &-Blank{
 
+                position: relative;
+                line-height: 1;
+
                 &-Unit{
-                    display: inline-block;
+                    display: inline-flex;
                     width:24px;
+                    height:24px;
                 }
+
+                &-Unit-ShowLine{
+                    position: relative;
+
+                    &:before{
+                        display: inline-block;
+                        content: "";
+                        position: absolute;
+                        left: 12px;
+                        top: 0;
+                        bottom: 0;
+                        border: 1px dashed rgba(0,0,0,0.5);
+                    }
+                }
+
             }
         }
 

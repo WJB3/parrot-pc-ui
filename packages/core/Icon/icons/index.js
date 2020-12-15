@@ -25,3 +25,6 @@ export { default as ArrowDown } from './ArrowDown';
 export { default as MoreHorizontal } from './MoreHorizontal';
 export { default as ArrowDoubleLeft } from './ArrowDoubleLeft';
 export { default as ArrowDoubleRight } from './ArrowDoubleRight';
+export { default as Expand } from './Expand';
+export { default as Shrink } from './Shrink';
+export { default as File } from './File';

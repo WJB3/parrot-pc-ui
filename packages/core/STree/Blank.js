@@ -5,7 +5,7 @@ import classNames from '@packages/utils/classNames';
 
 
 //空格组件
-const Blank=({prefixCls,level})=>{
+const Blank=({prefixCls,level,showLine})=>{
  
     const list=[];
     
@@ -14,7 +14,10 @@ const Blank=({prefixCls,level})=>{
             <span 
                 key={`${i}-blank`}
                 className={classNames(
-                    `${prefixCls}-Blank-Unit`
+                    `${prefixCls}-Blank-Unit`,
+                    {
+                       [`${prefixCls}-Blank-Unit-ShowLine`]:showLine
+                    }
                 )}
             />
         )

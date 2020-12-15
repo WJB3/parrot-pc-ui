@@ -186,3 +186,24 @@ export function arrDel(expandedKeys,key){
     
     return [...newExpandedKeys]
 }
+
+export function convertNodePropsToEventData(props){
+  const {
+    data,
+    expanded,
+    selected,
+    loaded,
+    loading
+  }=props;
+
+  const eventData={
+    ...data,
+    expanded,
+    selected,
+    loaded,
+    loading
+  }
+
+  return eventData;
+
+}

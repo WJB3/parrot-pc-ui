@@ -1,6 +1,6 @@
 
 
-import React ,{ useMemo,useContext, useCallback,useState,useEffect   } from 'react';
+import React ,{ useMemo,useContext, useCallback,useState,useEffect,useRef } from 'react';
 import TreeContext from './TreeContext';
 import { ConfigContext } from '@packages/core/ConfigProvider';
 import {
@@ -21,6 +21,7 @@ import {
 import useInit from '@packages/hooks/useInit';
 import "./index.scss";
 
+function noop(){}
 
 
 const Tree=React.forwardRef((props,ref)=>{
@@ -57,11 +58,22 @@ const Tree=React.forwardRef((props,ref)=>{
         loadedKeys:loadedKeysProp,
         //节点加载完毕时触发
         onLoad,
-        
+        showLine,
+        //设置节点可拖拽
+        draggable,
+        onRightClick=noop,
+        onDoubleClick=noop,
+        onDragStart=noop
     }=props;
 
     //是否初始化
     const isInit=useInit();
+
+    const dragStartMousePosition=useRef(null);
+
+    const dragNode=useRef(null);
+
+    const [dragging,setDragging]=useState(false);
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("Tree",customizePrefixCls);
 
@@ -167,7 +179,51 @@ const Tree=React.forwardRef((props,ref)=>{
         }
         setSelectedKeys(newSelectedKeys);
         onSelect?.(e)
-    },[onSelect,selectedKeys])
+    },[onSelect,selectedKeys]);
+
+    const onNodeContextMenu=useCallback((event,node)=>{
+        if (onRightClick) {
+            event.preventDefault();
+            onRightClick({ event, node });
+        }
+    },[onRightClick])
+
+    const onNodeDoubleClick=useCallback((event,node)=>{
+        if (onDoubleClick) { 
+            onDoubleClick({ event, node });
+        }
+    },[onDoubleClick]);
+
+    const onNodeDragStart=useCallback((event,node)=>{
+        dragNode.current=node;
+        dragStartMousePosition.current = {
+            x: event.clientX,
+            y: event.clientY,
+        };
+        setDragging(true);
+        window.addEventListener('dragend', onWindowDragEnd); 
+        onDragStart?.({ event, node });
+    },[onDragStart]);
+
+    const onWindowDragEnd = event => {
+        onNodeDragEnd(event, null, true);
+        window.removeEventListener('dragend', this.onWindowDragEnd);
+    };
+
+    const onNodeDragEnd = (event, node, outsideTree = false) => {
+        const { onDragEnd } = this.props;
+        this.setState({
+          dragOverNodeKey: null,
+        });
+    
+        this.cleanDragState();
+    
+        if (onDragEnd && !outsideTree) {
+          onDragEnd({ event, node: convertNodePropsToEventData(node.props) });
+        }
+    
+        dragNode.current = null;
+    };
      
 
     return (
@@ -186,7 +242,12 @@ const Tree=React.forwardRef((props,ref)=>{
                 onNodeSelect,
                 loadingKeys,
                 loadData,
-                loadedKeys
+                loadedKeys,
+                showLine,
+                draggable,
+                onNodeContextMenu,
+                onNodeDoubleClick,
+                onNodeDragStart
             }}
         >
             <div className={prefixCls}> 
