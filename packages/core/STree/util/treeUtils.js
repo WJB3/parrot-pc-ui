@@ -44,16 +44,16 @@ export function convertDataToEntities(
     const posEntities={};
     const keyEntities={};
 
+
+
     traverseSingleData(
         treeData,
-        (dfsData)=>{
-             
-            const { node,index,level,pos,parentPos,key }=dfsData;
-
+        (dfsData)=>{  
+            const { node,index,level,pos,parentPos,key }=dfsData; 
             const entity={ node,index,level,pos,key };
 
-            keyEntities[key]=entity;
-            posEntities[key]=entity;
+            posEntities[pos]=entity;
+            keyEntities[getKey(key, pos)]=entity;
 
             //如果有父数据
             entity.parent=posEntities[parentPos];
@@ -80,38 +80,40 @@ export function traverseSingleData(
 ){
 
     
-    function dfs(node,index,level,parentPos){
-
-        const children=node?node.children:treeData;  
-        const pos=node?getPos(parentPos,index):"0";
-
-        if(node){
- 
-            const info={  
-                node:node,
-                index:index,
-                level:level,
-                pos:pos,
-                parentPos:parentPos,
-                key:getKey(node.key,pos)
-            }
-
-            callback?.(info)
-
+    function dfs(
+        node,
+        index,
+        parent,
+      ) {
+        const children = node ? node.children : treeData;
+        const pos = node ? getPos(parent.pos, index) : '0';
+    
+        // Process node if is not root
+        if (node) {
+          const key=getKey(node.key,pos);
+          const data = {
+            node,
+            index,
+            pos,
+            key,
+            parentPos: parent.node ? parent.pos : null,
+            level: parent.level + 1,
+          };
+    
+          callback(data);
         }
-
-        if(children){
-            children.forEach((subNode,subIndex)=>{
-                dfs(
-                    subNode,
-                    subIndex,
-                    validateValue(level)?level+1:0,
-                    pos
-                )
-            })
-        } 
-
-    }
+    
+        // Process children node
+        if (children) {
+          children.forEach((subNode, subIndex) => {
+            dfs(subNode, subIndex, {
+              node,
+              pos,
+              level: parent ? parent.level + 1 : -1,
+            });
+          });
+        }
+      }
 
     dfs(null);
 

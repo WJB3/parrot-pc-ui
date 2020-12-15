@@ -5,9 +5,7 @@ import Button from '@packages/core/Button';
 
 const Page= React.forwardRef((props,ref)=>{
 
-    function handleResize(node){
-        console.log("handleResize");
-        console.log(node); 
+    function handleResize(node){ 
     }
 
     const [visible,setVisible]=React.useState(false);

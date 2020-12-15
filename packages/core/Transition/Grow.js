@@ -1,6 +1,6 @@
 import React ,{useEffect, useState } from 'react';
 import PropTypes from 'prop-types'; 
-import { Transition } from 'react-transition-group';
+import Transition from '@packages/core/ReactTransitionGroup/Transition';
 import { duration } from '@packages/core/styles/transitions';
 import { reflow } from './utils';
 import useForkRef from '@packages/hooks/useForkRef';
@@ -66,7 +66,7 @@ const Grow = React.forwardRef(function (props, ref) {
     return (
         <TransitionComponent
             appear
-            in={visibleProp}
+            visible={visibleProp}
             onEnter={handleEnter} 
             onExit={handleExit} 
             timeout={timeout}

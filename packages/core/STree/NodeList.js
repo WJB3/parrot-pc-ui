@@ -51,7 +51,8 @@ const NodeList = React.forwardRef((props, ref) => {
     const {
         data,
         expandedKeys,
-        transitionComponent: TransitionComponent = Collapse
+        transitionComponent: TransitionComponent = Collapse,
+        height
     } = props;
 
     //上一轮数据
@@ -108,14 +109,13 @@ const NodeList = React.forwardRef((props, ref) => {
         <VirtualList
             data={transitionData}
             itemKey={itemKey}
+            height={height}
         >
             {
-                (treeNode) => {
-
+                (treeNode) => { 
                     const {
                         data: { key }
-                    } = treeNode;
-
+                    } = treeNode; 
                     if (key === TRANSITION_KEY) { 
                         return (
                             <TransitionComponent 

@@ -4,6 +4,7 @@ import React,{useContext,useMemo } from 'react';
 import TreeContext from './TreeContext';
 import Blank from './Blank';
 import classNames from '@packages/utils/classNames';
+import Loading from '@packages/core/Loading';
 
 const noop=()=>{}
 
@@ -12,7 +13,9 @@ const TreeNode=React.forwardRef((props,ref)=>{
     const {
         eventKey,
         title,
-        selectable=true
+        selectable=true,
+        //是否是叶子节点
+        isLeaf=false
     }=props;
 
     const {
@@ -26,31 +29,58 @@ const TreeNode=React.forwardRef((props,ref)=>{
         filterTreeNode,
         showIcon,
         onNodeExpand,
-        onNodeSelect 
-    }=useContext(TreeContext); 
- 
-    const { expanded,selected,level,children,prefixCls }=useMemo(()=>{
+        onNodeSelect,
+        loadData,
+        loadingKeys,
+        loadedKeys
+    }=useContext(TreeContext);  
+
+    const { expanded,selected,level,children,prefixCls,loading,loaded }=useMemo(()=>{
+   
         return { 
             expanded:expandedKeys.indexOf(eventKey)>-1,
             selected:selectedKeys.indexOf(eventKey)>-1,
             level:keyEntities[eventKey].level,
             children:keyEntities[eventKey].children,
-            prefixCls:`${contextPrefixCls}-TreeNode`
+            prefixCls:`${contextPrefixCls}-TreeNode`,
+            loading:loadingKeys.indexOf(eventKey)>-1,
+            loaded:loadedKeys.indexOf(eventKey)>-1
         }
-    },[expandedKeys,selectedKeys,eventKey,keyEntities,contextPrefixCls]);
+    },[expandedKeys,selectedKeys,eventKey,keyEntities,contextPrefixCls,loadingKeys,loadedKeys]);  
+
+    const { haveSwitcher }=useMemo(()=>{ 
+        let hasSwitcher;
+        let hasChildren=(children||[]).length>0;  
+ 
+
+        if(hasChildren){
+            //如果有孩子节点就显示
+            hasSwitcher=true;
+        }else if(isLeaf){
+            hasSwitcher=false;
+        }else if(!hasChildren && loadData){ 
+            if(loaded){ 
+                hasSwitcher=false;
+            }else{
+                hasSwitcher=true;
+            } 
+        }   
+        return {
+            haveSwitcher:hasSwitcher
+        }
+    },[loadData,children,isLeaf,loaded]);
+ 
  
 
     const renderSwitcher=()=>{
  
-        let switchNode=null;
-
-        let hasChildren=(children||[]).length>0;
+        let switchNode=null;  
 
         //如果是叶子节点，前面就没有切换图标
-        if(!hasChildren){
+        if(!haveSwitcher){
             switchNode=null;
         }else{
-            switchNode= typeof switcherIcon==="function"
+            switchNode= loading?<Loading size={16}/>:typeof switcherIcon==="function"
             ?switcherIcon(props)
             :switcherIcon
         } 
@@ -59,7 +89,7 @@ const TreeNode=React.forwardRef((props,ref)=>{
             <span className={classNames(
                 `${prefixCls}-Switcher`,
                 `${prefixCls}-Switcher-${expanded?"Open":"Close"}`
-            )} onClick={hasChildren?onExpand:noop}> 
+            )} onClick={haveSwitcher?onExpand:noop}> 
                 {switchNode}
             </span>
         )

@@ -10,6 +10,7 @@ import "./index.scss";
 // import PaginationPage from '@packages/pages/common/PaginationPage'; 
 import TablePage from '@packages/pages/display/TablePage';
 import Demo from '@packages/pages/Demo';
+import LoadingPage from '@packages/pages/display/LoadingPage';
 
 // if (process.env.NODE_ENV === 'development') {
 //     const whyDidYouRender = require('@welldone-software/why-did-you-render');

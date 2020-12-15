@@ -1,95 +1,50 @@
+import React, { useState } from 'react';
+import { Tree } from 'antd';
+import STree from '@packages/core/STree';
 
 
-import React ,{ useEffect, useState,useRef } from 'react';   
-import Tree from '@packages/core/Tree';  
-import CTree from '@packages/core/CTree';  
-import STree from '@packages/core/STree';  
-import { Button, message,Tree as TreeA } from 'antd'; 
-import 'antd/dist/antd.css';
-
-const treeData2=[
-  {
-    title: 'parent 1',
-    key: '0-0', 
-    children: [
-      {
-        title: 'parent 1-0',
-        key: '0-0-0',  
-      },
-      {
-        title: 'parent 1-1',
-        key: '0-0-1' 
-      },
-    ],
-  }
+const initTreeDate = [
+  { title: 'Expand to load', key: '0' }, 
 ];
-  
-const treeData = [
-  {
-    title: 'parent 1',
-    key: '0-0', 
-    children: [
-      {
-        title: 'parent 1-0',
-        key: '0-0-0',  
-        children:[
-          {
-            title:"parent 1-0-0",
-            key: '0-0-0-0',  
-          },
-          {
-            title:"parent 1-0-1",
-            key: '0-0-0-1',  
-          }
-        ]
-      },
-      {
-        title: 'parent 1-1',
-        key: '0-0-1' 
-      },
-    ],
-  }
-]; 
 
-const key = 'updatable';
- 
-const Page=(props)=>{   
-
-    const openMessage = () => {
-      message.loading({ content: 'Loading...', key });
-      setTimeout(() => {
-        message.success({ content: 'Loaded!', key, duration: 2 });
-      }, 1000);
-    };
-
-    const [auto,setAuto]=useState(false); 
-
-    return (
-        <div> 
-            {/* <Tree 
-              treeData={treeData}   
-              defaultExpandedKeys={['0-0-0']} 
-              defaultExpandParent={false}
-              blockNode
-            />   */}
-            {/* <CTree
-              treeData={treeData}   
-              defaultExpandedKeys={['0-0-0']}    
-              defaultExpandParent={false}
-              blockNode
-            />   */}
-            <STree 
-              treeData={treeData}   
-              multiple  
-            />
-            <TreeA
-              treeData={treeData}   
-              defaultExpandedKeys={['0-0-0-0']} 
-            />  
-            
-        </div>
-    )
+// It's just a simple demo. You can use tree map to optimize update perf.
+function updateTreeData(list, key, children){
+  return list.map(node => {
+    if (node.key === key) {
+      return {
+        ...node,
+        children,
+      };
+    } else if (node.children) {
+      return {
+        ...node,
+        children: updateTreeData(node.children, key, children),
+      };
+    }
+    return node;
+  });
 }
- 
 
-export default Page;        
+const Demo = () => {
+  const [treeData, setTreeData] = useState(initTreeDate);
+
+  function onLoadData({ key, children }) {
+    return new Promise(resolve => { 
+      setTimeout(() => {
+        setTreeData(origin =>
+          updateTreeData(origin, key, [
+            { title: 'Child Node', key: `${key}-0` }, 
+          ]),
+        ); 
+        resolve();
+      }, 1000);
+    });
+  }
+
+  return <> 
+    <STree loadData={onLoadData} treeData={treeData}    />
+   
+  </>
+};
+
+export default Demo;

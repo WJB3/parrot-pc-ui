@@ -1,6 +1,6 @@
 import React  from 'react'; 
 import PropTypes from 'prop-types'; 
-import { Transition } from 'react-transition-group';
+import Transition from '@packages/core/ReactTransitionGroup/Transition';
 import { duration } from '@packages/core/styles/transitions'; 
 import { reflow } from './utils';
 
@@ -58,7 +58,7 @@ const Fade = React.forwardRef(function (props, ref) {
     return (
         <TransitionComponent
             appear
-            in={visibleProp}
+            visible={visibleProp}
             onEnter={handleEnter}
             onEntered={(node, isAppearing) => onEntered?.(node, isAppearing)}
             onEntering={(node, isAppearing) => onEntering?.(node, isAppearing)}

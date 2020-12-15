@@ -1,6 +1,6 @@
 
 
-import React ,{ useMemo,useContext, useCallback } from 'react';
+import React ,{ useMemo,useContext, useCallback,useState,useEffect   } from 'react';
 import TreeContext from './TreeContext';
 import { ConfigContext } from '@packages/core/ConfigProvider';
 import {
@@ -49,6 +49,14 @@ const Tree=React.forwardRef((props,ref)=>{
         onExpand,//展开/收起节点时触发
         onSelect,//	点击树节点触发
         multiple=false,
+        //设置虚拟滚动容器高度，设置后内部节点不再支持横向滚动
+        height,
+        //异步加载数据,需要返回一个promise
+        loadData,
+        //已经加载的节点，需要配合 loadData 使用
+        loadedKeys:loadedKeysProp,
+        //节点加载完毕时触发
+        onLoad,
         
     }=props;
 
@@ -66,6 +74,13 @@ const Tree=React.forwardRef((props,ref)=>{
         controlled:selectedKeysProp,
         default:defaultSelectedKeys
     }); 
+
+    const [loadingKeys,setLoadingKeys]=useState([]);
+
+    const [loadedKeys,setLoadedKeys]=useControlled({
+        controlled:loadedKeysProp,
+        default:[]
+    });
  
     const { keyEntities,expandedKeys,flattenData }=useMemo(()=>{ 
         //不可依赖isInit 否则在不改变expanded的情况下 会走进这个逻辑 造成渲染错误
@@ -98,6 +113,25 @@ const Tree=React.forwardRef((props,ref)=>{
         }
     },[treeData,expandParent,expandedKeyProps,initExpandedKeys]);  
 
+    const onNodeLoad=(treeNode)=>new Promise(resolve=>{
+        const { key }=treeNode;
+        const promise = loadData(treeNode);  
+        promise.then(()=>{ 
+            const newLoadedKeys=arrAdd(loadedKeys,key); 
+            const newLoadingKeys=arrDel(loadingKeys,key); 
+            setLoadedKeys(newLoadedKeys);
+            setLoadingKeys(newLoadingKeys);
+            resolve();
+        });
+        setLoadingKeys(arrAdd(loadingKeys,key));
+    });
+
+    useEffect(()=>{
+        if(isInit && onLoad){
+            onLoad(loadedKeys);
+        }
+    },[loadedKeys,onLoad]);
+
     const onNodeExpand=useCallback((e,treeNode)=>{  
         const { expanded,key }=treeNode; 
         const targetExpanded = !expanded; 
@@ -106,8 +140,18 @@ const Tree=React.forwardRef((props,ref)=>{
             newExpandedKeys = arrAdd(expandedKeys, key);
         }else{
             newExpandedKeys= arrDel(expandedKeys,key);
+        } 
+        if(targetExpanded && loadData){
+            const loadPromise = onNodeLoad(treeNode);
+            if(loadPromise){
+                loadPromise.then(()=>{
+                    setExpandedKeys(newExpandedKeys)
+                })
+            }
+        }else{
+            setExpandedKeys(newExpandedKeys); 
         }   
-        setExpandedKeys(newExpandedKeys); 
+        
         onExpand?.(e,{expanded,treeNode});
     },[onExpand,expandedKeys])
 
@@ -124,7 +168,7 @@ const Tree=React.forwardRef((props,ref)=>{
         setSelectedKeys(newSelectedKeys);
         onSelect?.(e)
     },[onSelect,selectedKeys])
-   
+     
 
     return (
         <TreeContext.Provider
@@ -139,13 +183,17 @@ const Tree=React.forwardRef((props,ref)=>{
                 filterTreeNode,
                 showIcon,
                 onNodeExpand,
-                onNodeSelect
+                onNodeSelect,
+                loadingKeys,
+                loadData,
+                loadedKeys
             }}
         >
             <div className={prefixCls}> 
                 <NodeList 
                     data={flattenData}
                     expandedKeys={expandedKeys}
+                    height={height}
                 />
             </div>
         </TreeContext.Provider>

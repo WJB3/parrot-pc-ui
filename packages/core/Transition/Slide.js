@@ -1,6 +1,6 @@
 import React,{ useEffect, useRef } from 'react';
 import PropTypes from 'prop-types'; 
-import { Transition } from 'react-transition-group';
+import Transition from '@packages/core/ReactTransitionGroup/Transition';
 import { duration } from '@packages/core/styles/transitions';
 import useForkRef from '@packages/hooks/useForkRef';
 import { reflow } from './utils';
@@ -140,7 +140,7 @@ const Slide = React.forwardRef(function (props, ref) {
     return (
         <TransitionComponent 
             appear
-            in={visibleProp}
+            visible={visibleProp}
             onEnter={handleEnter} 
             onEntering={handleEntering}
             onExit={handleExit}
