@@ -62,7 +62,7 @@ const List=React.forwardRef((props,ref)=>{
     );
 
     const containerStyle={
-        height,
+        maxHeight:height,
         overflow:"hidden"
     };
 
@@ -84,7 +84,7 @@ const List=React.forwardRef((props,ref)=>{
         let startOffset; 
 
         for(let i=0;i<originData.length;i++){
-            let itemKey=getKey(originData[i]);  
+            let itemKey=getKey(originData[i]);   
             let calcuHeight=heights.get(itemKey);  
           
             let currentItemBottom=itemTop+(calcuHeight===undefined?itemHeight:calcuHeight);   
@@ -108,8 +108,13 @@ const List=React.forwardRef((props,ref)=>{
         }
 
     },[isVirtual,scrollTop,originData,height,heightMarkedUpdate]);    
+
+    console.log(startIndex)
+    console.log(endIndex)
  
     const viewChildren=useChildren(originData,startIndex,endIndex,setInstanceRef,children,getKey);
+
+    console.log(viewChildren)
 
     //==============================Range=============================
     //采用ref为了获取到最新的值

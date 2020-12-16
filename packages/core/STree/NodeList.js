@@ -13,13 +13,13 @@ import {  Collapse,Fade,Grow } from '@packages/core/Transition';
 
 export const TRANSITION_KEY = `TRANSITION_KEY_${Math.random()}`;
 
-function itemKey(item) {
+function itemKey(item) { 
     const {
       data: { key },
       pos,
     } = item;
     return getKey(key, pos);
-  }
+}
   
 
 const TransitionNode = {

@@ -110,7 +110,7 @@ const Tree=React.forwardRef((props,ref)=>{
             }else if(!expandParent && !defaultExpandParent && !isInit){
                 expandedKeys=[];
             }else{
-                const cloneKeyEntities = { ...newKeyEntities };
+                const cloneKeyEntities = { ...keyEntities };
                 const allExpandedKeys = Object.keys(cloneKeyEntities).map(key => cloneKeyEntities[key].key);
                 expandedKeys = allExpandedKeys;
             } 
