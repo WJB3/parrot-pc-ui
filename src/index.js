@@ -4,6 +4,7 @@ import { HashRouter, Route, Switch } from 'react-router-dom';
 //import VirtualListPage from '@packages/pages/data/VirtualListPage';
 //import CheckboxPage from '@packages/pages/data/CheckboxPage';
 import TreePage from '@packages/pages/data/TreePage';
+import InputNumberPage from '@packages/pages/data/InputNumberPage';
 import TransitionPage from '@packages/pages/common/TransitionPage';
 import "./index.scss"; 
 //import SelectPage from '@packages/pages/data/SelectPage';

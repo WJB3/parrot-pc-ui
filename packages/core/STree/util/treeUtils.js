@@ -201,7 +201,8 @@ export function convertNodePropsToEventData(props){
     expanded,
     selected,
     loaded,
-    loading
+    loading,
+    eventKey:data.key
   }
 
   return eventData;

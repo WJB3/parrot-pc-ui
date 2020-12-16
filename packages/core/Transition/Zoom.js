@@ -74,6 +74,7 @@ const Zoom = React.forwardRef(function (props, ref) {
         >
             {
                 (state, childProps) => {
+                    console.log(state)
                     return React.cloneElement(children, {
                         style: {
                             transform: `scale(${zoom}) ${extraStyle}`,

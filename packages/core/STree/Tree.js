@@ -10,7 +10,8 @@ import {
     arrDel
 } from './util/treeUtils';
 import {
-    conductExpandParent
+    conductExpandParent,
+    conductCheckedKey
 } from './util/conductUtils';
 
 import useControlled from '@packages/hooks/useControlled';
@@ -19,7 +20,10 @@ import {
     ArrowDown
 } from '@packages/core/Icon';
 import useInit from '@packages/hooks/useInit';
-import { getDragChildrenKeys } from './util/dragUtils';
+import { 
+    getDragChildrenKeys,
+    calcDropPosition
+} from './util/dragUtils';
 import "./index.scss";
 
 function noop(){}
@@ -65,7 +69,16 @@ const Tree=React.forwardRef((props,ref)=>{
         onRightClick=noop,
         onDoubleClick=noop,
         onDragStart=noop,
-        onDragEnd=noop
+        onDragEnd=noop,
+        onDragEnter=noop,
+        //是否允许拖拽时放置在该节点
+        allowDrop,
+        //受控组件
+        checkedKeys:checkedKeysProp,
+        //默认选中复选框的树节点
+        defaultCheckedKeys=[],
+        checkable,
+        onCheck
     }=props;
 
     //是否初始化
@@ -86,6 +99,11 @@ const Tree=React.forwardRef((props,ref)=>{
         default:defaultExpandedKeys
     });
 
+    const [ initCheckedKeys,setCheckedKeys ]=useControlled({
+        controlled:checkedKeysProp,
+        default:defaultCheckedKeys
+    }); 
+
     const [ selectedKeys,setSelectedKeys  ]=useControlled({
         controlled:selectedKeysProp,
         default:defaultSelectedKeys
@@ -98,7 +116,7 @@ const Tree=React.forwardRef((props,ref)=>{
         default:[]
     });
  
-    const { keyEntities,expandedKeys,flattenData }=useMemo(()=>{ 
+    const { keyEntities,expandedKeys,flattenData,checkedKeys,halfCheckedKeys }=useMemo(()=>{ 
         //不可依赖isInit 否则在不改变expanded的情况下 会走进这个逻辑 造成渲染错误
  
         const keyEntities=convertDataToEntities(treeData)?.keyEntities;
@@ -118,16 +136,19 @@ const Tree=React.forwardRef((props,ref)=>{
                 const allExpandedKeys = Object.keys(cloneKeyEntities).map(key => cloneKeyEntities[key].key);
                 expandedKeys = allExpandedKeys;
             } 
-        } 
-         
+        }  
+        const { checkedKeys,halfCheckedKeys}=conductCheckedKey(initCheckedKeys,keyEntities,true); 
+ 
         const flattenData=flattenTreeData(treeData,expandedKeys);
 
         return {
             keyEntities,
             expandedKeys,
-            flattenData
+            flattenData,
+            checkedKeys,
+            halfCheckedKeys
         }
-    },[treeData,expandParent,expandedKeyProps,initExpandedKeys]);  
+    },[treeData,expandParent,expandedKeyProps,initExpandedKeys,initCheckedKeys]);  
 
     const onNodeLoad=(treeNode)=>new Promise(resolve=>{
         const { key }=treeNode;
@@ -198,16 +219,14 @@ const Tree=React.forwardRef((props,ref)=>{
         }
     },[onDoubleClick]);
 
-    const onNodeDragStart=useCallback((event,node,eventKey)=>{ 
+    const onNodeDragStart=useCallback((event,node)=>{ 
+        const { eventKey }=node;
         dragNode.current=node;
         dragStartMousePosition.current = {
             x: event.clientX,
             y: event.clientY,
         };
-        const newExpandedKeys = arrDel(expandedKeys, eventKey);
-        console.log(expandedKeys)
-        console.log(eventKey)
-        console.log(newExpandedKeys)
+        const newExpandedKeys = arrDel(expandedKeys,eventKey); 
         setDragging(true);
         setDragChildrenKeys(getDragChildrenKeys(eventKey,keyEntities));
         setExpandedKeys(newExpandedKeys);
@@ -215,18 +234,47 @@ const Tree=React.forwardRef((props,ref)=>{
         onDragStart?.({ event, node });
     },[onDragStart,expandedKeys]);
 
+
+
     const onNodeDragEnd=useCallback((event,node)=>{
-         
         dragNode.current=null;
         onDragEnd?.({event,node});
     },[onDragEnd])
+
+    const onNodeDragEnter=useCallback((event,node)=>{
+        onDragEnter?.({event,node});
+    },[onDragEnter,flattenData,allowDrop,dragStartMousePosition,keyEntities,expandedKeys]);
 
     const onWindowDragEnd = event => {
         onNodeDragEnd(event, null, true);
         window.removeEventListener('dragend', this.onWindowDragEnd);
     };
 
- 
+    const onNodeCheck=useCallback((event,node)=>{
+        const { key }=node;
+        let newCheckedKeys; 
+        let newHalfCheckedKeys;
+
+        const {checkedKeys:checkedKeysDestruction,halfCheckedKeys:halfCheckedKeysDestruction}=conductCheckedKey([...checkedKeys,key],keyEntities,true); 
+        newCheckedKeys=checkedKeysDestruction;
+        newHalfCheckedKeys=halfCheckedKeysDestruction;
+
+        if(!flag){
+            const keySet = new Set(checkedKeys);
+            keySet.delete(key);
+            const {checkedKeys:checkedKeysDestruction,halfCheckedKeys:halfCheckedKeysDestruction}=conductCheckedKey(
+                Array.from(keySet),
+                keyEntities,
+                {checked:false,halfCheckedKeys:newHalfCheckedKeys}
+            ); 
+
+            newCheckedKeys=checkedKeysDestruction;
+            newHalfCheckedKeys=halfCheckedKeysDestruction;
+        }
+
+        setCheckedKeys(newCheckedKeys); 
+        
+    },[onCheck,checkedKeys,keyEntities]);
 
     return (
         <TreeContext.Provider
@@ -235,6 +283,8 @@ const Tree=React.forwardRef((props,ref)=>{
                 keyEntities,
                 expandedKeys,
                 selectedKeys,
+                checkedKeys,
+                halfCheckedKeys,
                 titleRender,
                 switcherIcon,
                 blockNode,
@@ -249,7 +299,10 @@ const Tree=React.forwardRef((props,ref)=>{
                 draggable,
                 onNodeContextMenu,
                 onNodeDoubleClick,
-                onNodeDragStart
+                onNodeDragStart,
+                onNodeDragEnter,
+                checkable,
+                onNodeCheck
             }}
         >
             <div className={prefixCls}> 

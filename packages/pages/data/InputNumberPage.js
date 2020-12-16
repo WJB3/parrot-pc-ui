@@ -10,11 +10,7 @@ const Page=(props)=>{
     return (
         <div> 
             <InputNumber 
-                decimalSeparator={","} 
-                min={0}    
-                max={100}  
-                precision={4}    
-                step={20} 
+                 
                 style={{width:256}}  
                 placeholder="Basic usage" 
                 onChange={(value)=>console.log(value)} 

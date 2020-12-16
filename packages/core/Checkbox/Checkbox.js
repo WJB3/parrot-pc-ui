@@ -98,7 +98,7 @@ const Checkbox = React.forwardRef((props, ref) => {
                         onClick={()=>console.log("onclick")}
                     />
 
-                    {checked ? <Zoom in={checked}>{selectIcon}</Zoom> : unselectIcon}
+                    {checked ? <Zoom visible={checked}>{selectIcon}</Zoom> : unselectIcon}
 
                     {indeterminate && !checked && <span className={classNames(`${prefixCls}-Indeterminate`)}></span>}
 

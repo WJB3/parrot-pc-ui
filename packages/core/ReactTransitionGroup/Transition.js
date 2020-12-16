@@ -68,6 +68,8 @@ const Transition=React.forwardRef((props,ref)=>{
         }
     },[]);  
 
+   
+
     const [ status,setStatus ]=useStateCallback(initialStatus);  
 
     const mounting=useRef(false); 
@@ -86,7 +88,10 @@ const Transition=React.forwardRef((props,ref)=>{
         }
     }
 
+    
+
     useEffect(()=>{    
+         
         if(visibleProp && (status===EXITED)){//当visible由false变为true时 
             onEnter?.(nodeRef.current,mounting.current);
              
@@ -113,8 +118,10 @@ const Transition=React.forwardRef((props,ref)=>{
             setStatus(EXITED);
         }else if(!visibleProp && status===EXITED && unmountOnExit){
             setStatus(UNMOUNTED);
-        }
+        } 
     },[visibleProp,status]);
+
+   
 
     //如果状态是unmounted，直接返回空 
 

@@ -5,6 +5,7 @@ import TreeContext from './TreeContext';
 import Blank from './Blank';
 import classNames from '@packages/utils/classNames';
 import Loading from '@packages/core/Loading';
+import Checkbox from '@packages/core/Checkbox';
 import {
     convertNodePropsToEventData
 } from './util/treeUtils';
@@ -43,7 +44,12 @@ const TreeNode=React.forwardRef((props,ref)=>{
         onNodeContextMenu,
         onNodeDoubleClick,
         onNodeDragStart,
-        onNodeDragEnd
+        onNodeDragEnd,
+        onNodeDragEnter,
+        checkable,
+        checkedKeys,
+        halfCheckedKeys,
+        onNodeCheck
     }=useContext(TreeContext);  
 
     const { draggable }=useMemo(()=>{
@@ -55,7 +61,7 @@ const TreeNode=React.forwardRef((props,ref)=>{
 
     const [dragNodeHighlight,setDragNodeHighlight]=useState(false);
 
-    const { expanded,selected,level,children,prefixCls,loading,loaded }=useMemo(()=>{
+    const { expanded,selected,level,children,prefixCls,loading,loaded,checked,halfChecked }=useMemo(()=>{
    
         return { 
             expanded:expandedKeys.indexOf(eventKey)>-1,
@@ -64,9 +70,11 @@ const TreeNode=React.forwardRef((props,ref)=>{
             children:keyEntities[eventKey].children,
             prefixCls:`${contextPrefixCls}-TreeNode`,
             loading:loadingKeys.indexOf(eventKey)>-1,
-            loaded:loadedKeys.indexOf(eventKey)>-1
+            loaded:loadedKeys.indexOf(eventKey)>-1,
+            checked:checkedKeys.indexOf(eventKey)>-1,
+            halfChecked:halfCheckedKeys.indexOf(eventKey)>-1
         }
-    },[expandedKeys,selectedKeys,eventKey,keyEntities,contextPrefixCls,loadingKeys,loadedKeys]);  
+    },[expandedKeys,selectedKeys,eventKey,keyEntities,contextPrefixCls,loadingKeys,loadedKeys,checkedKeys,halfCheckedKeys]);  
 
     const { haveSwitcher }=useMemo(()=>{ 
         let hasSwitcher;
@@ -176,15 +184,40 @@ const TreeNode=React.forwardRef((props,ref)=>{
     }
 
     const onDragStart=(e)=>{
+        console.log("onDragStart");
         e.stopPropagation();
         setDragNodeHighlight(true);
-        onNodeDragStart?.(e,convertNodePropsToEventData(props),eventKey)
+        onNodeDragStart?.(e,convertNodePropsToEventData(props))
     }
 
     const onDragEnd=(e)=>{
         e.stopPropagation();
         setDragNodeHighlight(false);
         onNodeDragEnd?.(e,convertNodePropsToEventData(props));
+    }
+
+    const onDragEnter=(e)=>{ 
+        e.preventDefault();
+        e.stopPropagation();
+        onNodeDragEnter?.(e,convertNodePropsToEventData(props));
+    }
+
+    const onCheck=(e)=>{
+        onNodeCheck?.(e,convertNodePropsToEventData(props));
+    }
+
+    const renderCheckbox=()=>{
+        console.log(checked);
+        if(!checkable) return null;
+
+        return (<Checkbox
+            className={classNames(
+                `${prefixCls}-Checkbox`
+            )} 
+            checked={checked}
+            indeterminate={halfChecked}
+            onChange={onCheck}
+        />)
     }
 
     const renderSelector=()=>{
@@ -201,6 +234,7 @@ const TreeNode=React.forwardRef((props,ref)=>{
                 onContextMenu={draggable?onContextMenu:undefined}
                 onDoubleClick={draggable?onDoubleClick:undefined}
                 onDragStart={draggable?onDragStart:undefined}
+                onDragEnter={draggable?onDragEnter:undefined}
             >
                 {renderIcon()}
                 {renderTitle()}
@@ -215,9 +249,11 @@ const TreeNode=React.forwardRef((props,ref)=>{
             className={prefixCls}
             ref={ref}
             onDragEnd={draggable?onDragEnd:undefined}
+            onDragEnter={draggable?onDragEnter:undefined}
         >
             <Blank prefixCls={prefixCls} level={level} showLine={showLine} />
-            {renderSwitcher()}
+            {renderSwitcher()} 
+            {renderCheckbox()}
             {renderSelector()}
         </span>
     )

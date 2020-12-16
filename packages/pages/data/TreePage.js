@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Tree } from 'antd';
 import STree from '@packages/core/STree';
+import Checkbox from '@packages/core/Checkbox';
 const treeData = [
   {
     title: 'parent 1',
@@ -8,13 +9,11 @@ const treeData = [
     children: [
       {
         title: 'parent 1-0',
-        key: '0-0-0',
-        disabled: true,
+        key: '0-0-0', 
         children: [
           {
             title: 'leaf',
-            key: '0-0-0-0',
-            disableCheckbox: true,
+            key: '0-0-0-0', 
           },
           {
             title: 'leaf',
@@ -35,8 +34,9 @@ const treeData = [
 const Demo = () => { 
 
   return <> 
-    <STree  treeData={treeData}  draggable   />
-    <Tree treeData={treeData} draggable   />
+    <STree  treeData={treeData}  checkable   defaultCheckedKeys={['0-0-0', '0-0-1']} />
+    <Tree treeData={treeData} checkable   defaultCheckedKeys={['0-0-0', '0-0-1']} />
+    <Checkbox />
     
   </>
 };
