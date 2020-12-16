@@ -68,7 +68,7 @@ const List=React.forwardRef((props,ref)=>{
 
     const [setInstanceRef,heights,heightMarkedUpdate]=useHeights(getKey); 
 
-    const {startIndex,endIndex,scrollHeight,offsetHeight}=useMemo(()=>{
+    const {startIndex,endIndex,scrollHeight,offsetHeight,notScroll}=useMemo(()=>{
         if(!isVirtual){
             return {
                 startIndex:0,
@@ -82,6 +82,7 @@ const List=React.forwardRef((props,ref)=>{
         let startIndex;
         let endIndex; 
         let startOffset; 
+        let notScroll=false;
 
         for(let i=0;i<originData.length;i++){
             let itemKey=getKey(originData[i]);   
@@ -97,6 +98,13 @@ const List=React.forwardRef((props,ref)=>{
             if(currentItemBottom>=scrollTop+height  && endIndex===undefined ){
                 endIndex=i;
             }  
+
+            //如果高度不级虚拟高度
+            if(i===originData.length-1 && currentItemBottom<scrollTop+height && endIndex===undefined){
+                endIndex=i;
+                notScroll=true;
+            }
+             
             itemTop=currentItemBottom;
         }
  
@@ -104,18 +112,13 @@ const List=React.forwardRef((props,ref)=>{
             startIndex:startIndex,
             endIndex:endIndex,
             scrollHeight:itemTop,
-            offsetHeight:startOffset
+            offsetHeight:startOffset,
+            notScroll:notScroll
         }
 
     },[isVirtual,scrollTop,originData,height,heightMarkedUpdate]);    
-
-    console.log(startIndex)
-    console.log(endIndex)
  
-    const viewChildren=useChildren(originData,startIndex,endIndex,setInstanceRef,children,getKey);
-
-    console.log(viewChildren)
-
+    const viewChildren=useChildren(originData,startIndex,endIndex,setInstanceRef,children,getKey); 
     //==============================Range=============================
     //采用ref为了获取到最新的值
     let maxScrollHeight=scrollHeight-height; 
@@ -133,6 +136,7 @@ const List=React.forwardRef((props,ref)=>{
             return componentRef.current.removeEventListener("wheel",onRawWheel);
         }
     },[]);  
+ 
     
     return <div className={prefixCls} style={{position:"relative"}}>
 
@@ -141,7 +145,7 @@ const List=React.forwardRef((props,ref)=>{
         </div>
 
         {
-            isVirtual && <ScrollBar 
+            isVirtual && !notScroll && <ScrollBar 
                             prefixCls={prefixCls} 
                             scrollHeight={scrollHeight}   
                             scrollTop={scrollTop} 

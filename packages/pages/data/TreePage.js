@@ -35,9 +35,9 @@ const treeData = [
 const Demo = () => { 
 
   return <> 
-    <STree  treeData={treeData}   height={233} defaultExpandAll   />
-    <Tree treeData={treeData} height={233} defaultExpandAll />
-   
+    <STree  treeData={treeData}  draggable   />
+    <Tree treeData={treeData} draggable   />
+    
   </>
 };
 

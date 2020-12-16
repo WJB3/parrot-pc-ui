@@ -42,7 +42,8 @@ const TreeNode=React.forwardRef((props,ref)=>{
         draggable:contextDraggable,
         onNodeContextMenu,
         onNodeDoubleClick,
-        onNodeDragStart
+        onNodeDragStart,
+        onNodeDragEnd
     }=useContext(TreeContext);  
 
     const { draggable }=useMemo(()=>{
@@ -167,17 +168,23 @@ const TreeNode=React.forwardRef((props,ref)=>{
     }
     
     const onContextMenu = (e) => {//响应右击事件
-        onNodeContextMenu(e, convertNodePropsToEventData(props));
+        onNodeContextMenu?.(e, convertNodePropsToEventData(props),eventKey);
     };
 
     const onDoubleClick=(e)=>{
-        onNodeDoubleClick(e,convertNodePropsToEventData(props));
+        onNodeDoubleClick?.(e,convertNodePropsToEventData(props));
     }
 
     const onDragStart=(e)=>{
         e.stopPropagation();
         setDragNodeHighlight(true);
-        onNodeDragStart(e,convertNodePropsToEventData(props))
+        onNodeDragStart?.(e,convertNodePropsToEventData(props),eventKey)
+    }
+
+    const onDragEnd=(e)=>{
+        e.stopPropagation();
+        setDragNodeHighlight(false);
+        onNodeDragEnd?.(e,convertNodePropsToEventData(props));
     }
 
     const renderSelector=()=>{
@@ -191,9 +198,9 @@ const TreeNode=React.forwardRef((props,ref)=>{
                 })} 
                 onClick={selectable?onSelect:noop}
                 draggable={draggable||undefined}
-                onContextMenu={onContextMenu}
-                onDoubleClick={onDoubleClick}
-                onDragStart={onDragStart}
+                onContextMenu={draggable?onContextMenu:undefined}
+                onDoubleClick={draggable?onDoubleClick:undefined}
+                onDragStart={draggable?onDragStart:undefined}
             >
                 {renderIcon()}
                 {renderTitle()}
@@ -207,6 +214,7 @@ const TreeNode=React.forwardRef((props,ref)=>{
             title={typeof title==="string"?title:""}
             className={prefixCls}
             ref={ref}
+            onDragEnd={draggable?onDragEnd:undefined}
         >
             <Blank prefixCls={prefixCls} level={level} showLine={showLine} />
             {renderSwitcher()}

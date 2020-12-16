@@ -20,5 +20,5 @@ import LoadingPage from '@packages/pages/display/LoadingPage';
 // }
 
 ReactDOM.render((<HashRouter>
-    <Route path="/" exact component={(props)=><Demo {...props} />} /> 
+    <Route path="/" exact component={(props)=><TreePage {...props} />} /> 
 </HashRouter>), document.getElementById("root"));

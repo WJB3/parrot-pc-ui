@@ -19,6 +19,7 @@ import {
     ArrowDown
 } from '@packages/core/Icon';
 import useInit from '@packages/hooks/useInit';
+import { getDragChildrenKeys } from './util/dragUtils';
 import "./index.scss";
 
 function noop(){}
@@ -63,7 +64,8 @@ const Tree=React.forwardRef((props,ref)=>{
         draggable,
         onRightClick=noop,
         onDoubleClick=noop,
-        onDragStart=noop
+        onDragStart=noop,
+        onDragEnd=noop
     }=props;
 
     //是否初始化
@@ -74,6 +76,8 @@ const Tree=React.forwardRef((props,ref)=>{
     const dragNode=useRef(null);
 
     const [dragging,setDragging]=useState(false);
+
+    const [dragChildrenKeys,setDragChildrenKeys]=useState([]);
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("Tree",customizePrefixCls);
 
@@ -194,37 +198,35 @@ const Tree=React.forwardRef((props,ref)=>{
         }
     },[onDoubleClick]);
 
-    const onNodeDragStart=useCallback((event,node)=>{
+    const onNodeDragStart=useCallback((event,node,eventKey)=>{ 
         dragNode.current=node;
         dragStartMousePosition.current = {
             x: event.clientX,
             y: event.clientY,
         };
+        const newExpandedKeys = arrDel(expandedKeys, eventKey);
+        console.log(expandedKeys)
+        console.log(eventKey)
+        console.log(newExpandedKeys)
         setDragging(true);
+        setDragChildrenKeys(getDragChildrenKeys(eventKey,keyEntities));
+        setExpandedKeys(newExpandedKeys);
         window.addEventListener('dragend', onWindowDragEnd); 
         onDragStart?.({ event, node });
-    },[onDragStart]);
+    },[onDragStart,expandedKeys]);
+
+    const onNodeDragEnd=useCallback((event,node)=>{
+         
+        dragNode.current=null;
+        onDragEnd?.({event,node});
+    },[onDragEnd])
 
     const onWindowDragEnd = event => {
         onNodeDragEnd(event, null, true);
         window.removeEventListener('dragend', this.onWindowDragEnd);
     };
 
-    const onNodeDragEnd = (event, node, outsideTree = false) => {
-        const { onDragEnd } = this.props;
-        this.setState({
-          dragOverNodeKey: null,
-        });
-    
-        this.cleanDragState();
-    
-        if (onDragEnd && !outsideTree) {
-          onDragEnd({ event, node: convertNodePropsToEventData(node.props) });
-        }
-    
-        dragNode.current = null;
-    };
-     
+ 
 
     return (
         <TreeContext.Provider

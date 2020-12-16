@@ -24,7 +24,7 @@ $prefixClsCheckbox:"#{$global-prefix}-Checkbox";
                 display: flex;
                 justify-content: center;
                 align-items:center;
-                transition: transform all .3s;
+                transition: transform .3s;
                 cursor: pointer;
     
                 &.#{$prefixClsTreeNode}-Switcher-Close{
