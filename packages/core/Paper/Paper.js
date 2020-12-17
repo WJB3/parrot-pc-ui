@@ -14,6 +14,7 @@ const Paper=React.forwardRef((props,ref)=>{
         square=false,
         shadow=1,
         children,
+        outline,
         style,
         ...restProps
     }=props;
@@ -27,7 +28,7 @@ const Paper=React.forwardRef((props,ref)=>{
                 className,
                 {
                     [`${prefixCls}-Round`]:!square,
-                    [`${prefixCls}-Shadow${shadow}`]:shadow
+                    [`${prefixCls}-Shadow${shadow}`]:shadow && !outline
                 }
             )}
             ref={ref}

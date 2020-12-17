@@ -4,6 +4,7 @@ import { HashRouter, Route, Switch } from 'react-router-dom';
 //import VirtualListPage from '@packages/pages/data/VirtualListPage';
 //import CheckboxPage from '@packages/pages/data/CheckboxPage';
 import TreePage from '@packages/pages/data/TreePage';
+import AlertPage from '@packages/pages/common/AlertPage';
 import InputNumberPage from '@packages/pages/data/InputNumberPage';
 import TransitionPage from '@packages/pages/common/TransitionPage';
 import "./index.scss"; 
@@ -21,5 +22,5 @@ import LoadingPage from '@packages/pages/display/LoadingPage';
 // }
 
 ReactDOM.render((<HashRouter>
-    <Route path="/" exact component={(props)=><TreePage {...props} />} /> 
+    <Route path="/" exact component={(props)=><AlertPage {...props} />} /> 
 </HashRouter>), document.getElementById("root"));

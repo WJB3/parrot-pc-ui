@@ -1,0 +1,73 @@
+
+@import "../styles/variable.scss";
+  
+ 
+$prefixCls:"#{$global-prefix}-Alert";
+
+.#{$prefixCls}{
+    
+    display: flex;
+    padding: 6px 16px;
+
+    &-Message{
+        padding:8px 0;
+    }
+    
+
+    &.#{$prefixCls}-Primary{
+        background-color:$primary-color;
+
+        .#{$prefixCls}-Message{
+            color:#fff;
+        }
+    }
+
+    &.#{$prefixCls}-Second{
+        background-color:$second-color;
+
+        .#{$prefixCls}-Message{
+            color:#fff;
+        }
+    }
+
+    &.#{$prefixCls}-Danger{
+        background-color:$danger-color;
+
+        .#{$prefixCls}-Message{
+            color:#fff;
+        }
+    }
+
+    &.#{$prefixCls}-Error{
+        background-color:$danger-color;
+
+        .#{$prefixCls}-Message{
+            color:#fff;
+        }
+    }
+
+    &.#{$prefixCls}-Warning{
+        background-color:$warning-color;
+
+        .#{$prefixCls}-Message{
+            color:#fff;
+        }
+    }
+
+    &.#{$prefixCls}-Info{
+        background-color:$info-color;
+
+        .#{$prefixCls}-Message{
+            color:#fff;
+        }
+    }
+
+    
+    &.#{$prefixCls}-Success{
+        background-color:$success-color;
+
+        .#{$prefixCls}-Message{
+            color:#fff;
+        }
+    }
+}

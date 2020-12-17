@@ -28,3 +28,7 @@ export { default as ArrowDoubleRight } from './ArrowDoubleRight';
 export { default as Expand } from './Expand';
 export { default as Shrink } from './Shrink';
 export { default as File } from './File';
+export { default as OutlineError } from './OutlineError';
+export { default as OutlineSuccess } from './OutlineSuccess';
+export { default as OutlineInfo } from './OutlineInfo';
+export { default as OutlineWarning } from './OutlineWarning';
