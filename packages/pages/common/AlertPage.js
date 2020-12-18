@@ -1,5 +1,8 @@
 import React from 'react'; 
 import Alert from '@packages/core/Alert';
+import {
+    Add
+} from '@packages/core/Icon';
 
 
 const Page= React.forwardRef((props,ref)=>{
@@ -8,10 +11,10 @@ const Page= React.forwardRef((props,ref)=>{
             <Alert>
                 Primary
             </Alert> 
-            <Alert color="second">
+            <Alert color="second" >
                 Second
             </Alert> 
-            <Alert color="warning">
+            <Alert color="warning" >
                 Warning
             </Alert> 
             <Alert color="info">
