@@ -34,6 +34,7 @@ const Button=React.forwardRef((props,ref)=>{
                     [`${prefixCls}-${capitalize(shape)}`]:shape
                 }
             )}
+            centerRipple={shape==="circle"}
             ref={ref} 
             {...restProps}
         >

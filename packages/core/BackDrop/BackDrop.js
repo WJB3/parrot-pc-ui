@@ -16,27 +16,28 @@ const BackDrop=React.forwardRef((props,ref)=>{
         children,
         target, 
         disabledScroll,
-        centered=true,
+        centered=false,
+        transitionComponent:TransitionComponent=Fade,
         ...restProps
     }=props; 
 
     const prefixCls = useContext(ConfigContext)?.getPrefixCls("BackDrop", customizePrefixCls);
 
     useEffect(()=>{
-        if(disabledScroll && open){
+        if(disabledScroll && visible){
             document.body.style="overflow:hidden";
         }
 
         return ()=>{
-            if(open){
+            if(visible){
                 document.body.style="overflow:auto";
             }
         }
     },[disabledScroll,visible])
 
     return (
-        <Portal target={target}>
-            <Fade visible={visible}>
+        <Portal target={target} ref={ref}>
+            <TransitionComponent visible={visible} >
                 <div className={classNames(
                     prefixCls,className,{
                         [`${prefixCls}-Centered`]:centered
@@ -44,7 +45,7 @@ const BackDrop=React.forwardRef((props,ref)=>{
                 )} {...restProps}>
                     {children}
                 </div>
-            </Fade>
+            </TransitionComponent>
         </Portal>
     )
 });

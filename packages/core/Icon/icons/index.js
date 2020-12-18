@@ -32,3 +32,4 @@ export { default as OutlineError } from './OutlineError';
 export { default as OutlineSuccess } from './OutlineSuccess';
 export { default as OutlineInfo } from './OutlineInfo';
 export { default as OutlineWarning } from './OutlineWarning';
+export { default as CloseOutline } from './CloseOutline';

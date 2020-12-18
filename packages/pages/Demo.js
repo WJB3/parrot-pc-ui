@@ -1,46 +1,80 @@
-import React, { useState, useCallback, useMemo } from 'react';
-import TransitionR from '@packages/core/ReactTransitionGroup/Transition';
-import Button from '@packages/core/Button';
-import { Fade,Collapse } from '@packages/core/Transition';
+import React, { useState, useCallback } from "react";
+import { Card } from "./democomponent/Card";
+import update from "immutability-helper";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
-let demo=[{id:0,name:"安徽省",parentId:null},{id:1,name:"合肥市",parentId:0},{id:2,name:"肥东县",parentId:1}];
-
+const style = {
+  width: 400
+};
  
-function treeData(source, id, parentId, children){   
-  let cloneData = JSON.parse(JSON.stringify(source))
-  return cloneData.filter(father=>{ 
-      let branchArr = cloneData.filter(child => father[id] == child[parentId]);
-      branchArr.length>0 ? father[children] = branchArr : ''
-      return father[parentId] ==null        // 如果第一层不是parentId=0，请自行修改
-  })
-}
 
-console.log(treeData(demo, 'id', 'parentId', 'children'))
+const Container = () => {
+  {
+    const [cards, setCards] = useState([
+      {
+        id: 1,
+        text: "Write a cool JS library"
+      },
+      {
+        id: 2,
+        text: "Make it generic enough"
+      },
+      {
+        id: 3,
+        text: "Write README"
+      },
+      {
+        id: 4,
+        text: "Create some examples"
+      },
+      {
+        id: 5,
+        text:
+          "Spam in Twitter and IRC to promote it (note that this element is taller than the others)"
+      },
+      {
+        id: 6,
+        text: "???"
+      },
+      {
+        id: 7,
+        text: "PROFIT"
+      }
+    ]);
 
-export default function App() {
+    const moveCard = useCallback(
+      (dragIndex, hoverIndex) => {
+        const dragCard = cards[dragIndex];
+        setCards(
+          update(cards, {
+            $splice: [
+              [dragIndex, 1],
+              [hoverIndex, 0, dragCard]
+            ]
+          })
+        );
+      },
+      [cards]
+    );
 
-  const [visible, setVisible] = useState(false);
+    const renderCard = (card, index) => {
+      return (
+        <Card
+          key={card.id}
+          index={index}
+          id={card.id}
+          text={card.text}
+          moveCard={moveCard}
+        />
+      );
+    };
 
-  const statusStyle = {
-    exited: { opacity: 0 },
-    entering: { opacity: 1 },
-    entered: { opacity: 1 },
-    exiting: { opacity: 0 }
+    return (
+      <DndProvider backend={HTML5Backend}>
+        <div style={style}>{cards.map((card, i) => renderCard(card, i))}</div>
+      </DndProvider>
+    );
   }
-
-  return (
-    <div>
-      
-
-      <Collapse visible={visible} timeout={5000}>
-        <div
-          style={{ background: 'red', width: 200, height: 200 }}
-        >{"测试"}</div>
-      </Collapse>
-
-      <Button onClick={() => setVisible(!visible)}>显示</Button>
-
-    </div>
-  );
-}
-
+};
+export default Container;

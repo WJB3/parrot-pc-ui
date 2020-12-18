@@ -3,9 +3,10 @@
         "@babel/preset-react"
     ],
     "plugins":[
+        ["@babel/plugin-proposal-decorators", { "legacy": true }],
         "@babel/plugin-proposal-class-properties",
-        "@babel/plugin-proposal-optional-chaining",
-        ["@babel/plugin-proposal-decorators", { "legacy": true }]
+        "@babel/plugin-proposal-optional-chaining"
+        
         // ["babel-plugin-precise-floating",{"num":2}]
     ]
 }

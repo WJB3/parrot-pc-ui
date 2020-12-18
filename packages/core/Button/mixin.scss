@@ -108,7 +108,7 @@
     background-color: #fff;
 
     &:hover{
-        @include OpacityDefaultColor(.1);
+        @include OpacityDefaultColor(1);
     }
 }
 
