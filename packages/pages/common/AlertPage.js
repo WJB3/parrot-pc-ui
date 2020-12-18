@@ -12,16 +12,16 @@ const Page= React.forwardRef((props,ref)=>{
                 Second
             </Alert> 
             <Alert color="warning">
-                Second
+                Warning
             </Alert> 
             <Alert color="info">
-                Second
+                Info
             </Alert> 
             <Alert color="error">
-                Second
+                Error
             </Alert> 
             <Alert color="success">
-                Second
+                Success
             </Alert> 
         </div>
     </React.Fragment>

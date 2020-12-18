@@ -19,12 +19,14 @@ const Alert=React.forwardRef((props,ref)=>{
         outline,
         className,
         children,
-        color="primary"
+        color="primary",
+        //是否有icon
+        hasIcon:hasIconProp=true,
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("Alert",customizePrefixCls);
 
-    const hasIcon=color==="error"||color==="danger"||color==="warning"||color==="info"||color==="success";
+    const hasIcon=(color==="error"||color==="danger"||color==="warning"||color==="info"||color==="success") && hasIconProp;
 
     const IconMap={
         "error":<OutlineError />,
@@ -43,12 +45,13 @@ const Alert=React.forwardRef((props,ref)=>{
                     className,
                     prefixCls,
                     {
-                        [`${prefixCls}-${capitalize(color)}`]:color
+                        [`${prefixCls}-${capitalize(color)}`]:color,
+                        [`${prefixCls}-NoOutline`]:!outline
                     }
                 )
             }
         >
-            {hasIcon && IconMap[color]}
+            {hasIcon && <div className={`${prefixCls}-Icon`}>{IconMap[color]}</div>}
             <div className={`${prefixCls}-Message`}>{children}</div> 
         </Paper>
     );
