@@ -34,7 +34,7 @@ const Fade = React.forwardRef(function (props, ref) {
         ...other
     } = props;
 
-    const handleEnter = function(node, isAppearing){   
+    const handleEnter = function(node, isAppearing){    
 
         reflow(node);
 
@@ -52,7 +52,7 @@ const Fade = React.forwardRef(function (props, ref) {
 
         onExit?.(node,isAppearing);
 
-    };
+    }; 
  
 
     return (
@@ -69,7 +69,7 @@ const Fade = React.forwardRef(function (props, ref) {
             {...other}
         >
             {
-                (state, childProps) => {   
+                (state, childProps) => {  
                     return React.cloneElement(children, {
                         style: {
                             opacity: 0,

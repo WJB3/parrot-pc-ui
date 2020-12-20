@@ -19,6 +19,7 @@ const ModalPage = () => {
   };
 
   const handleCancel = () => {
+    console.log("handleCancel")
     setIsModalVisible(false);
   };
 
@@ -27,16 +28,16 @@ const ModalPage = () => {
       <button type="primary" onClick={showModal}>
         Open Modal
       </button>
-      <Modal  visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+      {/* <Modal  visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} mask={false}>
         <p>Some contents...</p>
         <p>Some contents...</p>
         <p>Some contents...</p>
-      </Modal>
-      {/* <ModalA visible={isModalVisible} title="Basic Modal">
+      </Modal> */}
+      <ModalA visible={isModalVisible} title="Basic Modal" onCancel={handleCancel}  >
         <p>Some contents...</p>
         <p>Some contents...</p>
         <p>Some contents...</p>
-      </ModalA>  */}
+      </ModalA> 
     </>
   );
 };

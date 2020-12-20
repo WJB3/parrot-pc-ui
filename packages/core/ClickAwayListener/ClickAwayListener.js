@@ -14,7 +14,9 @@ const ClickAwayListener = React.forwardRef((props, ref) => {
         mouseEvent = "onClick",
         onClickAway,
         //虽然在内部 但是需要作为为元素外部的元素
-        externalNode=[]
+        externalNode=[],
+        stopListen=false,
+        ...restProps
     } = props;
 
     const nodeRef=useRef(null);
@@ -34,7 +36,7 @@ const ClickAwayListener = React.forwardRef((props, ref) => {
         childrenProps[mouseEvent]=createHandleSynthetic(mouseEvent);
     }
 
-    const handleClickAway=(event)=>{ 
+    const handleClickAway=(event)=>{  
  
         if(!nodeRef.current){
             return ;
@@ -47,7 +49,7 @@ const ClickAwayListener = React.forwardRef((props, ref) => {
             insideDOM=event.composedPath().indexOf(nodeRef.current)>-1;
         }else{ 
             insideDOM=nodeRef.current.contains(event.target);
-        }
+        }  
 
         if(!insideDOM || externalNode?.indexOf(event.target)>-1){
             onClickAway(event)
@@ -58,19 +60,27 @@ const ClickAwayListener = React.forwardRef((props, ref) => {
         if(mouseEvent!==false){
             const mappedMouseEvent=mapEventPropToEvent(mouseEvent);
 
-            const doc=ownerDocument(nodeRef.current);
+            const doc=ownerDocument(nodeRef.current);  
 
-            doc.addEventListener(mappedMouseEvent,handleClickAway);
+            //当不监听时，监听点击事件
+            if(!stopListen){
+                doc.addEventListener(mappedMouseEvent,handleClickAway);
+            }
+
+            //禁用监听时 应该移除监听事件
+            if(stopListen){
+                doc.removeEventListener(mappedMouseEvent,handleClickAway);
+            }
 
             return ()=>{
                 doc.removeEventListener(mappedMouseEvent,handleClickAway);
             }
 
         }
-    },[handleClickAway,mouseEvent])
+    },[handleClickAway,mouseEvent,stopListen]); 
 
     return <React.Fragment>
-        {React.cloneElement(children, childrenProps)}
+        {React.cloneElement(children, {...childrenProps,...restProps})}
     </React.Fragment>
 
 });

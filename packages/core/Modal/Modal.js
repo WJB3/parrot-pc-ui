@@ -30,8 +30,10 @@ const Modal=React.forwardRef((props,ref)=>{
         closeIcon=CloseOutline,
         //点击蒙层是否允许关闭
         maskClosable=true,
+        mask=true,
         //点击遮罩层或右上角叉或取消按钮的回调
-        onCancel=noop
+        onCancel=noop,
+        centered
     }=props; 
 
     const modalStyle={
@@ -55,17 +57,19 @@ const Modal=React.forwardRef((props,ref)=>{
         return null;
     }
 
-    const handleClose=()=>()=>{
-        
+    const handleClose=(isClose)=>(e)=>{ 
+        if(isClose){
+            onCancel?.(e)
+        }
     }
  
     return (
-        <BackDrop visible={visible}  ref={ref}>
+        <BackDrop visible={visible}  ref={ref} onClickAway={handleClose(maskClosable)} centered={centered} transparent={!mask}>
             <Paper
-                className={classNames(prefixCls)}
+                className={classNames(prefixCls,{[`NoCentered`]:!centered})}
                 style={modalStyle}
             >
-                {title && <Title prefixCls={prefixCls} closable={closable} closeIcon={closeIcon} onCancel={}>{title}</Title>}
+                { title && <Title prefixCls={prefixCls} closable={closable} closeIcon={closeIcon} onCancel={handleClose(true)}>{title}</Title>}
                 <Content
                     prefixCls={prefixCls}
                 >

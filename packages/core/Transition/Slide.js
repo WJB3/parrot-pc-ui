@@ -82,9 +82,7 @@ const Slide = React.forwardRef(function (props, ref) {
 
     const childrenRef = useRef(null);
 
-    const handleEnter = (_, isAppearing)=>{
-
-       
+    const handleEnter = (_, isAppearing)=>{  
 
         const node = childrenRef.current; 
 

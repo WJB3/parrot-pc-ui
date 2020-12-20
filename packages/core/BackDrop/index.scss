@@ -13,7 +13,7 @@ $backdrop-zindex:2000;
     left:0;
     bottom:0;
     right:0;
-    background-color: $backdrop-background;
+    background-color: transparent;
     -webkit-tap-highlight-color: transparent;
     z-index:$backdrop-zindex;
 
@@ -21,5 +21,9 @@ $backdrop-zindex:2000;
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    &-NoTransparent{
+        background-color: $backdrop-background;
     }
 }
