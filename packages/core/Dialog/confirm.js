@@ -6,7 +6,7 @@ export default function confirm(config){
     const div = document.createElement('div');
     document.body.appendChild(div);
 
-    let currentConfig = { ...config, visible: true } ;
+    let currentConfig = { ...config, visible: true,close } ;
 
     function render({visible,...props}){
         ReactDOM.render(
@@ -20,6 +20,7 @@ export default function confirm(config){
     }
 
     function close() {
+        console.log("close")
         currentConfig = {
           ...currentConfig,
           visible: false, 

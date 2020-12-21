@@ -19,7 +19,7 @@ const Modal = React.forwardRef((props, ref) => {
     const {
         prefixCls: customizePrefixCls,
         //宽度
-        width = 520,
+        width = 600,
         //对话框是否可见
         visible = false,
         //标题
