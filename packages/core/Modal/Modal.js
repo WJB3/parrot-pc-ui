@@ -30,10 +30,14 @@ const Modal=React.forwardRef((props,ref)=>{
         closeIcon=CloseOutline,
         //点击蒙层是否允许关闭
         maskClosable=true,
+        //是否展示遮罩
         mask=true,
         //点击遮罩层或右上角叉或取消按钮的回调
         onCancel=noop,
-        centered
+        //垂直居中展示 Modal
+        centered,
+        //是否支持键盘 esc 关闭
+        keyboard
     }=props; 
 
     const modalStyle={
@@ -57,7 +61,7 @@ const Modal=React.forwardRef((props,ref)=>{
         return null;
     }
 
-    const handleClose=(isClose)=>(e)=>{ 
+    const handleClose=(isClose)=>(e)=>{  
         if(isClose){
             onCancel?.(e)
         }

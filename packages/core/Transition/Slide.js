@@ -18,9 +18,16 @@ export function setTranslateValue(direction, node) {
 
 function getTranslateValue(direction, node) {
     const rect = node.getBoundingClientRect();
+
+    const nodeChild=node?.childNodes[0]; 
  
     let transform;
+    let childTop=0;
 
+    if(nodeChild){
+        childTop=Number(window.getComputedStyle(nodeChild).getPropertyValue('top').slice(0, -2));
+    }
+  
     if (node.fakeTransform) {
         transform = node.fakeTransform;
     } else {
@@ -28,7 +35,8 @@ function getTranslateValue(direction, node) {
         transform =
             computedStyle.getPropertyValue('-webkit-transform') ||
             computedStyle.getPropertyValue('transform');
-    }
+    } 
+  
 
     let offsetX = 0;
     let offsetY = 0;
@@ -52,10 +60,9 @@ function getTranslateValue(direction, node) {
 
     if (direction === 'up') {
         return `translateY(${window.innerHeight}px) translateY(-${rect.top - offsetY}px)`;
-    }
-
+    } 
     // direction === 'down'
-    return `translateY(-${rect.top + rect.height - offsetY}px)`;
+    return `translateY(-${rect.top + rect.height +childTop- offsetY}px)`;
 }
 
 const Slide = React.forwardRef(function (props, ref) {
@@ -82,23 +89,20 @@ const Slide = React.forwardRef(function (props, ref) {
 
     const childrenRef = useRef(null);
 
-    const handleEnter = (_, isAppearing)=>{  
-
-        const node = childrenRef.current; 
+    const handleEnter = (node, isAppearing)=>{   
 
         setTranslateValue(direction, node);
 
-        reflow(_);
+        reflow(node);
 
         onEnter?.(node, isAppearing);
 
     };
 
-    const handleEntering = (_, isAppearing) => {
-        const node = childrenRef.current;
+    const handleEntering = (node, isAppearing) => { 
          
-        node.style.webkitTransition=`transform ${timeout && timeout.enter ? timeout.enter : timeout}ms cubic-bezier(0, 0, 0.2, 1) 0ms`;
-        node.style.transition=`transform ${timeout && timeout.enter ? timeout.enter : timeout}ms cubic-bezier(0, 0, 0.2, 1) 0ms`;
+        node.style.webkitTransition=`transform ${timeout && timeout.enter ? timeout.enter : timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`;
+        node.style.transition=`transform ${timeout && timeout.enter ? timeout.enter : timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`;
         node.style.webkitTransform = 'none';
         node.style.transform = 'none';
 
@@ -117,16 +121,12 @@ const Slide = React.forwardRef(function (props, ref) {
 
     };
 
-    const handleExited=()=>{
-        const node = childrenRef.current;
+    const handleExited=(node,isAppearing)=>{ 
         node.style.webkitTransition="";
         node.style.transition="";
         onExited?.(node)
     }
-
-
-    const handleRef = useForkRef(childrenRef, children.ref, ref);
-
+  
     useEffect(()=>{
         if(!visibleProp){
             if (childrenRef.current) {
@@ -143,18 +143,20 @@ const Slide = React.forwardRef(function (props, ref) {
             onEntering={handleEntering}
             onExit={handleExit}
             onExited={handleExited} 
+            onExiting={onExiting}
+            onEntered={onEntered} 
             timeout={timeout}
+            ref={ref}
             {...other}
         >
             {
-                (state, childProps) => {
+                (state, childProps) => { 
                     return React.cloneElement(children, {
                         style: {
                             visibility: state === 'exited' && !visibleProp ? 'hidden' : undefined,
                             ...style,
                             ...children.props.style,
                         },
-                        ref: handleRef,
                         ...childProps
                     })
                 }
