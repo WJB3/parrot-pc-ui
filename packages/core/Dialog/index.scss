@@ -1,0 +1,17 @@
+
+@import "../styles/variable.scss";
+
+
+$prefixCls:"#{$global-prefix}-Dialog";
+ 
+
+.#{$prefixCls}{
+    
+    &-Body{
+        padding:0;
+
+        &-Title{
+            padding: 16px 24px;
+        }
+    }
+}

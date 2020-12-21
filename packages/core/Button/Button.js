@@ -2,6 +2,7 @@ import React ,{useContext} from 'react';
 import classNames from '@packages/utils/classNames'; 
 import PropTypes from 'prop-types';
 import ButtonBase from '../ButtonBase';
+import Loading from '@packages/core/Loading';
 import {
     ConfigContext
 } from '@packages/core/ConfigProvider'; 
@@ -17,6 +18,8 @@ const Button=React.forwardRef((props,ref)=>{
         color="default",
         type="contained", 
         shape="round",
+        outline,
+        loading,
         ...restProps
     }=props; 
 
@@ -29,15 +32,19 @@ const Button=React.forwardRef((props,ref)=>{
                 className,
                 {
                     [`${prefixCls}-${capitalize(size)}`]:size,
-                    [`${prefixCls}-Color${capitalize(type)}${capitalize(color)}`]:color,
-                    [`${prefixCls}-Type${capitalize(type)}`]:type,
-                    [`${prefixCls}-${capitalize(shape)}`]:shape
+                    [`${prefixCls}-Color${capitalize(type)}${capitalize(color)}`]:color && !outline,
+                    [`${prefixCls}-Type${capitalize(type)}`]:type && !outline,
+                    [`${prefixCls}-${capitalize(shape)}`]:shape,
+                    [`${prefixCls}-Outline${capitalize(color)}`]:color && outline,
+                    [`${prefixCls}-Loading`]:loading,
                 }
             )}
+            disableTouchRipple={loading}
             centerRipple={shape==="circle"}
             ref={ref} 
             {...restProps}
         >
+            {loading && <Loading size={18} style={{marginRight:6}} />}
             {children}
         </ButtonBase>
     )

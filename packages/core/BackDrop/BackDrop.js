@@ -10,7 +10,7 @@ import { Fade,Slide } from '@packages/core/Transition';
 import ClickAwayListener from '@packages/core/ClickAwayListener';
 import Mask from './Mask';
 import "./index.scss";
-import zIndex from '@material-ui/core/styles/zIndex';
+import KeyCode from '@packages/utils/KeyCode';
 
 function noop() { }
 
@@ -23,10 +23,14 @@ const BackDrop = React.forwardRef((props, ref) => {
         target,
         disabledScroll,
         centered = false,
-        transitionComponent: TransitionComponent = Slide,
+        transitionComponent: TransitionComponent = Fade,
         onClickAway = noop,
         //背景色是否透明
         transparent=false,
+        keyboard,
+        onModalExited,
+        maskStyle,
+        zIndex="auto",
         ...restProps
     } = props;
 
@@ -38,14 +42,21 @@ const BackDrop = React.forwardRef((props, ref) => {
 
     const [appear,setAppear]=useState(false);
 
+    const handleKeyDown=(e)=>{
+        if(keyboard && e.keyCode===KeyCode.ESC){
+            onClickAway?.(e);
+        }
+    }
+
     useEffect(() => {
         if (disabledScroll && visible) {
             document.body.style = "overflow:hidden";
         }   
-        if(visible && modalRef.current){
-            console.log("a")
-            console.log(modalRef.current)
+        if(visible && modalRef.current){ 
             modalRef.current?.focus();
+        }
+        if(!visible){
+            modalRef.current?.blur();
         }
         return () => {
             if (visible) {
@@ -72,14 +83,20 @@ const BackDrop = React.forwardRef((props, ref) => {
         ...centerStyle
     }
 
+    const handleExited=(e)=>{
+        setStopListen(true);
+        setAppear(false);
+        onModalExited?.(e);
+    }
+
     return (
         <Portal target={target} ref={ref}>
-            <div style={{...divStyle,zIndex:appear?"auto":-1}}>
+            <div style={{...divStyle,zIndex:appear?zIndex:-1}}>
             <Fade visible={visible} unmountOnExit  >
-                <Mask prefixCls={prefixCls} transparent={transparent} />
+                <Mask prefixCls={prefixCls} transparent={transparent} maskStyle={maskStyle} />
             </Fade>
             
-            <TransitionComponent  visible={visible} onEnter={()=>setAppear(true)} onEntered={() => setStopListen(false)} onExited={() => {setStopListen(true);setAppear(false);}} >
+            <TransitionComponent  visible={visible} onEnter={()=>setAppear(true)} onEntered={() => setStopListen(false)} onExited={handleExited} >
 
                 <div   
                     className={classNames(
@@ -91,7 +108,7 @@ const BackDrop = React.forwardRef((props, ref) => {
                     <ClickAwayListener onClickAway={onClickAway} stopListen={stopListen} ref={modalRef}>
                         {React.cloneElement(children,{
                             tabIndex:-1,
-                            onKeyDown:()=>{console.log("onKeyDown")}
+                            onKeyDown:handleKeyDown
                         })}
                     </ClickAwayListener>
                 </div>

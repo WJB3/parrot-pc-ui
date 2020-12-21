@@ -1,16 +1,19 @@
 
 
 import React from 'react';
+import classNames from '@packages/utils/classNames';
 
 const Content=React.forwardRef((props,ref)=>{
 
     const {
         prefixCls,
-        children
+        children,
+        bodyStyle,
+        bodyClassName
     }=props;
 
     return (
-        <div className={`${prefixCls}-Content`} ref={ref}>
+        <div className={classNames(`${prefixCls}-Content`,bodyClassName)} ref={ref} style={bodyStyle}>
             {children}
         </div>
     );

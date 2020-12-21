@@ -16,7 +16,7 @@ const Title=React.forwardRef((props,ref)=>{
     return (
         <div className={`${prefixCls}-Title`} ref={ref}>
             <div className={`${prefixCls}-Title-Message`}>{children}</div>
-            <Close prefixCls={prefixCls} closable={closable} closeIcon={closeIcon} onCancel={onCancel} />
+            {closable && <Close prefixCls={prefixCls} closable={closable} closeIcon={closeIcon} onCancel={onCancel} />}
         </div>
     );
 });

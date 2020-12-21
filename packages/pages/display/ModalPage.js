@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Modal } from 'antd';
-import ModalA from '@packages/core/Modal';
+import ModalA from '@packages/core/Modal'; 
 import Button from '@packages/core/Button';
+import InputText from '@packages/core/InputText';
+import Draggable from 'react-draggable';
 import {
   CloseSquare
 } from '@packages/core/Icon';
@@ -24,18 +26,24 @@ const ModalPage = () => {
 
   return (
     <>
-      <button type="primary" onClick={showModal}>
+      <Button onClick={showModal} >
         Open Modal
-      </button>
-      {/* <Modal  visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}  maskClosable={false}>
+      </Button> 
+      {/* <Modal  visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} >
         <p>Some contents...</p>
         <p>Some contents...</p>
         <p>Some contents...</p>
       </Modal> */}
-      <ModalA visible={isModalVisible} title="Basic Modal" onCancel={handleCancel}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+      <ModalA 
+            visible={isModalVisible} 
+            title="Parrot Modal" 
+            onCancel={handleCancel} 
+            cancelText={"有危险？"}    
+            okText={"你确定"}
+            okColor={"info"}
+            onOk={handleOk}
+      >
+        <InputText />
       </ModalA> 
     </>
   );

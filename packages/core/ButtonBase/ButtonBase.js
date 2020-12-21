@@ -93,6 +93,11 @@ const ButtonBase=React.forwardRef((props,ref)=>{
     const handleTouchEnd = useRippleHandler('stop', onTouchEnd);
     const handleTouchMove = useRippleHandler('stop', onTouchMove);
      
+    const handleClick=(e)=>{
+        if(!disableTouchRipple){ 
+            onClick?.(e);
+        }
+    }
 
     return (
         <ComponentProp
@@ -105,7 +110,7 @@ const ButtonBase=React.forwardRef((props,ref)=>{
 
                 }
             )}
-            onClick={onClick} 
+            onClick={handleClick} 
             onFocus={handleFocus}
             onMouseDown={handleMouseDown}
             onBlur={handleBlur}
