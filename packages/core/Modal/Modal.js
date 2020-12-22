@@ -123,7 +123,7 @@ const Modal = React.forwardRef((props, ref) => {
             centered={centered}
             transparent={!mask}
             keyboard={keyboard}
-            onModalExited={afterClose}
+            onTransitionExited={afterClose}
             target={typeof getContainer === "function" ? getContainer() : getContainer}
             maskStyle={maskStyle}
             zIndex={zIndex}

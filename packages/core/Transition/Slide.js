@@ -9,14 +9,14 @@ import "./index.scss";
 
 export function setTranslateValue(direction, node) {
     const transform = getTranslateValue(direction, node);
- 
+    console.log(transform)
     if (transform) {
         node.style.webkitTransform = transform;
         node.style.transform = transform;
     }
 }
 
-function getTranslateValue(direction, node) {
+function getTranslateValue(direction, node) { 
     const rect = node.getBoundingClientRect();
 
     const nodeChild=node?.childNodes[0]; 
@@ -26,6 +26,9 @@ function getTranslateValue(direction, node) {
 
     if(nodeChild){
         childTop=Number(window.getComputedStyle(nodeChild).getPropertyValue('top').slice(0, -2));
+        if(Number.isNaN(childTop)){
+            childTop=0;
+        }
     }
   
     if (node.fakeTransform) {
@@ -61,8 +64,13 @@ function getTranslateValue(direction, node) {
     if (direction === 'up') {
         return `translateY(${window.innerHeight}px) translateY(-${rect.top - offsetY}px)`;
     } 
+
+    if (direction === 'down') { 
+        return `translateY(-${rect.top + rect.height +childTop- offsetY}px)`;
+    } 
     // direction === 'down'
-    return `translateY(-${rect.top + rect.height +childTop- offsetY}px)`;
+   
+    return `translateY(-${rect.top + rect.height +childTop - offsetY}px)`;
 }
 
 const Slide = React.forwardRef(function (props, ref) {
@@ -101,8 +109,8 @@ const Slide = React.forwardRef(function (props, ref) {
 
     const handleEntering = (node, isAppearing) => { 
          
-        node.style.webkitTransition=`transform ${timeout && timeout.enter ? timeout.enter : timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`;
-        node.style.transition=`transform ${timeout && timeout.enter ? timeout.enter : timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`;
+        node.style.webkitTransition=`transform ${timeout && timeout.enter ? timeout.enter : timeout}ms cubic-bezier(0, 0, 0.2, 1) 0ms`;
+        node.style.transition=`transform ${timeout && timeout.enter ? timeout.enter : timeout}ms cubic-bezier(0, 0, 0.2, 1) 0ms`;
         node.style.webkitTransform = 'none';
         node.style.transform = 'none';
 

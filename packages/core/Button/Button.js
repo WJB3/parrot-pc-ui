@@ -44,7 +44,7 @@ const Button=React.forwardRef((props,ref)=>{
             ref={ref} 
             {...restProps}
         >
-            {loading && <Loading size={18} style={{marginRight:6}} />}
+            {loading && <Loading size={18} style={{marginRight:6}} color={color} />}
             {children}
         </ButtonBase>
     )

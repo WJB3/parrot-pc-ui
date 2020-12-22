@@ -1,20 +1,7 @@
 import React ,{useContext, useState } from 'react'; 
 import Alert from '@packages/core/Alert';
-import Button from '@packages/core/Button';
-import {
-    Add
-} from '@packages/core/Icon';
-
-const TestContext=React.createContext(null);
-
-const Child=React.memo(()=>{ 
-    return <div>{`child${count}`}</div>
-})
-
-const Parent=React.memo(()=>{
-    console.log("parent render");
-    return <Child />
-})
+import Button from '@packages/core/Button'; 
+import { red } from '@material-ui/core/colors';
 
 
 const Page= React.forwardRef((props,ref)=>{
@@ -23,10 +10,21 @@ const Page= React.forwardRef((props,ref)=>{
 
     return <React.Fragment>
         <div style={{padding:200}}>
-            <Alert>
-                Primary
-            </Alert> 
-            <Button onClick={()=>setCount(count+1)}>测试</Button>
+            <Alert 
+                message="Primary" 
+                color="warning"  
+                closable 
+                destroyOnHidden  
+                description="destroyOnHiddendestroyOnHiddendestroyOnHidden"
+                action={
+                    <Button outline color="danger">UNDO</Button>
+                }
+            /> 
+            <Button onClick={()=>setCount(count+1)} >测试</Button>
+
+            <div style={{padding:10,width:300,height:300}}> 
+                <div style={{background:'red',width:"100%",height:"100%"}} className={"a"}>asdasdasda</div>
+            </div>
            
         </div>
     </React.Fragment>

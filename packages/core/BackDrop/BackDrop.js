@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState ,useRef} from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import classNames from '@packages/utils/classNames';
 import PropTypes from 'prop-types';
 import {
@@ -6,7 +6,7 @@ import {
 } from '@packages/core/ConfigProvider';
 import Portal from '@packages/core/Portal';
 // import Slide from '@material-ui/core/Slide';
-import { Fade,Slide } from '@packages/core/Transition';
+import { Fade, Slide } from '@packages/core/Transition';
 import ClickAwayListener from '@packages/core/ClickAwayListener';
 import Mask from './Mask';
 import "./index.scss";
@@ -24,13 +24,16 @@ const BackDrop = React.forwardRef((props, ref) => {
         disabledScroll,
         centered = false,
         transitionComponent: TransitionComponent = Fade,
+        transitionComponentProp,
         onClickAway = noop,
         //背景色是否透明
-        transparent=false,
+        transparent = false,
         keyboard,
-        onModalExited,
+        onTransitionExited,
+        onTransitionEntered,
         maskStyle,
-        zIndex="auto",
+        zIndex = "auto",
+        drawer=false,
         ...restProps
     } = props;
 
@@ -38,12 +41,12 @@ const BackDrop = React.forwardRef((props, ref) => {
 
     const [stopListen, setStopListen] = useState(true);
 
-    const modalRef=useRef(null);
+    const modalRef = useRef(null);
 
-    const [appear,setAppear]=useState(false);
+    const [appear, setAppear] = useState(false);
 
-    const handleKeyDown=(e)=>{
-        if(keyboard && e.keyCode===KeyCode.ESC){
+    const handleKeyDown = (e) => {
+        if (keyboard && e.keyCode === KeyCode.ESC) {
             onClickAway?.(e);
         }
     }
@@ -51,11 +54,11 @@ const BackDrop = React.forwardRef((props, ref) => {
     useEffect(() => {
         if (disabledScroll && visible) {
             document.body.style = "overflow:hidden";
-        }   
-        if(visible && modalRef.current){ 
+        }
+        if (visible && modalRef.current) {
             modalRef.current?.focus();
         }
-        if(!visible){
+        if (!visible) {
             modalRef.current?.blur();
         }
         return () => {
@@ -63,18 +66,18 @@ const BackDrop = React.forwardRef((props, ref) => {
                 document.body.style = "overflow:auto";
             }
         }
-    }, [disabledScroll, visible,modalRef.current]);  
- 
-    let centerStyle={}
+    }, [disabledScroll, visible, modalRef.current]);
 
-    if(centered){
-        centerStyle={
-            display:"flex",
-            justifyContent:"center",
-            alignItems:"center"
+    let centerStyle = {}
+
+    if (centered) {
+        centerStyle = {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
         }
     }
-    const divStyle={
+    const divStyle = {
         position: "absolute",
         top: 0,
         left: 0,
@@ -83,39 +86,68 @@ const BackDrop = React.forwardRef((props, ref) => {
         ...centerStyle
     }
 
-    const handleExited=(e)=>{
+    const handleEntered=(e)=>{ 
+        setStopListen(false);
+        onTransitionEntered?.(e);
+    }
+
+    const handleExited = (e) => { 
         setStopListen(true);
         setAppear(false);
-        onModalExited?.(e);
+        onTransitionExited?.(e);
     }
+
+    const commonContent = (
+        <TransitionComponent visible={visible} onEnter={() => setAppear(true)} onEntered={handleEntered} onExited={handleExited} {...transitionComponentProp}>
+            <div
+                className={classNames(
+                    prefixCls, className, {
+                    [`${prefixCls}-Centered`]: centered,
+                })}
+                {...restProps}
+            >
+
+                <ClickAwayListener onClickAway={onClickAway} stopListen={stopListen} ref={modalRef}>
+                    {React.cloneElement(children, {
+                        tabIndex: -1,
+                        onKeyDown: handleKeyDown
+                    })}
+                </ClickAwayListener>
+
+            </div>
+        </TransitionComponent>
+    );
+
+    const drawerContent = (
+        <div
+            className={classNames(
+                prefixCls, className, {
+                [`${prefixCls}-Centered`]: centered,
+            })}
+            {...restProps}
+        >
+            <TransitionComponent visible={visible} onEnter={() => setAppear(true)} onEntered={handleEntered} onExited={handleExited} {...transitionComponentProp}>
+                <ClickAwayListener onClickAway={onClickAway} stopListen={stopListen} ref={modalRef}>
+                    {React.cloneElement(children, {
+                        tabIndex: -1,
+                        onKeyDown: handleKeyDown
+                    })}
+                </ClickAwayListener>
+            </TransitionComponent>
+        </div>
+    )
 
     return (
         <Portal target={target} ref={ref}>
-            <div style={{...divStyle,zIndex:appear?zIndex:-1}}>
-            <Fade visible={visible} unmountOnExit  >
-                <Mask prefixCls={prefixCls} transparent={transparent} maskStyle={maskStyle} />
-            </Fade>
-            
-            <TransitionComponent  visible={visible} onEnter={()=>setAppear(true)} onEntered={() => setStopListen(false)} onExited={handleExited} >
+            <div style={{ ...divStyle, zIndex: appear ? zIndex : -1 }}>
+                <Fade visible={visible} unmountOnExit  >
+                    <Mask prefixCls={prefixCls} transparent={transparent} maskStyle={maskStyle} />
+                </Fade>
 
-                <div   
-                    className={classNames(
-                        prefixCls, className, {
-                        [`${prefixCls}-Centered`]: centered,
-                    })} 
-                    {...restProps}
-                >
-                    <ClickAwayListener onClickAway={onClickAway} stopListen={stopListen} ref={modalRef}>
-                        {React.cloneElement(children,{
-                            tabIndex:-1,
-                            onKeyDown:handleKeyDown
-                        })}
-                    </ClickAwayListener>
-                </div>
+                {drawer ?  drawerContent : commonContent}
 
-            </TransitionComponent>
             </div>
-        </Portal>
+        </Portal >
     )
 });
 

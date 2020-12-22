@@ -13,6 +13,7 @@ import ActionButton from './ActionButton';
 import Space from "@packages/core/Space";
 
 import "./index.scss";
+import { capitalize } from '@material-ui/core';
 
 export const destroyFns=[];
 
@@ -33,10 +34,14 @@ const Dialog=React.forwardRef((props,ref)=>{
         onCancel,
         onOk,
         close,
+        type="",
+        color,
         ...restProps
     }=props;
 
     const prefixCls=useContext(ConfigContext)?.getPrefixCls("Dialog",customizePrefixCls);
+
+    const isShowCancel=type!=="warning"&&type!=="error"&&type!=="success"&&type!=="info";
 
     return (
         <Modal 
@@ -49,7 +54,8 @@ const Dialog=React.forwardRef((props,ref)=>{
             ref={ref} 
             bodyStyle={bodyStyle}
             transitionComponent={Slide}
-            bodyClassName={classNames(bodyClassName,`${prefixCls}-Body`)}
+            bodyClassName={classNames(bodyClassName,`${prefixCls}-Body`,{[`${prefixCls}-Body-${capitalize(type)}`]:type})}
+               
         >
             <div className={`${prefixCls}-Body-Title`}>
                 <span className={`${prefixCls}-Body-Title-Icon`}>{icon}</span>
@@ -60,8 +66,8 @@ const Dialog=React.forwardRef((props,ref)=>{
             </div>
             <div className={`${prefixCls}-Body-Footer`}>
                 <Space>
-                    <ActionButton color={cancelColor} actionFn={onCancel} closeModal={close} >{cancelText}</ActionButton>
-                    <ActionButton color={okColor} actionFn={onOk} closeModal={close}>{okText}</ActionButton>
+                    {isShowCancel && <ActionButton color={cancelColor} actionFn={onCancel} closeModal={close} >{cancelText}</ActionButton>}
+                    <ActionButton color={isShowCancel?okColor:color} actionFn={onOk} closeModal={close}>{isShowCancel?okText:"知道了"}</ActionButton>
                 </Space>
             </div>
         </Modal>

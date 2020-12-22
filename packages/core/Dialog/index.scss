@@ -11,6 +11,30 @@ $prefixClsModal:"#{$global-prefix}-Modal";
     &-Body{
         padding:0;
 
+        &.#{$prefixCls}-Body-Warning{ 
+            .#{$prefixCls}-Body-Title-Icon{
+                    color:$warning-color;  
+            } 
+        }
+
+        &.#{$prefixCls}-Body-Info{ 
+            .#{$prefixCls}-Body-Title-Icon{
+                    color:$info-color;  
+            } 
+        }
+
+        &.#{$prefixCls}-Body-Success{ 
+            .#{$prefixCls}-Body-Title-Icon{
+                    color:$success-color;  
+            } 
+        }
+
+        &.#{$prefixCls}-Body-Error{ 
+            .#{$prefixCls}-Body-Title-Icon{
+                    color:$danger-color;  
+            } 
+        }
+
         &-Title{
             padding: 16px 24px;
             display: flex;

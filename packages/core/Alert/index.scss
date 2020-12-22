@@ -4,10 +4,26 @@
  
 $prefixCls:"#{$global-prefix}-Alert";
 
+.a{
+    position: relative;
+    &:after{
+        content:"";
+        position:absolute;
+        background-color:red;
+        top: -10px;
+        bottom: -10px;
+        left: -10px;
+        right: -10px; 
+    } 
+}
+
 .#{$prefixCls}{
     
     display: flex;
     padding: 6px 16px;
+    &.#{$prefixCls}-Center{
+        align-items: center;
+    }
 
     &.#{$prefixCls}-NoOutline{
         
@@ -20,15 +36,43 @@ $prefixCls:"#{$global-prefix}-Alert";
         }
     }
 
-    &-Message{
-        padding:8px 0;
+    &-Content{
+        flex:1;
+
+        &-Message{
+            padding:4px 0;
+            font-size:16px;
+            color:#fff;
+        }
+        &-Description{
+            padding:4px 0;
+            font-size:14px;
+            color:#fff;
+        }
     }
+    
     
     &-Icon{
         display: flex; 
         padding: 7px 0;
         font-size: 22px;
         margin-right: 12px;
+        flex:0 0 auto;
+    }
+
+    &-Close{
+        color:#fff;
+        font-size:18px;
+        cursor: pointer;
+        flex:0 0 auto;
+        
+        line-height: 0;
+    }
+
+    &-Action{ 
+        flex:0 0 auto;
+        margin-right:10px;
+        margin-left:10px;
     }
 
     &.#{$prefixCls}-Primary{
