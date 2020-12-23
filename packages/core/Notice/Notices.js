@@ -1,8 +1,7 @@
-import React ,{ useContext } from 'react';
+import React ,{ useContext,useState,useMemo } from 'react';
 import NoticeBase from './NoticeBase';
 import ReactDOM from 'react-dom';
-import classNames from '@packages/utils/classNames';
-import createChainedFunction from '@packages/utils/createChainedFunction';
+import classNames from '@packages/utils/classNames'; 
 import {
     ConfigContext
 } from '@packages/core/ConfigProvider';
@@ -24,13 +23,14 @@ const Notices=React.forwardRef((props,ref)=>{
         visible
     }=props;
 
-    const prefixCls=useContext(ConfigContext)?.getOrefixCls("Notices",customizePrefixCls);
+    const prefixCls=useContext(ConfigContext)?.getPrefixCls("Notices",customizePrefixCls);
 
     const [notices,setNotices]=useState([]);
 
     const [ domRender,setDomRender ]=useState(visible);
 
     const addNotice=(notice)=>{
+        console.log("addNotices")
         const key = notice.key || getNoticeUuid();
         //要添加的notice是否存在
         const noticeIndex = notices.map((v) => v.key).indexOf(key);
@@ -48,7 +48,7 @@ const Notices=React.forwardRef((props,ref)=>{
                 updatedNotices.shift();
             }
             //加入的要添加的notice
-            updatedNotices.push(notice);
+            updatedNotices.push({...notice,key});
         }
         setNotices(updatedNotices);
     }
@@ -61,22 +61,27 @@ const Notices=React.forwardRef((props,ref)=>{
 
         let Component=null;
 
-        Component=notices.map((notice, index)=>{
-            return (
-                <NoticeBase 
-                    message={notice.message}
-                />
-            )
-        })
+        console.log(notices)
+
+        if(notices.length>0){
+            Component=notices.map((notice, index)=>{
+                return (
+                    <NoticeBase 
+                        message={notice.content}
+                        key={notice.key}
+                    />
+                )
+            })
+        } 
 
         return {
             Component
         }
-    },[notices]);
+    },[notices]);  
 
     return (
-        <div className={classNames(prefixCls,className)}>
-            <Component />
+        <div className={classNames(prefixCls,className)}> 
+            {Component}
         </div>
     )
 
@@ -84,9 +89,10 @@ const Notices=React.forwardRef((props,ref)=>{
 
  
 
-export default function notice(config,callback){
+export default function notice(config,callback){ 
 
     const div = document.createElement('div');
+
     document.body.appendChild(div);  
 
     let currentConfig = { ...config, visible: true };

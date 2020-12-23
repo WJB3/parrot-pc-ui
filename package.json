@@ -44,7 +44,7 @@
     "redux": "^4.0.5",
     "resize-observer-polyfill": "^1.5.1",
     "rimraf": "^3.0.2",
-    "rsuite": "^4.8.2",
+    "rsuite": "^4.8.6",
     "sass": "^1.26.10",
     "sass-loader": "^9.0.3",
     "scss-loader": "^0.0.1",

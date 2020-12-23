@@ -10,11 +10,22 @@ let maxCount;
 
 function notice(args){
     const target = args.key || key++;
+    const closePromise=new Promise(resolve=>{
+        console.log("closePromise")
+        const callback=()=>{
+
+        }
+        pNotice(args,(instance)=>{
+            console.log(instance)
+            instance.addNotice(args);
+        });
+    })
     const result = () => {
         if (messageInstance) {
           messageInstance.removeNotice(target);
         }
     };
+    result.promise = closePromise;
     return result;
 }
 
@@ -33,7 +44,7 @@ function setMessageConfig(options){
 }
 
 const Message={
-    open,
+    open:notice,
     config:setMessageConfig,
 
 }

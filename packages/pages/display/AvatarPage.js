@@ -1,6 +1,6 @@
 import React from 'react';
 import Avatar from '@packages/core/Avatar';
-import Tooltip from '@packages/core/Tooltip';
+
 import Space from '@packages/core/Space';
 import {
   Favorite
