@@ -97,10 +97,18 @@ export default function notice(config,callback){
 
     let currentConfig = { ...config, visible: true };
 
+    let called=false;
+
     function render({visible,...props}){
         ReactDOM.render(
             <Notices  
-                ref={callback}
+                ref={(instance)=>{
+                    if(called){
+                        return ;
+                    }
+                    called=true;
+                    callback(instance);
+                }}
                 visible={visible}
             />,
             div
