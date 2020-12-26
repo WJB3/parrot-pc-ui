@@ -73,7 +73,7 @@ const Grow = React.forwardRef(function (props, ref) {
             {...other}
         >
             {
-                (state, childProps) => {
+                (state, childProps) => { 
                     return React.cloneElement(children, {
                         style: {
                             opacity: 0,

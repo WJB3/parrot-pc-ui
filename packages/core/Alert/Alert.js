@@ -8,7 +8,11 @@ import {
     ErrorOutline,
     InfoOutline,
     SuccessOutline,
-    CloseOutline
+    CloseOutline,
+    Warning,
+    Error,
+    Info,
+    Success
 } from '@packages/core/Icon';
 import Paper from '@packages/core/Paper';
 import {
@@ -23,7 +27,7 @@ const Alert = React.forwardRef((props, ref) => {
         outline,
         className,
         message,
-        color = "primary",
+        color = "default",
         //是否有icon
         hasIcon: hasIconProp = true,
         icon,
@@ -34,7 +38,10 @@ const Alert = React.forwardRef((props, ref) => {
         //关闭动画结束后触发的回调函数
         afterClose=noop,
         onClose,
-        action
+        action,
+        style,
+        block=true,
+        type="notification"
     } = props;
 
     const prefixCls = useContext(ConfigContext)?.getPrefixCls("Alert", customizePrefixCls);
@@ -51,13 +58,46 @@ const Alert = React.forwardRef((props, ref) => {
         "success": <SuccessOutline />
     }
 
+    const IconMessageMap={
+        "error": <Error />,
+        "danger": <Error />,
+        "warning": <Warning />,
+        "info": <Info />,
+        "success": <Success />
+    }
+
     const handleClose=(e)=>{
         setVisible(false);
         onClose?.(e);
     }
 
+    const renderContent=()=>{
+        if(type==="notification"){
+            return (
+                <>
+                <div className={`${prefixCls}-Content`}>
+                    <div className={`${prefixCls}-Content-Message`}>{message}</div>
+                    {description && <div className={`${prefixCls}-Content-Description`}>{description}</div>}
+                </div>
+                <div className={`${prefixCls}-Action`}>
+                    {action}
+                </div>
+                {closable && <div className={`${prefixCls}-Close`} onClick={handleClose}><CloseOutline /></div>}
+                </>
+            )
+        }else if(type==="message"){
+            return (
+                <>
+                    <div className={`${prefixCls}-Content`}> 
+                        {message}
+                    </div>
+                </>
+            )
+        }
+    }
+
     return (
-        <Collapse visible={visible} unmountOnExit={destroyOnHidden} onExited={afterClose} appear={false}>
+        <Collapse visible={visible} unmountOnExit={destroyOnHidden} onExited={afterClose} appear={false} className={className} >
             <Paper
                 ref={ref}
                 outline={outline}
@@ -69,20 +109,16 @@ const Alert = React.forwardRef((props, ref) => {
                             [`${prefixCls}-${capitalize(color)}`]: color,
                             [`${prefixCls}-NoOutline`]: !outline,
                             [`${prefixCls}-Center`]: !description,
-
+                            [`${prefixCls}-InlineBlock`]: !block,
+                            [`${prefixCls}-InlineBlock`]: !block,
+                            [`${prefixCls}-TypeMessage`]: type==="message"
                         }
                     )
                 }
+                style={style}
             >
-                {hasIcon && <div className={`${prefixCls}-Icon`}>{icon || IconMap[color]}</div>}
-                <div className={`${prefixCls}-Content`}>
-                    <div className={`${prefixCls}-Content-Message`}>{message}</div>
-                    {description && <div className={`${prefixCls}-Content-Description`}>{description}</div>}
-                </div>
-                <div className={`${prefixCls}-Action`}>
-                    {action}
-                </div>
-                {closable && <div className={`${prefixCls}-Close`} onClick={handleClose}><CloseOutline /></div>}
+                {hasIcon && <div className={`${prefixCls}-Icon`}>{icon || type==="message"?IconMessageMap[color]:IconMap[color]}</div>}
+                {renderContent()}
             </Paper>
         </Collapse>
     );

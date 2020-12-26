@@ -1,40 +1,35 @@
 
 import React from 'react';
 import pNotice from '@packages/core/Notice';
+import "./index.scss";
 
 let messageInstance = null;
-let defaultDuration = 3;
-let defaultTop;
-let key = 1;
+let defaultDuration = 3000;
+let defaultTop; 
 let maxCount;
 
-function getNotificationInstance(args, callback) {
+function getNotificationInstance(args, callback) { 
     if (messageInstance) {
         callback({
             instance: messageInstance,
         });
         return;
-    }
+    } 
+    pNotice(args,(instance)=>{  
+        messageInstance=instance;
+        callback({instance})
+    })
 }
 
-function notice(args) {
-    const target = args.key || key++;
-    const closePromise = new Promise(resolve => {
-        console.log("closePromise")
-        const callback = () => {
-
-        }
-        getNotificationInstance(args, ({instance}) => {
-            pNotice.addNotice(getRCNoticeProps({ ...args, key: target, onClose: callback }, prefixCls));
-        });
-    })
-    const result = () => {
-        if (messageInstance) {
-            messageInstance.removeNotice(target);
-        }
-    };
-    result.promise = closePromise;
-    return result;
+export function notice(args) { 
+    getNotificationInstance({
+        ...args,
+        type:"message",
+        componentName:"Message",
+        duration:args.duration?args.duration:defaultDuration
+    }, ({instance}) => {
+        instance.addNotice(args);
+    }); 
 }
 
 function setMessageConfig(options) {
@@ -54,7 +49,6 @@ function setMessageConfig(options) {
 const Message = {
     open: notice,
     config: setMessageConfig,
-
 }
 
 export default Message;

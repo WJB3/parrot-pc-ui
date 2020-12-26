@@ -36,6 +36,71 @@ $prefixCls:"#{$global-prefix}-Alert";
         }
     }
 
+    &.#{$prefixCls}-TypeMessage{
+
+        &.#{$prefixCls}-Default,&.#{$prefixCls}-Primary,&.#{$prefixCls}-Second{ 
+            background-color: #fff;
+        }
+
+        &.#{$prefixCls}-Warning{ 
+            background-color: #fff;
+
+            .#{$prefixCls}-Icon{ 
+                font-size: 16px;
+                margin:0;
+                padding:0;
+                margin-right: 12px;
+                flex:0 0 auto;
+                color:$warning-color;
+            }
+        
+        }
+        &.#{$prefixCls}-Danger,&.#{$prefixCls}-Error{ 
+            background-color: #fff; 
+
+            .#{$prefixCls}-Icon{ 
+                font-size: 16px;
+                margin:0;
+                padding:0;
+                margin-right: 12px;
+                flex:0 0 auto;
+                color:$danger-color;
+            }
+        }
+
+        &.#{$prefixCls}-Success{ 
+            background-color: #fff; 
+
+            .#{$prefixCls}-Icon{ 
+                font-size: 16px;
+                margin:0;
+                padding:0;
+                margin-right: 12px;
+                flex:0 0 auto;
+                color:$success-color;
+            }
+        }
+
+        &.#{$prefixCls}-Info{ 
+            background-color: #fff; 
+
+            .#{$prefixCls}-Icon{ 
+                font-size: 16px;
+                margin:0;
+                padding:0;
+                margin-right: 12px;
+                flex:0 0 auto;
+                color:$info-color;
+            }
+        }
+
+
+    }
+
+    &-InlineBlock{
+        display: inline-flex;
+    }
+
     &-Content{
         flex:1;
 
@@ -103,5 +168,8 @@ $prefixCls:"#{$global-prefix}-Alert";
     
     &.#{$prefixCls}-Success{
         background-color:$success-color; 
+    }
+    &.#{$prefixCls}-Default{
+        background-color:rgba(0,0,0,.8); 
     }
 }

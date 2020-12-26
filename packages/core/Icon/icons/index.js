@@ -33,4 +33,7 @@ export { default as SuccessOutline } from './SuccessOutline';
 export { default as InfoOutline } from './InfoOutline';
 export { default as WarningOutline } from './WarningOutline';
 export { default as CloseOutline } from './CloseOutline';
-export { default as QuestionOutline } from './QuestionOutline';
+export { default as QuestionOutline } from './QuestionOutline'; 
+export { default as Error } from './Error';
+export { default as Success } from './Success';
+export { default as Info } from './Info';

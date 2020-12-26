@@ -7,9 +7,15 @@ import { reflow } from './utils';
 const styles = {
     entering: {
         opacity: 1,
+        maxHeight:150,
+        paddingTop:8,
+        paddingBottom:8
     },
     entered: {
         opacity: 1,
+        maxHeight:150,
+        paddingTop:8,
+        paddingBottom:8
     },
 };
 
@@ -38,8 +44,19 @@ const Fade = React.forwardRef(function (props, ref) {
 
         reflow(node);
 
-        node.style.webkitTransition = `opacity ${timeout && timeout.enter?timeout.enter:timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`;
-        node.style.transition =`opacity ${timeout && timeout.enter?timeout.enter:timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`;
+        node.style.webkitTransitionProperty=`opacity,max-height,padding-top,padding-bottom`; 
+        node.style.transitionProperty=`opacity,max-height,padding-top,padding-bottom`;
+        
+
+        node.style.transitionDuration=`${timeout && timeout.enter?timeout.enter:timeout}ms`; 
+        node.style.webkitTransitionDuration =`${timeout && timeout.enter?timeout.enter:timeout}ms`; 
+
+        node.style.transitionTimingFunction="cubic-bezier(0.55, 0, 0.55, 0.2)";
+        node.style.webkitTransitionTimingFunction="cubic-bezier(0.55, 0, 0.55, 0.2)";
+    
+        node.style.transitionDelay="0ms";
+        node.style.webkitTransitionDelay="0ms";
+    
 
         onEnter?.(node,isAppearing);
 
@@ -47,8 +64,18 @@ const Fade = React.forwardRef(function (props, ref) {
 
     const handleExit = function(node, isAppearing){ 
  
-        node.style.webkitTransition = `opacity ${timeout && timeout.exit?timeout.exit:timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`;
-        node.style.transition =  `opacity ${timeout && timeout.exit?timeout.exit:timeout}ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`;
+        node.style.webkitTransitionProperty=`opacity,max-height,padding-top,padding-bottom`; 
+        node.style.transitionProperty=`opacity,max-height,padding-top,padding-bottom`;
+        
+
+        node.style.transitionDuration=`${timeout && timeout.exit?timeout.exit:timeout}ms`; 
+        node.style.webkitTransitionDuration =`${timeout && timeout.exit?timeout.exit:timeout}ms`; 
+
+        node.style.transitionTimingFunction="cubic-bezier(0.55, 0, 0.55, 0.2)";
+        node.style.webkitTransitionTimingFunction="cubic-bezier(0.55, 0, 0.55, 0.2)";
+    
+        node.style.transitionDelay="0ms";
+        node.style.webkitTransitionDelay="0ms";
 
         onExit?.(node,isAppearing);
 
@@ -73,6 +100,9 @@ const Fade = React.forwardRef(function (props, ref) {
                     return React.cloneElement(children, {
                         style: {
                             opacity: 0,
+                            maxHeight:0,
+                            paddingTop:0,
+                            paddingBottom:0,
                             visibility: state === 'exited' && !visibleProp ? 'hidden' : undefined,
                             ...style,
                             ...styles[state], 

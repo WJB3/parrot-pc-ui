@@ -1,7 +1,7 @@
 import React ,{useContext, useState } from 'react'; 
-//import Alert from '@packages/core/Alert';
+import Alert from '@packages/core/Alert';
 import Button from '@packages/core/Button'; 
-import { Alert } from 'rsuite';
+//import { Alert } from 'rsuite';
 import 'rsuite/dist/styles/rsuite-default.css';
 // or 'rsuite/dist/styles/rsuite-default.css'
 
@@ -12,22 +12,67 @@ const Page= React.forwardRef((props,ref)=>{
 
     return <React.Fragment>
         <div style={{padding:200}}>
-            {/* <Alert 
-                message="Primary" 
-                color="warning"  
-                closable 
-                destroyOnHidden  
-                description="destroyOnHiddendestroyOnHiddendestroyOnHidden"
-                action={
-                    <Button outline color="danger">UNDO</Button>
-                }
-            />  */}
-            <Button onClick={()=>Alert.info("aaaa",1000000)} >测试</Button>
-
-            <div style={{padding:10,width:300,height:300}}> 
-                <div style={{background:'red',width:"100%",height:"100%"}} className={"a"}>asdasdasda</div>
-            </div>
-           
+            <Alert 
+                message="我是谁" 
+            />
+            <Alert 
+                message="我是谁"
+                type="message" 
+            />
+            <Alert 
+                message="我是谁" 
+                color="warning"   
+            />
+            <Alert 
+                message="我是谁" 
+                color="warning"
+                type="message"   
+            />
+            <Alert 
+                message="我是谁" 
+                color="primary"   
+            /> 
+            <Alert 
+                message="我是谁" 
+                color="primary" 
+                type="message"  
+            />   
+             <Alert 
+                message="我是谁" 
+                color="danger"   
+            />
+             <Alert 
+                message="我是谁" 
+                color="danger"   
+                type="message"  
+            /> 
+             <Alert 
+                message="我是谁" 
+                color="second"   
+            />      
+             <Alert 
+                message="我是谁" 
+                color="second"   
+                type="message"  
+            />  
+            <Alert 
+                message="我是谁" 
+                color="info"   
+            />   
+            <Alert 
+                message="我是谁" 
+                color="info"
+                type="message"   
+            /> 
+             <Alert 
+                message="我是谁" 
+                color="success"   
+            /> 
+              <Alert 
+                message="我是谁" 
+                color="success"   
+                type="message"
+            />    
         </div>
     </React.Fragment>
 });
