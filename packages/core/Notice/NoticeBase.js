@@ -3,7 +3,7 @@
 import React, { useEffect,useRef } from 'react';
 import Alert from '@packages/core/Alert';
 import {
-    Grow,Fade,FadeGrow
+    Slide,FadeGrow
 } from '@packages/core/Transition';
 
 
@@ -18,7 +18,10 @@ const Notice=React.forwardRef((props,ref)=>{
         //时间到了的回调
         onTimeClose,
         onClose,
-        color
+        color,
+        transition="fadeGrow",
+        direction="left",
+        closable
     }=props;
 
     let startTimer=useRef(null);
@@ -35,13 +38,16 @@ const Notice=React.forwardRef((props,ref)=>{
     const handleExited=(e)=>{
         onClose?.(e)
     }
+    
+    let TransitionComponent=transition==="fadeGrow"?FadeGrow:Slide;
 
     return (
-        <FadeGrow
+        <TransitionComponent
             appear
             visible={visibleProp}
             ref={ref}
             onExited={handleExited}
+            direction={direction}
         >
             <Alert
                 className={`${prefixCls}-Notice`}
@@ -49,8 +55,9 @@ const Notice=React.forwardRef((props,ref)=>{
                 message={message}
                 type={type}
                 color={color}
+                closable={closable}
             />
-        </FadeGrow>
+        </TransitionComponent>
     )
 });
 

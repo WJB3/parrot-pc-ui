@@ -24,7 +24,8 @@ const Notices = React.forwardRef((props, ref) => {
         componentName, 
         type,
         duration,
-        color
+        transition,
+        placement
     } = props;
 
     const prefixCls = useContext(ConfigContext)?.getPrefixCls(componentName?componentName:"Notices", customizePrefixCls);
@@ -32,6 +33,7 @@ const Notices = React.forwardRef((props, ref) => {
     const [notices, setNotices] = useState([]);
 
     const addNotice = useCallback((notice) => { 
+        console.log(notice)
         const key = notice.key || getNoticeUuid();
 
         setNotices(prevNotices => {
@@ -76,6 +78,21 @@ const Notices = React.forwardRef((props, ref) => {
         });
     },[]);
 
+    const getDirection=()=>{
+        switch(placement){
+            case "topRight":
+                return "left";
+            case "topLeft":
+                return "right";
+            case "bottomRight":
+                return "left";
+            case "bottomLeft":
+                return "right";
+            default:
+                return "right";
+        }
+    }
+
     React.useImperativeHandle(ref, () => ({
         addNotice
     }), [addNotice]);
@@ -90,6 +107,7 @@ const Notices = React.forwardRef((props, ref) => {
 
                 return (
                     <NoticeBase
+                        transition={transition}
                         message={notice.content}
                         duration={duration}
                         key={notice.key}
@@ -98,6 +116,8 @@ const Notices = React.forwardRef((props, ref) => {
                         visible={notice.visible}
                         onClose={onClose}
                         color={notice.color}
+                        closable={notice.closable}
+                        direction={getDirection()}
                         onTimeClose={onTimeClose.bind(this,notice.key)}
                     />
                 )

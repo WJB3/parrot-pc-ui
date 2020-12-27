@@ -21,6 +21,8 @@ $prefixCls:"#{$global-prefix}-Alert";
     
     display: flex;
     padding: 6px 16px;
+    min-width: 300px;
+
     &.#{$prefixCls}-Center{
         align-items: center;
     }

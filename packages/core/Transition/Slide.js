@@ -1,15 +1,13 @@
 import React,{ useEffect, useRef } from 'react';
 import PropTypes from 'prop-types'; 
 import Transition from '@packages/core/ReactTransitionGroup/Transition';
-import { duration } from '@packages/core/styles/transitions';
-import useForkRef from '@packages/hooks/useForkRef';
+import { duration } from '@packages/core/styles/transitions'; 
 import { reflow } from './utils';
 import "./index.scss";
 
 
 export function setTranslateValue(direction, node) {
-    const transform = getTranslateValue(direction, node);
-    console.log(transform)
+    const transform = getTranslateValue(direction, node); 
     if (transform) {
         node.style.webkitTransform = transform;
         node.style.transform = transform;
