@@ -9,6 +9,7 @@ const ResizeObserverComponent=forwardRef((props,ref)=>{
         children:childrenProps,
         onResize
     }=props;
+    
 
     const [sizeObject,setSizeObject]=useState({width:0,height:0,offsetWidth:0,offsetWidth:0});
 
@@ -32,10 +33,7 @@ const ResizeObserverComponent=forwardRef((props,ref)=>{
         }
     }
 
-    const handleResize=(entries)=>{  
-
-        console.log("handleResize");
-
+    const handleResize=(entries)=>{   
         const target=entries[0].target;
 
         const { width,height }=target.getBoundingClientRect();

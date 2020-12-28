@@ -7,6 +7,8 @@ $primary-color-opacity2:rgba(0,189,170,.2);
 $primary-color-opacity1:rgba(0,189,170,.1);
 $primary-color-hover:rgb(4, 153, 138);
 
+$danger-color-opacity5:rgba(247, 31, 85,.5);
+
 @mixin OpacityPrimaryColor($opacity) {
     background-color:rgba(0,189,170,$opacity);
 }

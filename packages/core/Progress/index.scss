@@ -1,0 +1,77 @@
+
+@import "../styles/variable.scss";
+
+$prefixCls:"#{$global-prefix}-Progress";  
+
+.#{$prefixCls}{ 
+   
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    &-BackgroundTransparency{
+        &.#{$prefixCls}-Bar{
+            background:transparent!important;
+        }
+    }
+
+    &-Bar{
+        position: relative;
+        height:6px;
+        flex:1;
+        overflow: hidden;
+    }
+
+    &-InlineBar{
+        position:absolute;
+        top:0;
+        bottom:0;
+        left:0;
+        width:100%;
+        transition: transform  linear;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+
+    &-Label{
+        margin:0 10px;
+        min-width: 40px;
+        text-align: center;
+    }
+
+    &.#{$prefixCls}-Primary{   
+        .#{$prefixCls}-Bar{
+            background-color:$primary-color-opacity5;   
+
+            .#{$prefixCls}-InlineBar{
+                background-color: $primary-color;
+            }
+
+        } 
+    }
+
+    
+    &.#{$prefixCls}-Success{   
+        .#{$prefixCls}-Bar{ 
+
+            .#{$prefixCls}-InlineBar{
+                background-color: $success-color;
+            }
+
+        } 
+    }
+
+    &.#{$prefixCls}-Danger{   
+        .#{$prefixCls}-Bar{ 
+
+            background-color:$danger-color-opacity5;  
+
+            .#{$prefixCls}-InlineBar{
+                background-color: $danger-color;
+            }
+
+        } 
+    }
+  
+
+} 
