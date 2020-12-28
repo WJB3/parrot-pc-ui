@@ -1,5 +1,6 @@
 import React ,{useContext, useEffect, useState,useRef } from 'react'; 
 import Progress,{ gprogress } from '@packages/core/Progress';   
+import '@packages/icon/svg/404.svg';
 
 import Button from '@packages/core/Button';
 import 'antd/dist/antd.css'; 
@@ -37,6 +38,9 @@ const Page= React.forwardRef((props,ref)=>{
         <div style={{padding:200}}>
             <Button onClick={handleClick}>测试机</Button>
             <Button onClick={()=>gprogress.end()}>结束</Button>
+            <svg>
+                <use xlinkHref="#404"></use>
+            </svg>
             <Progress 
                 percent={value}
                 showInfo={true}

@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 let duration = 200;
 let percent = 0;
 let percentInterval;
-let max = 80;
+let max = 88;
 let div = null;
 
 const style = "position: fixed;left: 0;right: 0;top: 0;width: 100%"
