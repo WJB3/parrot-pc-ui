@@ -10,7 +10,8 @@ module.exports={
         extensions:['.js','.jsx'],
         alias:{
             "@":path.resolve(__dirname,"../src"),
-            "@packages":path.resolve(__dirname,'../packages')
+            "@packages":path.resolve(__dirname,'../packages'),
+            "rc-util":path.resolve(__dirname,'../node_modules/rc-util'),
         }
     },
     module:{

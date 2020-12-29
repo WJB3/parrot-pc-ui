@@ -1,9 +1,13 @@
 
-@import "../styles/variable";
-
-
-$prefixCls:"#{$global-prefix}-Table"; 
+@import "../styles/variable.scss";
+  
+ 
+$prefixCls:"#{$global-prefix}-Table";  
 
 .#{$prefixCls}{ 
 
+    &.#{$prefixCls}-Wrapper{
+        max-width:100%;
+    }
+    
 }
