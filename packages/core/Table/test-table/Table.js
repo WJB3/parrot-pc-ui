@@ -2,12 +2,11 @@
 import * as React from 'react';
 import isVisible from '@packages/utils/isVisible';
 import classNames from 'classnames';
-import shallowEqual from 'shallowequal';
 import warning from 'rc-util/lib/warning';
 import ResizeObserver from 'rc-resize-observer';
 import getScrollBarSize from 'rc-util/lib/getScrollBarSize';
 import ColumnGroup from './sugar/ColumnGroup';
-import Column from './sugar/Column'; 
+import Column from './sugar/Column';
 import Header from './Header/Header';
 import TableContext from './context/TableContext';
 import BodyContext from './context/BodyContext';
@@ -19,10 +18,9 @@ import ResizeContext from './context/ResizeContext';
 import useStickyOffsets from './hooks/useStickyOffsets';
 import ColGroup from './ColGroup';
 import { getExpandableProps } from './utils/legacyUtil';
-import Panel from './Panel';
-import Footer, { FooterComponents } from './Footer';
+import { FooterComponents } from './Footer';
 import { findAllChildrenKeys, renderExpandIcon } from './utils/expandUtil';
-import { getCellFixedInfo } from './utils/fixUtil'; 
+import { getCellFixedInfo } from './utils/fixUtil';
 import useSticky from './hooks/useSticky';
 
 // Used for conditions cache
@@ -32,20 +30,6 @@ const EMPTY_DATA = [];
 const EMPTY_SCROLL_TARGET = {};
 
 export const INTERNAL_HOOKS = 'rc-table-internal-hook';
-
-const MemoTableContent = React.memo(
-  ({ children }) => children,
-
-  (prev, next) => {
-    if (!shallowEqual(prev.props, next.props)) {
-      return false;
-    }
-
-    // No additional render when pinged status change.
-    // This is not a bug.
-    return prev.pingLeft !== next.pingLeft || prev.pingRight !== next.pingRight;
-  },
-);
 
 function Table(props) {
   const {
@@ -58,11 +42,6 @@ function Table(props) {
     scroll,
     tableLayout,
     direction,
-
-    // Additional Part
-    title,
-    footer,
-    summary,
 
     // Customize
     id,
@@ -244,6 +223,9 @@ function Table(props) {
     internalHooks === INTERNAL_HOOKS ? transformColumns : null,
   );
 
+  console.log(columns)
+  console.log(flattenColumns)
+
   const columnContext = React.useMemo(
     () => ({
       columns,
@@ -271,13 +253,13 @@ function Table(props) {
 
   // Sticky
   const stickyRef = React.useRef();
-  const { isSticky, offsetHeader, offsetScroll, stickyClassName, container } = useSticky(
+  const { isSticky } = useSticky(
     sticky,
     prefixCls,
   );
 
   let scrollXStyle;
-  let scrollYStyle; 
+  let scrollYStyle;
 
   if (fixHeader) {
     scrollYStyle = {
@@ -293,7 +275,7 @@ function Table(props) {
     // https://github.com/ant-design/ant-design/issues/21879
     if (!fixHeader) {
       scrollYStyle = { overflowY: 'hidden' };
-    } 
+    }
   }
 
   const onColumnResize = React.useCallback((columnKey, width) => {
@@ -376,7 +358,7 @@ function Table(props) {
       internalRefs.body.current = scrollBodyRef.current;
     }
   });
- 
+
 
   // Table layout
   const mergedTableLayout = React.useMemo(() => {
@@ -394,8 +376,6 @@ function Table(props) {
     }
     return 'auto';
   }, [fixHeader, fixColumn, flattenColumns, tableLayout, isSticky]);
-
-  let groupTableNode;
 
   // Header props
   const headerProps = {
@@ -434,34 +414,31 @@ function Table(props) {
 
   const bodyColGroup = (
     <ColGroup colWidths={flattenColumns.map(({ width }) => width)} columns={flattenColumns} />
-  ); 
-
-  groupTableNode = (
-    <div
-      style={{
-        ...scrollXStyle,
-        ...scrollYStyle,
-      }}
-      className={classNames(`${prefixCls}-content`)}
-      onScroll={onScroll}
-      ref={scrollBodyRef}
-    >
-      <table style={{tableLayout: "auto" }}>
-        {bodyColGroup}
-        {showHeader !== false && <Header {...headerProps} {...columnContext} />}
-        {bodyTable} 
-      </table>
-    </div>
-  ); 
-
+  );
   let fullTable = (
     <div
       className={classNames(prefixCls, className)}
       style={style}
       id={id}
-      ref={fullTableRef} 
-    > 
-        <div className={`${prefixCls}-container`}>{groupTableNode}</div>  
+      ref={fullTableRef}
+    >
+      <div className={`${prefixCls}-container`}>
+        <div
+          style={{
+            ...scrollXStyle,
+            ...scrollYStyle,
+          }}
+          className={classNames(`${prefixCls}-content`)}
+          onScroll={onScroll}
+          ref={scrollBodyRef}
+        >
+          <table style={{ tableLayout: "auto" }}>
+            {bodyColGroup}
+            {showHeader !== false && <Header {...headerProps} {...columnContext} />}
+            {bodyTable}
+          </table>
+        </div>
+      </div>
     </div>
   );
 

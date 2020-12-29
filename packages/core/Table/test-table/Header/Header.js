@@ -86,6 +86,8 @@ function Header({
   const trComponent = getComponent(['header', 'row'], 'tr');
   const thComponent = getComponent(['header', 'cell'], 'th');
 
+  console.log(rows)
+
   return (
     <WrapperComponent className={`${prefixCls}-thead`}>
       {rows.map((row, rowIndex) => {
