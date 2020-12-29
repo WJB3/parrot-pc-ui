@@ -7,9 +7,8 @@ import warning from 'rc-util/lib/warning';
 import ResizeObserver from 'rc-resize-observer';
 import getScrollBarSize from 'rc-util/lib/getScrollBarSize';
 import ColumnGroup from './sugar/ColumnGroup';
-import Column from './sugar/Column';
-import FixedHeader from './Header/FixedHeader';
-import Header from './Header/Header'; 
+import Column from './sugar/Column'; 
+import Header from './Header/Header';
 import TableContext from './context/TableContext';
 import BodyContext from './context/BodyContext';
 import Body from './Body';
@@ -19,12 +18,11 @@ import { getPathValue, mergeObject, validateValue, getColumnsKey } from './utils
 import ResizeContext from './context/ResizeContext';
 import useStickyOffsets from './hooks/useStickyOffsets';
 import ColGroup from './ColGroup';
-import { getExpandableProps, getDataAndAriaProps } from './utils/legacyUtil';
+import { getExpandableProps } from './utils/legacyUtil';
 import Panel from './Panel';
 import Footer, { FooterComponents } from './Footer';
 import { findAllChildrenKeys, renderExpandIcon } from './utils/expandUtil';
-import { getCellFixedInfo } from './utils/fixUtil';
-import StickyScrollBar from './stickyScrollBar';
+import { getCellFixedInfo } from './utils/fixUtil'; 
 import useSticky from './hooks/useSticky';
 
 // Used for conditions cache
@@ -33,7 +31,7 @@ const EMPTY_DATA = [];
 // Used for customize scroll
 const EMPTY_SCROLL_TARGET = {};
 
-export const INTERNAL_HOOKS = 'rc-table-internal-hook'; 
+export const INTERNAL_HOOKS = 'rc-table-internal-hook';
 
 const MemoTableContent = React.memo(
   ({ children }) => children,
@@ -48,7 +46,7 @@ const MemoTableContent = React.memo(
     return prev.pingLeft !== next.pingLeft || prev.pingRight !== next.pingRight;
   },
 );
- 
+
 function Table(props) {
   const {
     prefixCls,
@@ -203,7 +201,7 @@ function Table(props) {
     [expandedRowKeys, innerExpandedKeys],
   );
 
-  const onTriggerExpand= React.useCallback(
+  const onTriggerExpand = React.useCallback(
     (record) => {
       const key = getRowKey(record, mergedData.indexOf(record));
 
@@ -279,8 +277,7 @@ function Table(props) {
   );
 
   let scrollXStyle;
-  let scrollYStyle;
-  let scrollTableStyle;
+  let scrollYStyle; 
 
   if (fixHeader) {
     scrollYStyle = {
@@ -296,11 +293,7 @@ function Table(props) {
     // https://github.com/ant-design/ant-design/issues/21879
     if (!fixHeader) {
       scrollYStyle = { overflowY: 'hidden' };
-    }
-    scrollTableStyle = {
-      width: scroll.x === true ? 'auto' : scroll.x,
-      minWidth: '100%',
-    };
+    } 
   }
 
   const onColumnResize = React.useCallback((columnKey, width) => {
@@ -383,9 +376,7 @@ function Table(props) {
       internalRefs.body.current = scrollBodyRef.current;
     }
   });
-
-  // ====================== Render ======================
-  const TableComponent = getComponent(['table'], 'table');
+ 
 
   // Table layout
   const mergedTableLayout = React.useMemo(() => {
@@ -443,150 +434,34 @@ function Table(props) {
 
   const bodyColGroup = (
     <ColGroup colWidths={flattenColumns.map(({ width }) => width)} columns={flattenColumns} />
-  );
+  ); 
 
-  const footerTable = summary && <Footer>{summary(mergedData)}</Footer>;
-  const customizeScrollBody = getComponent(['body']);
-
-  if (
-    process.env.NODE_ENV !== 'production' &&
-    typeof customizeScrollBody === 'function' &&
-    hasData &&
-    !fixHeader
-  ) {
-    warning(false, '`components.body` with render props is only work on `scroll.y`.');
-  }
-
-  if (fixHeader || isSticky) {
-    let bodyContent;
-
-    if (typeof customizeScrollBody === 'function') {
-      bodyContent = customizeScrollBody(mergedData, {
-        scrollbarSize,
-        ref: scrollBodyRef,
-        onScroll,
-      });
-      headerProps.colWidths = flattenColumns.map(({ width }, index) => {
-        const colWidth = index === columns.length - 1 ? width - scrollbarSize : width;
-        if (typeof colWidth === 'number' && !Number.isNaN(colWidth)) {
-          return colWidth;
-        }
-        warning(
-          false,
-          'When use `components.body` with render props. Each column should have a fixed `width` value.',
-        );
-
-        return 0;
-      });
-    } else {
-      bodyContent = (
-        <div
-          style={{
-            ...scrollXStyle,
-            ...scrollYStyle,
-          }}
-          onScroll={onScroll}
-          ref={scrollBodyRef}
-          className={classNames(`${prefixCls}-body`)}
-        >
-          <TableComponent
-            style={{
-              ...scrollTableStyle,
-              tableLayout: mergedTableLayout,
-            }}
-          >
-            {bodyColGroup}
-            {bodyTable}
-            {footerTable}
-          </TableComponent>
-        </div>
-      );
-    }
-
-    groupTableNode = (
-      <>
-        {/* Header Table */}
-        {showHeader !== false && (
-          <FixedHeader
-            noData={!mergedData.length}
-            {...headerProps}
-            {...columnContext}
-            direction={direction}
-            // Fixed Props
-            offsetHeader={offsetHeader}
-            stickyClassName={stickyClassName}
-            ref={scrollHeaderRef}
-            onScroll={onScroll}
-          />
-        )}
-
-        {/* Body Table */}
-        {bodyContent}
-
-        {isSticky && (
-          <StickyScrollBar
-            ref={stickyRef}
-            offsetScroll={offsetScroll}
-            scrollBodyRef={scrollBodyRef}
-            onScroll={onScroll}
-            container={container}
-          />
-        )}
-      </>
-    );
-  } else {
-    groupTableNode = (
-      <div
-        style={{
-          ...scrollXStyle,
-          ...scrollYStyle,
-        }}
-        className={classNames(`${prefixCls}-content`)}
-        onScroll={onScroll}
-        ref={scrollBodyRef}
-      >
-        <TableComponent style={{ ...scrollTableStyle, tableLayout: mergedTableLayout }}>
-          {bodyColGroup}
-          {showHeader !== false && <Header {...headerProps} {...columnContext} />}
-          {bodyTable}
-          {footerTable}
-        </TableComponent>
-      </div>
-    );
-  }
-
-  const ariaProps = getDataAndAriaProps(props);
+  groupTableNode = (
+    <div
+      style={{
+        ...scrollXStyle,
+        ...scrollYStyle,
+      }}
+      className={classNames(`${prefixCls}-content`)}
+      onScroll={onScroll}
+      ref={scrollBodyRef}
+    >
+      <table style={{tableLayout: "auto" }}>
+        {bodyColGroup}
+        {showHeader !== false && <Header {...headerProps} {...columnContext} />}
+        {bodyTable} 
+      </table>
+    </div>
+  ); 
 
   let fullTable = (
     <div
-      className={classNames(prefixCls, className, {
-        [`${prefixCls}-rtl`]: direction === 'rtl',
-        [`${prefixCls}-ping-left`]: pingedLeft,
-        [`${prefixCls}-ping-right`]: pingedRight,
-        [`${prefixCls}-layout-fixed`]: tableLayout === 'fixed',
-        [`${prefixCls}-fixed-header`]: fixHeader,
-        /** No used but for compatible */
-        [`${prefixCls}-fixed-column`]: fixColumn,
-        [`${prefixCls}-scroll-horizontal`]: horizonScroll,
-        [`${prefixCls}-has-fix-left`]: flattenColumns[0] && flattenColumns[0].fixed,
-        [`${prefixCls}-has-fix-right`]:
-          flattenColumns[flattenColumns.length - 1] &&
-          flattenColumns[flattenColumns.length - 1].fixed === 'right',
-      })}
+      className={classNames(prefixCls, className)}
       style={style}
       id={id}
-      ref={fullTableRef}
-      {...ariaProps}
-    >
-      <MemoTableContent
-        pingLeft={pingedLeft}
-        pingRight={pingedRight}
-        props={{ ...props, stickyOffsets, mergedExpandedKeys }}
-      >
-        {title && <Panel className={`${prefixCls}-title`}>{title(mergedData)}</Panel>}
-        <div className={`${prefixCls}-container`}>{groupTableNode}</div>
-        {footer && <Panel className={`${prefixCls}-footer`}>{footer(mergedData)}</Panel>}
-      </MemoTableContent>
+      ref={fullTableRef} 
+    > 
+        <div className={`${prefixCls}-container`}>{groupTableNode}</div>  
     </div>
   );
 
