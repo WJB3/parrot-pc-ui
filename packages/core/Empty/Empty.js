@@ -1,46 +1,51 @@
-import React,{useContext} from 'react';
+import React,{ useContext } from 'react';
 import classNames from '@packages/utils/classNames'; 
-import PropTypes from 'prop-types'; 
-import ConfigContext from '@packages/cores/ConfigCotext';
-import usePrefixCls from '@packages/hooks/usePrefixCls'; 
+import PropTypes from 'prop-types';  
+import {
+    ConfigContext
+} from '@packages/core/ConfigProvider';
+import {
+    Empty as EmptyIcon
+} from '@packages/core/Icon';
+import capitalize from '@packages/utils/capitalize';
 import "./index.scss";
+ 
 
-
-const spaceSize = {
-    small: 8,
-    default: 16,
-    large: 24,
-};
-
-const Input=React.forwardRef(function(props,ref){
+const Empty=React.forwardRef(function(props,ref){
     const {
         prefixCls:customizePrefixCls,
-        className, 
-        children, 
-        size="default"
+        className,   
+        type,
+        style,
+        description,
+        height
     }=props;
 
-    const prefixCls=usePrefixCls('Input',customizePrefixCls);
-
-    const {size}=useContext();
-
-   
+    const prefixCls=useContext(ConfigContext)?.getPrefixCls("Empty",customizePrefixCls); 
 
     return (
         <div ref={ref} className={classNames(
-            prefixCls,className 
-        )}>
-             
+            prefixCls,
+            className,
+            {
+                [`${prefixCls}-${capitalize(type)}`]:type
+            }
+        )}  style={{...style}} >
+            <div className={classNames(
+                `${prefixCls}-Image`
+            )} style={{height:height}}> 
+                <EmptyIcon />
+            </div>
+            {<p className={classNames(
+                `${prefixCls}-Description`
+            )}>{description ? description :"暂无数据"}</p>}
         </div>
     )
 });
 
-Input.propTypes={
+Empty.propTypes={
     prefixCls:PropTypes.string,
-    className:PropTypes.string, 
-    children:PropTypes.any, 
-    size:PropTypes.oneOf(['small','default','large']),
-    component:PropTypes.string
+    className:PropTypes.string,  
 };
 
-export default Input;
+export default Empty;

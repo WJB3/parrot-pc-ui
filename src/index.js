@@ -4,7 +4,8 @@ import { HashRouter, Route } from 'react-router-dom';
 import "./index.scss";     
 import ResultPage from '@packages/pages/feedback/ResultPage';   
 import TablePage from '@packages/pages/display/TablePage';   
+import EmptyPage from '@packages/pages/display/EmptyPage';   
 
 ReactDOM.render((<HashRouter>
-    <Route path="/" exact component={(props)=><ResultPage {...props} />} /> 
+    <Route path="/" exact component={(props)=><TablePage {...props} />} /> 
 </HashRouter>), document.getElementById("root"));

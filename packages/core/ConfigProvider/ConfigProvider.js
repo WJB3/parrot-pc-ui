@@ -28,6 +28,7 @@ const ConfigProvider=props=>{
     const config={
         ...configContext,
         getPrefixCls:getPrefixClsWrapper(configContext),
+        
     }
 
 

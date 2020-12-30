@@ -37,7 +37,7 @@ function Table(props) {
     className,
     rowClassName,
     style,
-    data,
+    data=[],
     rowKey,
     scroll,
     tableLayout,
@@ -59,7 +59,7 @@ function Table(props) {
     sticky,
   } = props;
 
-  const mergedData = data || EMPTY_DATA;
+  const mergedData = data || [];
   const hasData = !!mergedData.length;
 
   // ===================== Effects ======================
@@ -221,10 +221,7 @@ function Table(props) {
       direction,
     },
     internalHooks === INTERNAL_HOOKS ? transformColumns : null,
-  );
-
-  console.log(columns)
-  console.log(flattenColumns)
+  ); 
 
   const columnContext = React.useMemo(
     () => ({

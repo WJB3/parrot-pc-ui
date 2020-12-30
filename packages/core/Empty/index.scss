@@ -1,9 +1,45 @@
 
 @import "../styles/variable.scss";
-
-$prefixCls:"#{$global-prefix}-Input";
-
+ 
+  
+$prefixCls:"#{$global-prefix}-Empty";
+$prefixClsIcon:"#{$global-prefix}-Icon";
+ 
 .#{$prefixCls}{
+    margin: 0 8px;
+    font-size: 14px;
+    line-height: 1.5715;
+    text-align: center;
+
+    &-Image{
+        // height: 100px; 
+        margin-bottom: 8px; 
+
+        .#{$prefixClsIcon}{
+            font-size: 100px;
+        }
+        
+    }
+
+    &-Description{
+        margin: 0;
+    }
+
+    &.#{$prefixCls}-Normal{
+
+        margin: 32px 0;
+
+        .#{$prefixCls}-Image{
     
-     
+            margin-bottom: 4px; 
+
+            .#{$prefixClsIcon}{
+                font-size: 40px;
+            }
+        }
+       
+    }
 }
+ 
+ 
+ 
