@@ -18,6 +18,8 @@ const EMPTY_DATA = [];
 //2.React.memo的第二个参数如果返回true表示不渲染 false表示不缓存 默认为true
 
 //3.rowspan的作用是指定单元格纵向跨越的行数。
+
+//4.tr设置border会产生失效 如果td没有占满整个tr  tr有10个colspan 而其中的td只有5个
 const Table = React.forwardRef((props, ref) => {
 
     const {

@@ -58,7 +58,7 @@ function parseHeaderRows(
         return colSpans;
     }
 
-    // Generate `rows` cell data
+    // 生成' rows '单元格数据
     fillRowCells(rootColumns, 0);
 
     // Handle `rowSpan`
@@ -80,10 +80,11 @@ const Header = (props) => {
 
     const {
         columns
-    } = props;
+    } = props; 
 
     const { prefixCls } = React.useContext(TableContext);
-    const rows = React.useMemo(() => parseHeaderRows(columns), [columns]);
+
+    const rows = React.useMemo(() => parseHeaderRows(columns), [columns]); 
 
     return (
         <thead className={`${prefixCls}-Thead`}>
@@ -94,7 +95,7 @@ const Header = (props) => {
                         cells={row}
                         rowComponent={"tr"}
                         cellComponent={"th"}
-                        index={rowIndex}
+                        index={rowIndex} 
                     />
                 );
                 return rowNode;

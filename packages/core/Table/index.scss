@@ -11,10 +11,13 @@ $prefixClsIcon:"#{$global-prefix}-Icon";
     table{
         width:100%;    
     }
+
+    &-Tr{
+        border-bottom: 1px solid rgba(224, 224, 224, 1);
+    }
     
     &-Cell{
         padding:16px;
-        border-bottom: 1px solid rgba(224, 224, 224, 1);
         font-weight:500;
     }
 
