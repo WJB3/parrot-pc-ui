@@ -1,5 +1,5 @@
 Arguments: 
-  E:\Program Files\nodejs\node.exe C:\Users\wjb\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add mutation-observer-polyfill -S
+  E:\Program Files\nodejs\node.exe C:\Users\wjb\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add antd
 
 PATH: 
   C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;E:\Program Files\nodejs\;e:\Program Files\Git\cmd;E:\phpstudy_pro\Extensions\php\php7.0.9nts;C:\ProgramData\ComposerSetup\bin;E:\svn\bin;C:\Users\wjb\AppData\Local\Microsoft\WindowsApps;E:\Microsoft VS Code\bin;C:\Users\wjb\AppData\Roaming\npm;E:\phpstudy_pro\Extensions\php\php7.0.9nts;C:\Users\wjb\AppData\Roaming\Composer\vendor\bin;F:\config\mongodb\bin;
@@ -14,17 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/mutation-observer-polyfill: Not found
-      at Request.params.callback [as _callback] (C:\Users\wjb\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:66988:18)
-      at Request.self.callback (C:\Users\wjb\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:140662:22)
-      at Request.emit (events.js:314:20)
-      at Request.<anonymous> (C:\Users\wjb\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141634:10)
-      at Request.emit (events.js:314:20)
-      at IncomingMessage.<anonymous> (C:\Users\wjb\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141556:12)
-      at Object.onceWrapper (events.js:420:28)
-      at IncomingMessage.emit (events.js:326:22)
-      at endReadableNT (_stream_readable.js:1244:12)
-      at processTicksAndRejections (internal/process/task_queues.js:80:21)
+  Error: EPERM: operation not permitted, unlink 'F:\PProject\parrot-pc-ui\node_modules\rc-animate\es'
 
 npm manifest: 
   {

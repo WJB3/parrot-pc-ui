@@ -11,3 +11,5 @@ const BodyRow=(props)=>{
     
 
 }
+
+export default BodyRow;

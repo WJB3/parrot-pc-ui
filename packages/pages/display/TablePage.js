@@ -3,6 +3,7 @@ import { Table,Button } from 'antd';
 import RCTable from '@packages/core/Table/rc-table';
 import TestTable from '@packages/core/Table/test-table';
 import MyTable from '@packages/core/Table';
+import VirtualList from '@packages/core/VirtualList';
 import 'antd/dist/antd.css'; 
 
 const renderContent = (value, row, index) => {
@@ -19,7 +20,8 @@ const renderContent = (value, row, index) => {
 const columns = [
   {
     title: 'Name',
-    dataIndex: 'name',
+    dataIndex: 'name', 
+    colSpan:3,
     render: (text, row, index) => {
       if (index < 4) {
         return <a>{text}</a>;
@@ -30,7 +32,7 @@ const columns = [
           colSpan: 5,
         },
       };
-    },
+    }
   },
   {
     title: 'Age',
@@ -117,12 +119,15 @@ const data = [
 
 
 const Page = React.forwardRef((props, ref) => { 
-  
- 
+  let strs="范德萨发生的范德萨范德萨范德萨范德萨范德萨发生的范范德萨发生的范德\n萨范德萨范德萨范德萨范德萨发生的范德萨范德萨范德萨范德萨范德萨发生的范德萨范德萨范德萨范德萨范德萨发生的范德萨范德萨范德萨范德萨德萨范德萨范德萨范德萨范德萨发生的范德萨范德萨范德萨范德萨范德萨发生的范德萨";
+  const str = Array(9999999).fill(strs) 
   return <div>
-    <Table  columns={columns} dataSource={[]} /> 
-    <TestTable  columns={columns} data={data} prefixCls={"ant-table"} />
-    <MyTable  columns={columns} data={data}   />
+       
+       <VirtualList data={str} height={1000} itemHeight={30} itemKey="id">
+                {item=> <div style={{whiteSpace:"pre"}}>
+                    {item}
+                </div>} 
+        </VirtualList>
  
   </div>
 });

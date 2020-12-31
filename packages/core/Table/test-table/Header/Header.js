@@ -85,9 +85,9 @@ function Header({
   const WrapperComponent = getComponent(['header', 'wrapper'], 'thead');
   const trComponent = getComponent(['header', 'row'], 'tr');
   const thComponent = getComponent(['header', 'cell'], 'th');
- 
-  console.log(rows)
+  
   console.log(flattenColumns)
+  console.log(columns)
 
   return (
     <WrapperComponent className={`${prefixCls}-thead`}>

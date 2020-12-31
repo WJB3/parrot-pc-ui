@@ -74,6 +74,7 @@ const Table = React.forwardRef((props, ref) => {
         <Body 
             data={dataSource}
             emptyNode={emptyNode}
+            getRowKey={getRowKey}
         />
     )
 

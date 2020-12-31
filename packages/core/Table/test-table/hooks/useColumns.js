@@ -1,28 +1,6 @@
 import * as React from 'react';
-import warning from 'rc-util/lib/warning';
-import toArray from 'rc-util/lib/Children/toArray';
-import { INTERNAL_COL_DEFINE } from '../utils/legacyUtil';
-
-export function convertChildrenToColumns(
-  children,
-) {
-  return toArray(children)
-    .filter(node => React.isValidElement(node))
-    .map(({ key, props }) => {
-      const { children: nodeChildren, ...restProps } = props;
-      const column = {
-        key,
-        ...restProps,
-      };
-
-      if (nodeChildren) {
-        column.children = convertChildrenToColumns(nodeChildren);
-      }
-
-      return column;
-    });
-}
-
+import warning from 'rc-util/lib/warning';  
+ 
 function flatColumns(columns){
   return columns.reduce((list, column) => {
     const { fixed } = column;
@@ -73,33 +51,14 @@ function warningFixed(flattenColumns) {
     }
   }
 }
-
-function revertForRtl(columns){
-  return columns.map(column => {
-    const { fixed, ...restProps } = column;
-
-    // Convert `fixed='left'` to `fixed='right'` instead
-    let parsedFixed = fixed;
-    if (fixed === 'left') {
-      parsedFixed = 'right';
-    } else if (fixed === 'right') {
-      parsedFixed = 'left';
-    }
-    return {
-      fixed: parsedFixed,
-      ...restProps,
-    };
-  });
-}
-
+ 
 /**
  * Parse `columns` & `children` into `columns`.
  */
 function useColumns(
   {
     prefixCls,
-    columns,
-    children,
+    columns, 
     expandable,
     expandedKeys,
     getRowKey,
@@ -107,66 +66,17 @@ function useColumns(
     expandIcon,
     rowExpandable,
     expandIconColumnIndex,
-    direction,
     expandRowByClick,
     columnWidth,
-  }, 
-  transformColumns,
-)  {
+  },  
+)  { 
   const baseColumns = React.useMemo(
-    () => columns || convertChildrenToColumns(children),
-    [columns, children],
-  );
-
-  // Add expand column
-  const withExpandColumns = React.useMemo(() => {
-    if (expandable) {
-      const expandColIndex = expandIconColumnIndex || 0;
-      const prevColumn = baseColumns[expandColIndex];
-
-      const expandColumn = {
-        [INTERNAL_COL_DEFINE]: {
-          className: `${prefixCls}-expand-icon-col`,
-        },
-        title: '',
-        fixed: prevColumn ? prevColumn.fixed : null,
-        className: `${prefixCls}-row-expand-icon-cell`,
-        width: columnWidth,
-        render: (_, record, index) => {
-          const rowKey = getRowKey(record, index);
-          const expanded = expandedKeys.has(rowKey);
-          const recordExpandable = rowExpandable ? rowExpandable(record) : true;
-
-          const icon = expandIcon({
-            prefixCls,
-            expanded,
-            expandable: recordExpandable,
-            record,
-            onExpand: onTriggerExpand,
-          });
-
-          if (expandRowByClick) {
-            return <span onClick={e => e.stopPropagation()}>{icon}</span>;
-          }
-          return icon;
-        },
-      };
-
-      // Insert expand column in the target position
-      const cloneColumns = baseColumns.slice();
-      if (expandColIndex >= 0) {
-        cloneColumns.splice(expandColIndex, 0, expandColumn);
-      }
-      return cloneColumns;
-    }
-    return baseColumns;
-  }, [expandable, baseColumns, getRowKey, expandedKeys, expandIcon, direction]);
+    () => columns,
+    [columns],
+  ); 
 
   const mergedColumns = React.useMemo(() => {
-    let finalColumns = withExpandColumns;
-    if (transformColumns) {
-      finalColumns = transformColumns(finalColumns);
-    }
+    let finalColumns = baseColumns; 
 
     // Always provides at least one column for table display
     if (!finalColumns.length) {
@@ -177,18 +87,12 @@ function useColumns(
       ];
     }
     return finalColumns;
-  }, [transformColumns, withExpandColumns, direction]);
+  }, [baseColumns]);
 
   const flattenColumns = React.useMemo(() => {
-    if (direction === 'rtl') {
-      return revertForRtl(flatColumns(mergedColumns));
-    }
     return flatColumns(mergedColumns);
-  }, [mergedColumns, direction]);
-  // Only check out of production since it's waste for each render
-  if (process.env.NODE_ENV !== 'production') {
-    warningFixed(flattenColumns);
-  }
+  }, [mergedColumns]); 
+  
   return [mergedColumns, flattenColumns];
 }
 
