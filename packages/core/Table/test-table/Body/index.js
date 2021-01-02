@@ -64,7 +64,6 @@ function Body({
           componentWidth={componentWidth}
           cellComponent={tdComponent}
           colSpan={flattenColumns.length}
-          colSpan={flattenColumns.reduce((length,item)=>length+item.colSpan,0)}
         >
           {emptyNode}
         </ExpandedRow>

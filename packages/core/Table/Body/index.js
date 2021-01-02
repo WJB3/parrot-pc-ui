@@ -3,6 +3,8 @@
 import React from 'react';
 import ExpandedRow from './ExpandedRow';
 import TableContext from '../context/TableContext';
+import BodyContext from '../context/BodyContext';
+import BodyRow from '../Body/BodyRow';
 
 
 const Body=(props)=>{
@@ -14,12 +16,30 @@ const Body=(props)=>{
 
     const {prefixCls}=React.useContext(TableContext);
 
+    const { flattenColumns }=React.useContext(BodyContext);
+
+    const colSpan=React.useMemo(()=>{
+        return flattenColumns.reduce((num,column)=>num+column.colSpan,0);
+    },[flattenColumns]); 
+
     return React.useMemo(()=>{ 
 
         let rows;
         if(data.length){
             rows=data.map((record,index)=>{
                 const key=getRowKey(record,index);
+
+                return (
+                    <BodyRow
+                        key={key}
+                        rowKey={key}
+                        rowComponent={"tr"}
+                        cellComponent={"td"}
+                        getRowKey={getRowKey}
+                        index={index}
+                        record={record}
+                    />
+                )
             })
         }else{
             //如果是空的
@@ -30,6 +50,7 @@ const Body=(props)=>{
                     prefixCls={prefixCls}
                     component={"tr"}
                     cellComponent={"td"} 
+                    colSpan={colSpan}
                 >
                     {emptyNode}
                 </ExpandedRow>
@@ -37,7 +58,7 @@ const Body=(props)=>{
         }
 
         return (
-            <tbody className={`${prefixCls}-TBody`}>
+            <tbody className={`${prefixCls}-Body`}>
                 {rows}
             </tbody>
         )

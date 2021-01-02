@@ -21,6 +21,7 @@ const HeaderRow=(props)=>{
                     return (
                         <Cell
                             {...cell}
+                            key={cellIndex}
                             prefixCls={prefixCls}
                             component={CellComponent}
                         />

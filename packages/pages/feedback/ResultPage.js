@@ -13,6 +13,7 @@ const Demo=React.memo(()=>{
 },(prev,next)=>{
   // console.log(prev)
   // console.log(next)
+  //第二个参数return true
   return false;
 })
 

@@ -4,10 +4,13 @@ import {
 } from '@packages/core/ConfigProvider';
 import classNames from '@packages/utils/classNames';
 import TableContext from './context/TableContext';
+import BodyContext from './context/BodyContext';
 import Header from './Header/Header';
 import Paper from '@packages/core/Paper';
 import Empty from '@packages/core/Empty'; 
 import Body from './Body';
+import useColumns from './hooks/useColumns';
+import { usePaginationData } from './Pagination';
 import "./index.scss";
 
 const EMPTY_DATA = [];
@@ -20,16 +23,22 @@ const EMPTY_DATA = [];
 //3.rowspan的作用是指定单元格纵向跨越的行数。
 
 //4.tr设置border会产生失效 如果td没有占满整个tr  tr有10个colspan 而其中的td只有5个
+
+//5.通过转换cloumns 如果有children 则给其余的columns添加rowspan 而colspan和rowspan默认都是0
+
+//6.为了css选择器更好的选择 我们给每个属性都增加了colspan rowspan
 const Table = React.forwardRef((props, ref) => {
 
     const {
         prefixCls: customizePrefixCls,
         //是否显示表头
         showHeader = true,
-        columns,
+        columns:columnsProp,
         dataSource=EMPTY_DATA,
         rowKey="key",
-        renderEmpty=<Empty type="normal" />
+        bordered=false,
+        renderEmpty=<Empty type="normal" />,
+        pagination
     } = props;
 
     const prefixCls = useContext(ConfigContext)?.getPrefixCls("Table", customizePrefixCls);
@@ -65,16 +74,33 @@ const Table = React.forwardRef((props, ref) => {
         ]
     );
 
+    const [ columns,flattenColumns ]=useColumns(
+        {
+            columns:columnsProp
+        }
+    );
+
     const columnContext=React.useMemo(
         ()=>({
             columns,
+            flattenColumns
         }),
-        [columns]
+        [columns,flattenColumns]
     );
+
+    const BodyContextValue=React.useMemo(
+        ()=>({
+            ...columnContext,
+        }),
+        [
+            columnContext
+        ]
+    );
+  
 
     const bodyTable=(
         <Body 
-            data={dataSource}
+            data={mergedData}
             emptyNode={emptyNode}
             getRowKey={getRowKey}
         />
@@ -88,7 +114,10 @@ const Table = React.forwardRef((props, ref) => {
         }>
             <div className={
                 classNames(
-                    `${prefixCls}-Container`
+                    `${prefixCls}-Container`,
+                    {
+                        [`${prefixCls}-Bordered`]:bordered
+                    }
                 )
             }>
                 <div className={
@@ -105,7 +134,11 @@ const Table = React.forwardRef((props, ref) => {
 
     return (
         <TableContext.Provider value={TableContextValue}>
-            {fullTable}
+            <BodyContext.Provider value={BodyContextValue}>
+                <div className={classNames(`${prefixCls}-Wrapper`)}>
+                    {fullTable}
+                </div>
+            </BodyContext.Provider> 
         </TableContext.Provider>
     )
 

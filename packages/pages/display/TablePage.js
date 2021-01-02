@@ -8,7 +8,7 @@ import 'antd/dist/antd.css';
 const renderContent = (value, row, index) => {
   const obj = {
     children: value,
-    props: {},
+    props: {}
   };
   if (index === 4) {
     obj.props.colSpan = 0;
@@ -18,125 +18,61 @@ const renderContent = (value, row, index) => {
 
 const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name', 
-    render: (text, row, index) => {
-      if (index < 4) {
-        return <a>{text}</a>;
-      }
-      return {
-        children: <a>{text}</a>,
-        props: {
-          colSpan: 5,
-        },
-      };
-    },
+    title: "Name",
+    dataIndex: "name",
     children:[
-      {
-        title:"a",
-        dataIndex:"b",
-        colSpan:3,
-      },
-      {
-        title:"a",
-        dataIndex:"b",
-        colSpan:4,
-      }
+      {title:"name1",dataIndex:"name1"},
+      {title:"name2",dataIndex:"name2"}
     ]
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    render: renderContent,
+    title: "Age",
+    dataIndex: "age", 
   },
   {
-    title: 'Home phone',
+    title: "Home phone",
     colSpan: 2,
-    dataIndex: 'tel',
+    dataIndex: "tel",
     render: (value, row, index) => {
       const obj = {
-        children: <Button>{value}</Button>,
-        props: {},
-      };
-      if (index === 2) {
-        obj.props.rowSpan = 2;
-      }
-      // These two are merged into above cell
-      if (index === 3) {
-        obj.props.rowSpan = 0;
-      }
-      if (index === 4) {
-        obj.props.colSpan = 0;
-      }
+        children: value,
+        props: {}
+      }; 
       return obj;
-    },
+    }
   },
   {
-    title: 'Phone',
+    title: "Phone",
     colSpan: 0,
-    dataIndex: 'phone',
-    render: renderContent,
+    dataIndex: "phone", 
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    render: renderContent,
-  },
+    title: "Address",
+    dataIndex: "address", 
+  }
 ];
 
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    tel: '0571-22098909',
-    phone: 18889898989,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    tel: '0571-22098333',
-    phone: 18889898888,
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    tel: '0575-22098909',
-    phone: 18900010002,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 18,
-    tel: '0575-22098909',
-    phone: 18900010002,
-    address: 'London No. 2 Lake Park',
-  },
-  {
-    key: '5',
-    name: 'Jake White',
-    age: 18,
-    tel: '0575-22098909',
-    phone: 18900010002,
-    address: 'Dublin No. 2 Lake Park',
-  },
-];
-
+const data = new Array(100).fill("").map((item,index)=>({
+  key:index,
+  name:"John Brown"+index,
+  name1:"John Brown"+index,
+  name2:"John Brown"+index,
+  age:"32"+index,
+  tel:"0571-22098909"+index,
+  phone:"12312312312asdasdasasasdaasdass"+index,
+  address:"Ner"+index
+}));
+ 
 
 const Page = React.forwardRef((props, ref) => { 
   
  
   return <div style={{background:"#f5f5f5",padding:10}}>
-    <Table  columns={columns} dataSource={[]} /> 
+    <Table  columns={columns} dataSource={data} pagination={{position:["bottomRight","topLeft"]}} /> 
     <div style={{height:20}}></div>
-    <TestTable  columns={columns} data={data} prefixCls={"ant-table"} />
+    <RCTable  columns={columns} data={data} prefixCls={"ant-table"} />
     <div style={{height:20}}></div>
-    <MyTable  columns={columns} data={data}   /> 
+    <MyTable  columns={columns} dataSource={data}   /> 
     <div style={{height:20}}></div>
   </div>
 });

@@ -3,6 +3,7 @@
   
  
 $prefixCls:"#{$global-prefix}-Table";  
+$prefixClsCell:"#{$global-prefix}-Table-Cell";  
 $prefixClsEmpty:"#{$global-prefix}-Empty";  
 $prefixClsIcon:"#{$global-prefix}-Icon";  
 
@@ -12,13 +13,40 @@ $prefixClsIcon:"#{$global-prefix}-Icon";
         width:100%;    
     }
 
+    &-Thead{
+        .#{$prefixCls}-Tr{
+            th[colspan]{
+                &:not([colspan='1']){
+                    text-align: center;
+                }
+            }
+        }
+    }
+
+
     &-Tr{
-        border-bottom: 1px solid rgba(224, 224, 224, 1);
+
+        &>th{
+            border-bottom: 1px solid rgba(224, 224, 224, 1);
+        }
+
+        &:not(:last-child){ 
+            &>th[rowspan='1']{
+                border-bottom: 0;
+            }
+        }
+        
     }
     
     &-Cell{
         padding:16px;
         font-weight:500;
+
+        &.#{prefixClsCell}{
+            overflow:hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     }
 
     &-PlaceHolder{

@@ -1,27 +1,27 @@
 
+/**
+ * 
+ * @param  {...any} objects 传入多个object数组 深拷贝返回一个新数组
+ */
+export default function mergeObject(...objects){
 
-export default function mergeObject(
-    ...objects
-){
-    const merged={};
+    const mergeObject={};
 
-    function fillProps(obj,clone){
-        if(clone){
-            Object.keys(clone).forEach(key=>{
-                const value=clone[key];
-                if(value && typeof value==="object"){
-                    obj[key]=obj[key]||{};
-                    fillProps(obj[key],value);
-                }else{
-                    obj[key]=value;
-                }
-            })
-        }
+    function fillProps(merge,clone){
+        Object.keys(clone).forEach(key=>{
+            const value=clone[key];
+        
+            if(value && typeof value==="object"){
+                merge[key]=merge[key]||{};
+                fillProps(merge[key],value)
+            }else{
+                merge[key]=value;
+            }
+        })
     }
 
-    objects.forEach(clone=>{
-        fillProps(merged,clone);
-    });
+    objects.forEach(clone=>fillProps(mergeObject,clone))
 
-    return merged;
+    return mergeObject;
+
 }

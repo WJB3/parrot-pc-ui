@@ -7,6 +7,7 @@ import TableContext from '../context/TableContext';
 function parseHeaderRows(
     rootColumns,
 ) {
+
     const rows = [];
 
     function fillRowCells(
@@ -65,8 +66,7 @@ function parseHeaderRows(
     const rowCount = rows.length;
     for (let rowIndex = 0; rowIndex < rowCount; rowIndex += 1) {
         rows[rowIndex].forEach(cell => {
-            if (!('rowSpan' in cell) && !cell.hasSubColumns) {
-                // eslint-disable-next-line no-param-reassign
+            if (!('rowSpan' in cell) && !cell.hasSubColumns) { 
                 cell.rowSpan = rowCount - rowIndex;
             }
         });
