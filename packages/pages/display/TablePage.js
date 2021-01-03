@@ -72,7 +72,7 @@ const Page = React.forwardRef((props, ref) => {
     <div style={{height:20}}></div>
     <RCTable  columns={columns} data={data} prefixCls={"ant-table"} />
     <div style={{height:20}}></div>
-    <MyTable  columns={columns} dataSource={data}   /> 
+    <MyTable  columns={columns} dataSource={data}  /> 
     <div style={{height:20}}></div>
   </div>
 });

@@ -6,6 +6,7 @@ $prefixCls:"#{$global-prefix}-Table";
 $prefixClsCell:"#{$global-prefix}-Table-Cell";  
 $prefixClsEmpty:"#{$global-prefix}-Empty";  
 $prefixClsIcon:"#{$global-prefix}-Icon";  
+$prefixClsPagination:"#{$global-prefix}-Table-Pagination";  
 
 .#{$prefixCls}{ 
     
@@ -37,12 +38,16 @@ $prefixClsIcon:"#{$global-prefix}-Icon";
         }
         
     }
+
+    &-Body{
+        border-bottom: 1px solid #e0e0e0;
+    }
     
     &-Cell{
         padding:16px;
         font-weight:500;
 
-        &.#{prefixClsCell}{
+        &.#{$prefixClsCell}{
             overflow:hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -56,6 +61,17 @@ $prefixClsIcon:"#{$global-prefix}-Icon";
                     font-size:50px;
                 }
             } 
+        }
+    }
+
+    &-Pagination{
+        padding:16px;
+        background-color: rgb(255, 255, 255);
+
+        &.#{$prefixClsPagination}-Right{
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
         }
     }
 }

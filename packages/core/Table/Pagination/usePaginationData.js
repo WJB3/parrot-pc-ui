@@ -1,7 +1,5 @@
 import React from 'react';
-import usePagination ,{ DEFAULT_PAGE_SIZE } from './usePagination';
-
-
+import usePagination from './usePagination';
 
 
 export default function usePaginationData(
@@ -19,7 +17,11 @@ export default function usePaginationData(
         if(Object.getOwnPropertyNames(mergedPagination).length===0){
             return [dataSource,mergedPagination];
         }
-        const {current,pageSize}=mergedPagination;
+        const {current:currentProp,pageSize:pageSizeProp,defaultCurrent,defaultPageSize}=mergedPagination;
+
+        let current=currentProp?currentProp:defaultCurrent;
+
+        let pageSize=pageSizeProp?pageSizeProp:defaultPageSize;
         
         return [dataSource.slice((current-1)*pageSize,current*pageSize),mergedPagination];
 

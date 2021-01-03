@@ -10,7 +10,7 @@ import Paper from '@packages/core/Paper';
 import Empty from '@packages/core/Empty'; 
 import Body from './Body';
 import useColumns from './hooks/useColumns';
-import { usePaginationData } from './Pagination';
+import renderPagination, { usePaginationData } from './Pagination';
 import "./index.scss";
 
 const EMPTY_DATA = [];
@@ -96,8 +96,9 @@ const Table = React.forwardRef((props, ref) => {
             columnContext
         ]
     );
-  
 
+    const [mergedData,paginationNode]=renderPagination(dataSource,pagination,prefixCls)
+  
     const bodyTable=(
         <Body 
             data={mergedData}
@@ -129,15 +130,14 @@ const Table = React.forwardRef((props, ref) => {
                     </table>
                 </div>
             </div>
+            {paginationNode}
         </Paper>
     )
 
     return (
         <TableContext.Provider value={TableContextValue}>
-            <BodyContext.Provider value={BodyContextValue}>
-                <div className={classNames(`${prefixCls}-Wrapper`)}>
-                    {fullTable}
-                </div>
+            <BodyContext.Provider value={BodyContextValue}> 
+                    {fullTable} 
             </BodyContext.Provider> 
         </TableContext.Provider>
     )

@@ -31,7 +31,8 @@ const Pagination = React.forwardRef((props, ref) => {
         pageSizeOptions=[10,20,50,100],
         onChange:onChangeProp,
         onShowSizeChange:onShowSizeChangeProp,
-        showQuickJumper=false
+        showQuickJumper=false,
+        className
     } = props;
 
     const prefixCls = useContext(ConfigContext)?.getPrefixCls("Pagination", customizePrefixCls);
@@ -45,11 +46,12 @@ const Pagination = React.forwardRef((props, ref) => {
         controlled: currentProp,
         default: defaultCurrent
     });
+ 
 
     const [pageSize, setPageSize] = useControlled({
         controlled: pageSizeProp,
         default: defaultPageSize
-    });
+    }); 
 
     //是否是arrow
     const [isArrow, setIsArrow] = useState(false);
@@ -62,6 +64,8 @@ const Pagination = React.forwardRef((props, ref) => {
     const renderNum = Math.round(total / pageSize);
 
     const handleSwitchCurrent = (currentIndex) => {
+        console.log("handleSwitchCurrent")
+        console.log(currentIndex)
         const index = Math.min(Math.max(currentIndex, 1), renderNum);
         setCurrent(index);
     }
@@ -200,6 +204,7 @@ const Pagination = React.forwardRef((props, ref) => {
         className={
             classNames(
                 prefixCls,
+                classNames,
                 {
                     [`${prefixCls}-${capitalize(color)}`]: color
                 }
