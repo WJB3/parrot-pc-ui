@@ -1,19 +1,21 @@
 import React from 'react';
 
-export default function useControlled({controlled,default:defaultProps}){
+export default function useControlled({controlled:controlledProp,default:defaultProp}){
 
-    let isControlled=controlled!==undefined;
+    //如果value为undefined 则此时组件为可控
+    let controlled=controlledProp!==undefined;
 
-    const [valueState,setValueState]=React.useState(defaultProps); 
+    //defaultProp 参数只会在组件的初始渲染中起作用，后续渲染时会被忽略。
+    const [valueState,setValueState]=React.useState(defaultProp); 
 
-    const value=isControlled?controlled:valueState;
+    const value=controlled?controlledProp:valueState;
 
     const setValueIfControlled=React.useCallback((newValue)=>{
-        if(!isControlled){
+        if(!controlled){
             setValueState(newValue)
         }
-    },[value]);
+    },[value,controlled]);
 
-    return [value,setValueIfControlled,isControlled]
+    return [value,setValueIfControlled,controlled];
 
 }

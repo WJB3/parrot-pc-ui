@@ -17,12 +17,8 @@ export default function usePaginationData(
         if(Object.getOwnPropertyNames(mergedPagination).length===0){
             return [dataSource,mergedPagination];
         }
-        const {current:currentProp,pageSize:pageSizeProp,defaultCurrent,defaultPageSize}=mergedPagination;
+        const { current,pageSize }=mergedPagination;
 
-        let current=currentProp?currentProp:defaultCurrent;
-
-        let pageSize=pageSizeProp?pageSizeProp:defaultPageSize;
-        
         return [dataSource.slice((current-1)*pageSize,current*pageSize),mergedPagination];
 
     },[dataSource,mergedPagination]);

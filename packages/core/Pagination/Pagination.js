@@ -63,10 +63,9 @@ const Pagination = React.forwardRef((props, ref) => {
     //render的数量
     const renderNum = Math.round(total / pageSize);
 
-    const handleSwitchCurrent = (currentIndex) => {
-        console.log("handleSwitchCurrent")
-        console.log(currentIndex)
-        const index = Math.min(Math.max(currentIndex, 1), renderNum);
+    const handleSwitchCurrent = (e,currentIndex) => { 
+        const index = Math.min(Math.max(currentIndex, 1), renderNum);  
+        onChangeProp?.(e,{current:index,pageSize});
         setCurrent(index);
     }
 
@@ -85,7 +84,7 @@ const Pagination = React.forwardRef((props, ref) => {
             shape="circle"
             key={`renderPragination-MorePragation-${i}`}
             className={classNames()}
-            onClick={() => handleSwitchCurrent(jumpDirection === "left" ? current - jumpNumber : current + jumpNumber)}
+            onClick={(e) => handleSwitchCurrent(e,jumpDirection === "left" ? current - jumpNumber : current + jumpNumber)}
             onMouseOver={(e) => {
                 if (arrowSwitchTimeout && arrowSwitchTimeout.current) clearTimeout(arrowSwitchTimeout.current);
                 setCurrentHover(i);
@@ -118,7 +117,7 @@ const Pagination = React.forwardRef((props, ref) => {
                 {
                     [`Selected`]: current === 1
                 }
-            )} onClick={() => handleSwitchCurrent(1)}>{1}</Button>
+            )} onClick={(e) => handleSwitchCurrent(e,1)}>{1}</Button>
         ];
 
         const lastPagination = [
@@ -126,7 +125,7 @@ const Pagination = React.forwardRef((props, ref) => {
                 {
                     [`Selected`]: current === renderNum
                 }
-            )} onClick={() => handleSwitchCurrent(renderNum)}>
+            )} onClick={(e) => handleSwitchCurrent(e,renderNum)}>
                 {renderNum}
             </Button>
         ];
@@ -149,7 +148,7 @@ const Pagination = React.forwardRef((props, ref) => {
                 {
                     [`Selected`]: current === item
                 }
-            )} onClick={() => handleSwitchCurrent(renderPraginationNum[i])}>
+            )} onClick={(e) => handleSwitchCurrent(e,renderPraginationNum[i])}>
                 {item}
             </Button>;
 
@@ -171,7 +170,7 @@ const Pagination = React.forwardRef((props, ref) => {
         return new Array(renderNum).fill("").map((item, index) => {
             return <Button size={size} shape="circle" key={index} className={classNames({
                 [`Selected`]: current === index + 1
-            })} onClick={() => handleSwitchCurrent(index + 1)}>
+            })} onClick={(e) => handleSwitchCurrent(e,index + 1)}>
                 {index + 1}
             </Button>
         })
@@ -182,7 +181,7 @@ const Pagination = React.forwardRef((props, ref) => {
     }
 
     const handleInputNumberBlur=(number,e)=>{ 
-        handleSwitchCurrent(number);
+        handleSwitchCurrent(e,number);
     }
 
     useEffect(()=>{
@@ -190,10 +189,7 @@ const Pagination = React.forwardRef((props, ref) => {
             setShowSizeChanger(true);
         }
     },[total]); 
-
-    useEffect(()=>{
-        onChangeProp?.(current,pageSize);
-    },[current]);
+ 
 
     useEffect(()=>{
         onShowSizeChangeProp?.(current,pageSize); 
@@ -213,9 +209,9 @@ const Pagination = React.forwardRef((props, ref) => {
         }
     >
         {showTotal && <div className={`${prefixCls}-ShowTotal`}>{showTotal(total,renderRange())}</div>}
-        <Button size={size} shape="circle" onClick={() => handleSwitchCurrent(current - 1)}><KeyboardArrowLeft style={{ fontSize: 24 }} /></Button>
+        <Button size={size} shape="circle" onClick={(e) => handleSwitchCurrent(e,current - 1)}><KeyboardArrowLeft style={{ fontSize: 24 }} /></Button>
         {renderPagination}
-        <Button size={size} shape="circle" onClick={() => handleSwitchCurrent(current + 1)}><KeyboardArrowRight style={{ fontSize: 24 }} /></Button>
+        <Button size={size} shape="circle" onClick={(e) => handleSwitchCurrent(e,current + 1)}><KeyboardArrowRight style={{ fontSize: 24 }} /></Button>
         {showSizeChanger && <div className={`${prefixCls}-ShowSizeChanger`}>
             <Select value={pageSize} inputWidth={100} autoWidth onSelect={handleSelect}>
                 {pageSizeOptions.map((item,index)=>{
