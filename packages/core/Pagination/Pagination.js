@@ -176,7 +176,8 @@ const Pagination = React.forwardRef((props, ref) => {
         })
     }, [current, renderNum, isArrow, currentHover,pageSize]);
 
-    const handleSelect=(value)=>{
+    const handleSelect=(e,value)=>{
+        onChangeProp?.(e,{current:current,pageSize:value});
         setPageSize(value);
     }
 

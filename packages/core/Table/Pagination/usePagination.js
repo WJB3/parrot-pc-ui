@@ -32,6 +32,8 @@ export default function usePagination(
         setPageSize(pageSizeProp);
     },[current,pageSize]);
 
+    console.log(pageSize);
+
    
     const onChange=useCreateChainedFunction(innerChange,pagination?.onChange);
 
@@ -39,8 +41,7 @@ export default function usePagination(
 
         if (pagination === false) {
             return [{}];
-        }
-
+        } 
 
         return [{
             ...pagination, 

@@ -78,7 +78,7 @@ const Select=React.forwardRef((props,ref)=>{
     const onSelect=(e,index,value)=>{  
         setSelectIndex(index);
         setValue(value);
-        onSelectProp?.(value);
+        onSelectProp?.(e,value);
     }
 
     useEffect(()=>{
